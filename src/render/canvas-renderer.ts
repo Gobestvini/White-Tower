@@ -1,6 +1,6 @@
 import type { Level, Stack } from '../game/model.js';
 import { DIRECTION_VECTORS, type Direction } from '../game/directions.js';
-import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, type Projection } from './projection.js';
+import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, pickVisibleStack, type Projection } from './projection.js';
 import { WHITE_TOWER_COLORS, type RenderViewState } from './presets.js';
 import type { RenderViewport, WhiteTowerRenderer } from './webgl-renderer.js';
 
@@ -97,6 +97,11 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
       const point = worldToScreen(stack.u, stack.v, stack.height - 1, selectedProjection);
       drawArrow(point.x, point.y, stack.launchDirection);
     }
+    if (view?.selectedStackId === stack.id) {
+      const point = worldToScreen(stack.u, stack.v, stack.height - 1, selectedProjection);
+      context!.beginPath(); context!.moveTo(point.x, point.y - TILE_RADIUS - 7); context!.lineTo(point.x + TILE_RADIUS + 7, point.y); context!.lineTo(point.x, point.y + TILE_RADIUS + 7); context!.lineTo(point.x - TILE_RADIUS - 7, point.y); context!.closePath();
+      context!.strokeStyle = '#3C7EA9'; context!.lineWidth = 3; context!.stroke();
+    }
   }
 
   function setView(nextView: RenderViewState): void {
@@ -138,12 +143,7 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
 
   function pickStack(point: Readonly<{ x: number; y: number }>, activeView: RenderViewState): string | undefined {
     const selectedProjection = projection ?? createProjection(activeView.level, activeView.level.totalTiles);
-    for (const stack of [...activeView.stacks].sort((a, b) => b.u + b.v - a.u - a.v)) {
-      const center = worldToScreen(stack.u, stack.v, stack.height - 1, selectedProjection);
-      const dx = Math.abs(point.x - center.x); const dy = Math.abs(point.y - center.y);
-      if (dx / (TILE_RADIUS * selectedProjection.scale) + dy / (TILE_RADIUS * selectedProjection.scale) <= 1.15) return stack.id;
-    }
-    return undefined;
+    return pickVisibleStack(point, activeView.stacks.map(stack => ({ id: stack.id, u: stack.u, v: stack.v, height: stack.height })), selectedProjection);
   }
 
   return Object.freeze({ setView, resize, render, pickStack, resourceCounts: () => Object.freeze({ geometries: 0, textures: 0, programs: 0, children: 0 }), dispose() { if (!disposed) { disposed = true; view = undefined; } } });

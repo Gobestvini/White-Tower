@@ -6,7 +6,7 @@
 - Обновлена: 2026-10-08
 - Проект: White Tower, C:/Users/gobes/OneDrive/Документы/PetProgects/White Tower; https://github.com/Gobestvini/White-Tower
 - Рекомендуемый исполнитель: сильная; высокий уровень рассуждения — разделение итогов и отображения
-- Зависимости: TASK-0005, TASK-0008
+- Зависимости: TASK-0005, TASK-0008, TASK-0010
 - GDD: разделы 9, 14, 21, 24–25 в `docs/knowledge/white-tower/White_Tower_GDD.md`
 
 ## 1. Цель и запрос пользователя

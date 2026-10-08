@@ -32,7 +32,7 @@ interface Renderer {
 }
 ```
 
-The simulation owns integer board coordinates, heights, directions, move count, and stable state. It emits a new immutable `ViewState` revision after a committed logical action. The renderer owns GPU/Canvas resources, projection, visual interpolation, and hit testing; it may read snapshots but cannot modify them. World coordinates are tile units, height is layer count, direction is a quarter-turn enum. Pixel coordinates are CSS pixels; drawing-buffer scaling uses bounded DPR. `resize` changes backing storage/camera without changing game state. `pickStack` returns stable ID only; controller validates whether the action is legal.
+The simulation owns integer board coordinates, heights, directions, move count, and stable state. It emits a new immutable `ViewState` revision after a committed logical action. The renderer owns GPU/Canvas resources, projection, visual interpolation, hit testing, and selected-stack presentation; it may read snapshots but cannot modify them. World coordinates are tile units, height is layer count, direction is a quarter-turn enum. Pixel coordinates are CSS pixels; drawing-buffer scaling uses bounded DPR. `resize` changes backing storage/camera without changing game state. `pickStack` returns stable ID only; controller validates whether the action is legal.
 
 Module boundaries:
 

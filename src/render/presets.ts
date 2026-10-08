@@ -18,10 +18,11 @@ export type RenderViewState = Readonly<{
   revision: number;
   level: Level;
   stacks: readonly Stack[];
+  selectedStackId?: string;
 }>;
 
-export function createRenderView(level: Level, state: GameState, revision = state.moveCount): RenderViewState {
-  return Object.freeze({ revision, level, stacks: state.stacks });
+export function createRenderView(level: Level, state: GameState, revision = state.moveCount, selectedStackId?: string): RenderViewState {
+  return Object.freeze({ revision, level, stacks: state.stacks, ...(selectedStackId ? { selectedStackId } : {}) });
 }
 
 export function createLevelPreset(level: Level) {

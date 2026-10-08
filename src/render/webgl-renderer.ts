@@ -12,7 +12,7 @@ import {
 import { DIRECTIONS, type Direction } from '../game/directions.js';
 import type { Level, Stack } from '../game/model.js';
 import { createBevelGeometry, createChevronGeometry, createDiamondGeometry, createDiamondOutlineGeometry, createArrowGeometry, createShadowGeometry, createSideGeometry } from './geometry.js';
-import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, type Projection } from './projection.js';
+import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, pickVisibleStack, type Projection } from './projection.js';
 import { WHITE_TOWER_COLORS, type RenderViewState } from './presets.js';
 
 export type RenderViewport = Readonly<{ width: number; height: number; pixelRatio: number }>;
@@ -45,6 +45,7 @@ function createMaterials() {
     floor: new MeshBasicMaterial({ color: WHITE_TOWER_COLORS.floor, ...MATERIAL_OPTIONS }),
     arrow: new MeshBasicMaterial({ color: WHITE_TOWER_COLORS.arrow, ...MATERIAL_OPTIONS }),
     chevron: new MeshBasicMaterial({ color: WHITE_TOWER_COLORS.chevron, ...MATERIAL_OPTIONS }),
+    selection: new MeshBasicMaterial({ color: '#3C7EA9', ...MATERIAL_OPTIONS }),
     seam: new MeshBasicMaterial({ color: WHITE_TOWER_COLORS.floorSeam, ...MATERIAL_OPTIONS }),
     // Pre-composited blue keeps shadows in the opaque ordering pass, behind tile faces.
     shadow: new MeshBasicMaterial({ color: '#FFFFFF', vertexColors: true, ...MATERIAL_OPTIONS }),
@@ -70,6 +71,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     tileTop: createDiamondGeometry(TILE_RADIUS - 4),
     tileBevel: createBevelGeometry(TILE_RADIUS, 4),
     tileSide: createSideGeometry(TILE_RADIUS, 9),
+    selection: createDiamondOutlineGeometry(TILE_RADIUS + 7),
     shadow: createShadowGeometry(),
     arrows: Object.fromEntries(DIRECTIONS.map(direction => [direction, createArrowGeometry(direction)])) as Record<Direction, ReturnType<typeof createArrowGeometry>>,
     chevrons: Object.fromEntries(DIRECTIONS.map(direction => [direction, createChevronGeometry(direction)])) as Record<Direction, ReturnType<typeof createChevronGeometry>>,
@@ -134,7 +136,16 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
       }
     }
     const sortedStacks = [...nextView.stacks].sort((a, b) => a.u + a.v - (b.u + b.v) || a.u - b.u || a.v - b.v);
-    for (const stack of sortedStacks) order = addStack(stack, nextView.level, projection, order + 2);
+    for (const stack of sortedStacks) {
+      order = addStack(stack, nextView.level, projection, order + 2);
+      if (stack.id === nextView.selectedStackId) {
+        const top = pixelPoint(stack.u, stack.v, stack.height - 1, projection);
+        const outline = new LineSegments(geometry.selection, materials.selection);
+        outline.position.set(top.x, top.y, 0.08 + (stack.u + stack.v) * 0.00001);
+        outline.renderOrder = order++;
+        viewLayer.add(outline);
+      }
+    }
     render();
   }
 
@@ -165,14 +176,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
 
   function pickStack(point: Readonly<{ x: number; y: number }>, activeView: RenderViewState): string | undefined {
     if (!projection) projection = createProjection(activeView.level, activeView.level.totalTiles);
-    const sorted = [...activeView.stacks].sort((a, b) => b.u + b.v - a.u - a.v);
-    for (const stack of sorted) {
-      const center = worldToScreen(stack.u, stack.v, stack.height - 1, projection);
-      const dx = Math.abs(point.x - center.x);
-      const dy = Math.abs(point.y - center.y);
-      if (dx / (TILE_RADIUS * projection.scale) + dy / (TILE_RADIUS * projection.scale) <= 1.15) return stack.id;
-    }
-    return undefined;
+    return pickVisibleStack(point, activeView.stacks, projection);
   }
 
   function resourceCounts(): RendererResourceCounts {
@@ -188,6 +192,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     geometry.tileTop.dispose();
     geometry.tileBevel.dispose();
     geometry.tileSide.dispose();
+    geometry.selection.dispose();
     geometry.shadow.dispose();
     Object.values(geometry.arrows).forEach(item => item.dispose());
     Object.values(geometry.chevrons).forEach(item => item.dispose());

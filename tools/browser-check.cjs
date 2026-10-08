@@ -15,13 +15,25 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       ['desktop', { width: 1280, height: 900 }, false],
       ['mobile', { width: 390, height: 844 }, true],
     ]) {
-      const page = await browser.newPage({ viewport, hasTouch: touch, isMobile: touch });
+      const page = await browser.newPage({ viewport, hasTouch: touch, isMobile: touch, deviceScaleFactor: touch ? 2 : 1 });
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
       page.on('response', response => { if (response.status() >= 400 && response.url().startsWith(baseUrl)) errors.push(`HTTP ${response.status()}`); });
       await page.goto(baseUrl);
       await page.waitForFunction(() => window.gameDebug?.snapshot().loaded && window.gameDebug.snapshot().elapsed > 0);
+      if (touch) {
+        await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
+        const mobileTap = await page.evaluate(() => {
+          const point = window.gameDebug.pointForStack(window.gameDebug.selectedStackId());
+          const rect = document.querySelector('canvas').getBoundingClientRect();
+          const scale = Math.min(rect.width / 720, rect.height / 1280);
+          return { x: rect.left + (rect.width - 720 * scale) / 2 + point.x * scale, y: rect.top + (rect.height - 1280 * scale) / 2 + point.y * scale };
+        });
+        await page.touchscreen.tap(mobileTap.x, mobileTap.y);
+        assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 1, 'touch on the active top face launches once at DPR 2');
+        await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
+      }
       await page.getByRole('button', { name: 'Пауза', exact: true }).click();
       const before = await page.evaluate(() => window.gameDebug.snapshot().elapsed);
       await page.waitForTimeout(150);
@@ -63,13 +75,17 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
         canvas.style.height = '1280px';
         document.querySelector('main').style.width = '720px';
         document.querySelector('main').style.margin = '0';
+        window.dispatchEvent(new Event('resize'));
       });
+      await page.evaluate(() => new Promise(requestAnimationFrame));
       for (const [id, file] of [['level-001', 'r01'], ['level-006', 'r06'], ['level-007', 'r08']]) {
         await page.evaluate(async value => { await window.gameDebug.setLevelById(value); await new Promise(requestAnimationFrame); }, id);
         await page.locator('canvas').screenshot({ path: `artifacts/screenshots/${file}-${name}.png` });
       }
       await page.evaluate(async () => { await window.gameDebug.setLevelById('level-006'); window.gameDebug.setTowerDemo(14); await new Promise(requestAnimationFrame); });
       await page.locator('canvas').screenshot({ path: `artifacts/screenshots/r07-${name}.png` });
+      await page.setViewportSize({ width: 720, height: 1280 });
+      await page.evaluate(() => window.dispatchEvent(new Event('resize')));
       const fallbackState = await page.evaluate(async () => {
         await window.gameDebug.setLevelById('level-002');
         let complete;
@@ -116,6 +132,62 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
         return outcomes;
       }, exampleLevels.filter(level => ['A_line', 'D_ring'].includes(level.id)));
       assert.deepEqual(replay.map(item => [item.levelId, item.mode]), [['A_line', 'webgl'], ['D_ring', 'webgl'], ['A_line', '2d'], ['D_ring', '2d']]);
+      await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
+      await page.locator('canvas').focus();
+      await page.keyboard.press('ArrowRight');
+      await page.keyboard.press('Enter');
+      let keyboardState = await page.evaluate(() => window.gameDebug.snapshot());
+      assert.equal(keyboardState.phase, 'Won', 'keyboard can complete level A');
+      assert.equal(keyboardState.committedState.moveCount, 1);
+      await page.keyboard.press('Control+z');
+      keyboardState = await page.evaluate(() => window.gameDebug.snapshot());
+      assert.equal(keyboardState.phase, 'Idle');
+      assert.equal(keyboardState.committedState.moveCount, 0);
+      await page.keyboard.press('Escape');
+      assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Menu');
+      await page.keyboard.press('Escape');
+      assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Idle');
+      await page.keyboard.press('r');
+      const beforeOutsideShortcut = await page.evaluate(() => window.gameDebug.snapshot().attemptId);
+      await page.locator('#pause').focus();
+      await page.keyboard.press('r');
+      assert.equal(await page.evaluate(() => window.gameDebug.snapshot().attemptId), beforeOutsideShortcut, 'R outside the game must not restart');
+
+      await page.evaluate(() => window.gameDebug.setLevelById('level-002'));
+      await page.locator('canvas').focus();
+      const selectedBefore = await page.evaluate(() => window.gameDebug.selectedStackId());
+      await page.keyboard.press('ArrowRight');
+      const selectedAfter = await page.evaluate(() => window.gameDebug.selectedStackId());
+      assert.notEqual(selectedAfter, selectedBefore, 'arrow key cycles the active stacks');
+
+      await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
+      const tapPoint = await page.evaluate(() => {
+        const point = window.gameDebug.pointForStack(window.gameDebug.selectedStackId());
+        const rect = document.querySelector('canvas').getBoundingClientRect();
+        const scale = Math.min(rect.width / 720, rect.height / 1280);
+        return { x: rect.left + (rect.width - 720 * scale) / 2 + point.x * scale, y: rect.top + (rect.height - 1280 * scale) / 2 + point.y * scale };
+      });
+      const hitDebug = await page.evaluate(({ x, y }) => {
+        const rect = document.querySelector('canvas').getBoundingClientRect();
+        const scale = Math.min(rect.width / 720, rect.height / 1280);
+        const point = { x: (x - rect.left - (rect.width - 720 * scale) / 2) / scale, y: (y - rect.top - (rect.height - 1280 * scale) / 2) / scale };
+        return { point, rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height }, viewport: { width: innerWidth, height: innerHeight }, selected: window.gameDebug.selectedStackId(), hit: window.gameDebug.pickStack(point) };
+      }, tapPoint);
+      await page.evaluate(() => {
+        window.__pointerTrace = [];
+        for (const type of ['pointerdown', 'pointerup', 'pointercancel']) window.addEventListener(type, event => window.__pointerTrace.push({ type, target: event.target?.tagName, x: event.clientX, y: event.clientY, pointerType: event.pointerType, primary: event.isPrimary, button: event.button }), true);
+      });
+      if (!touch) {
+        await page.mouse.move(tapPoint.x, tapPoint.y); await page.mouse.down(); await page.mouse.move(tapPoint.x + 20, tapPoint.y); await page.mouse.up();
+        assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 0, 'drag beyond 12 CSS pixels must not move');
+        await page.mouse.click(tapPoint.x, tapPoint.y);
+      }
+      if (!touch) {
+        const pointerTrace = await page.evaluate(() => window.__pointerTrace);
+        assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 1, `tap on the active top face launches once (${JSON.stringify({ hitDebug, pointerTrace })})`);
+        await page.mouse.click(tapPoint.x, tapPoint.y);
+        assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 1, 'a second tap on the vacated target cannot duplicate a move');
+      }
       assert.deepEqual(errors, []);
       await page.close();
     }

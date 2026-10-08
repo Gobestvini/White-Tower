@@ -1,6 +1,8 @@
 import './style.css';
 import { createStepper } from './loop.js';
 import { createInput } from './input.js';
+import { createPointerInput } from './input/pointer.ts';
+import { createGameActions } from './input/game-actions.ts';
 import { createScene } from './scene.js';
 
 let canvas = document.querySelector('canvas');
@@ -21,6 +23,25 @@ let paused = false;
 let previous = null;
 let frame;
 let disposed = false;
+let pointerInput;
+function installPointerInput() {
+  pointerInput?.dispose();
+  canvas = scene.canvas;
+  canvas.tabIndex = 0;
+  canvas.setAttribute('role', 'application');
+  pointerInput = createPointerInput(canvas, {
+    pickStack: point => scene.pickStack(point),
+    activate: stackId => !paused && scene.rendererInfo().supported && scene.launchStack(stackId),
+  });
+}
+installPointerInput();
+const gameActions = createGameActions({
+  canvas: () => scene.canvas,
+  scene,
+  enabled: () => !paused && scene.rendererInfo().supported,
+  announce: message => { status.textContent = message; },
+  reset,
+});
 
 function clearTiming() { previous = null; stepper.reset(); input.reset(); }
 function resize() {
@@ -84,7 +105,7 @@ scene.ready.then(async () => {
 function dispose() {
   disposed = true;
   cancelAnimationFrame(frame);
-  input.dispose(); scene.dispose();
+  input.dispose(); pointerInput?.dispose(); gameActions.dispose(); scene.dispose();
   window.removeEventListener('resize', resize);
   document.removeEventListener('visibilitychange', visibility);
   pauseButton.removeEventListener('click', toggle);
@@ -99,11 +120,14 @@ if (import.meta.env.DEV) {
     setTowerDemo: height => scene.setTowerDemo(height),
     resourceCounts: () => scene.resourceCounts(),
     rendererInfo: () => scene.rendererInfo(),
-    setRendererMode: mode => { const changed = scene.setRendererMode(mode); if (changed) { resize(); status.textContent = scene.rendererInfo().message ?? (scene.rendererInfo().mode === '2d' ? 'Упрощённый графический режим.' : 'Готово'); } return changed; },
+    setRendererMode: mode => { const changed = scene.setRendererMode(mode); if (changed) { installPointerInput(); resize(); status.textContent = scene.rendererInfo().message ?? (scene.rendererInfo().mode === '2d' ? 'Упрощённый графический режим.' : 'Готово'); } return changed; },
     launch: start => scene.debugLaunch(start),
     finishAnimation: generationId => scene.debugFinishAnimation(generationId),
     undo: () => scene.undo(),
     loadLevel: level => scene.debugLoadLevel(level),
+    pointForStack: id => scene.pointForStack(id),
+    selectedStackId: () => scene.selectedStackId(),
+    pickStack: point => scene.pickStack(point),
   };
 }
 if (import.meta.hot) import.meta.hot.dispose(dispose);
