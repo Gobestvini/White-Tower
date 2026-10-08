@@ -4,7 +4,7 @@
 
 | Задача | Статус | Приоритет | Зависимости | Исполнитель |
 | --- | --- | --- | --- | --- |
-| [TASK-0001 Подготовить воспроизводимую основу White Tower](TASK-0001-project-foundation.md) | ready | high | нет | средняя |
+| [TASK-0001 Подготовить воспроизводимую основу White Tower](TASK-0001-project-foundation.md) | done | high | нет | средняя |
 | [TASK-0002 Выбрать рендер и зафиксировать контракты подсистем](TASK-0002-renderer-decision.md) | draft | high | TASK-0001 | сильная |
 | [TASK-0003 Реализовать модель уровня и проверку JSON](TASK-0003-level-model.md) | draft | normal | TASK-0001 | средняя |
 | [TASK-0004 Реализовать расчёт полного хода и защиту от циклов](TASK-0004-move-simulator.md) | draft | high | TASK-0003 | сильная |

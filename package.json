@@ -1,0 +1,29 @@
+{
+  "name": "white-tower",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.js",
+    "check": "node tools/telegram/verify.js",
+    "check:full": "node tools/telegram/verify.js --full",
+    "context": "node tools/telegram/knowledge.js",
+    "test:browser": "node tools/browser-check.cjs",
+    "telegram": "node tools/telegram/bot.js",
+    "telegram:check": "node tools/telegram/bot.js --check"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "7.1.9"
+  }
+}

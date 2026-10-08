@@ -6,10 +6,14 @@
 | src/loop.js / createStepper | Шаг 1/60 с, максимум 8 шагов кадра, dropped time, alpha |
 | src/input.js / createInput | Клавиатура event.code, blur/reset/dispose |
 | src/scene.js / createScene | Пустая точка расширения: update/render/reset/snapshot/dispose |
-| index.html, src/style.css | Доступные кнопки и адаптивная пустая сцена |
+| index.html, src/style.css | Оболочка приложения и адаптивная сцена |
+| tsconfig.json | Строгая проверка TypeScript runtime, тестов и инструментов |
+| src/game/ | Правила, модель уровня и контроллер (в последующих задачах) |
+| src/render/ | Выбранный WebGL renderer, общая проекция и Canvas fallback (в последующих задачах) |
+| tests/game-*.test.js | Поведенческие проверки игровых систем, запускаются вместе с общей suite |
 | tests/loop.test.js, tests/input.test.js | Частоты кадров, stalls, ввод и очистка |
 | tools/telegram/knowledge.js | Память, актуальность хэшей, ограничение контекста |
-| tools/telegram/verify.js | Тесты/сборка, логи, квитанция проверки |
+| tools/telegram/verify.js | Тесты, TypeScript, сборка, логи и проверяемая квитанция |
 | tools/telegram/economy.js | Инструкции экономии, JSONL usage, учёт кэша |
 | tools/browser-check.cjs | Desktop/mobile layout, pause/reset, ввод, ошибки |
 | docs/knowledge/README.md | Выбор справочника по теме и правила сохранения знаний |
