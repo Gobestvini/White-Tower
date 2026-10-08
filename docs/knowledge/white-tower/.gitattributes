@@ -1,0 +1,6 @@
+/White_Tower_GDD.* -text
+/White_Tower_GDD.md whitespace=cr-at-eol
+/White_Tower_GDD.html whitespace=cr-at-eol
+/levels_examples.json -text whitespace=cr-at-eol
+/source-video.mp4 -text
+/references/*.png -text

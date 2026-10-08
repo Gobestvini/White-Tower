@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "importedAt": "2026-10-08",
+  "sourceThread": {
+    "hostId": "local",
+    "threadId": "01a11a46-d974-73e0-925a-60d08f1ade04",
+    "title": "Создать полный GDD по видео"
+  },
+  "verification": "All imported files compared with original files using SHA-256. Game behavior and GDD assumptions have not been verified in this project.",
+  "files": [
+    {
+      "path": "White_Tower_GDD.md",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\White_Tower_GDD.md",
+      "bytes": 88846,
+      "sha256": "e2df5fc09d4bfc62312b6e1615c1706de2f6ff8549f54b41bdb8715554371057"
+    },
+    {
+      "path": "White_Tower_GDD.docx",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\White_Tower_GDD.docx",
+      "bytes": 2240730,
+      "sha256": "086216c46d71c993575e0517a7ef50c50e55293185d80bf714bc683d239040b1"
+    },
+    {
+      "path": "White_Tower_GDD.html",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\White_Tower_GDD.html",
+      "bytes": 3058624,
+      "sha256": "c9d64f39d2a029ac1a1fcf5a1ea98630c6a30bf4d1dd4c5cb550931032c10af7"
+    },
+    {
+      "path": "levels_examples.json",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\levels_examples.json",
+      "bytes": 5368,
+      "sha256": "a48327fc60b5ec8262d46eba77460e1996d3ab8685b5b8807f8f3c6ada7ce7df"
+    },
+    {
+      "path": "references/ref_0s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_0s.png",
+      "bytes": 114255,
+      "sha256": "86d0ffdc62a53f5023d5345429c0792a86537274ac425faccf3c9ddc8eaba552"
+    },
+    {
+      "path": "references/ref_1_5s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_1_5s.png",
+      "bytes": 129961,
+      "sha256": "a8b2147de21926c987a555f6a8cb03e99ad7ea54e58afe36799bd77de77bb255"
+    },
+    {
+      "path": "references/ref_4_4s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_4_4s.png",
+      "bytes": 120419,
+      "sha256": "03cb9ba73e3cdd6ef50132f8590b2b8bde4fb2597661da8be913dabacba0bf2d"
+    },
+    {
+      "path": "references/ref_8_5s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_8_5s.png",
+      "bytes": 121826,
+      "sha256": "48277e59fbea8d2d1ca3341dcf989a1bf4d87cf6336130b5da42aa159826d17a"
+    },
+    {
+      "path": "references/ref_13s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_13s.png",
+      "bytes": 171691,
+      "sha256": "abbf16084e9d4ff2a818e5df8dd64a748ad2f68260f489cd33b6d16984b9ba1d"
+    },
+    {
+      "path": "references/ref_23s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_23s.png",
+      "bytes": 231599,
+      "sha256": "d09d068ac55d9c6bfc496e3e6fbc0a14fc21dc2f3a18d06a00aa135a46dd7d1e"
+    },
+    {
+      "path": "references/ref_33s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_33s.png",
+      "bytes": 268689,
+      "sha256": "e9a30e223d9fafbde5cef414a70a9a8fffac8b67a54934625d19124742365660"
+    },
+    {
+      "path": "references/ref_35s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_35s.png",
+      "bytes": 222799,
+      "sha256": "ef9ad646605127c097034db7f39eda27c55484b87a82496ed11e0d916bcacd2e"
+    },
+    {
+      "path": "references/ref_57s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_57s.png",
+      "bytes": 187750,
+      "sha256": "14fd0b1f8cfe3b89ffe176f61f76090e9bf70c51939e9a057bfdd6e6938f01af"
+    },
+    {
+      "path": "references/ref_81s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_81s.png",
+      "bytes": 191716,
+      "sha256": "d4bf938b836322bdf9f963df14300eba4d43ad6d1b96a2388f11b972cbf7b88a"
+    },
+    {
+      "path": "references/ref_101s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_101s.png",
+      "bytes": 204675,
+      "sha256": "c8d05d339029c84369959f4af2dd15fd99edff2be5244037f0bf3d2f1531bb73"
+    },
+    {
+      "path": "references/ref_113s.png",
+      "sourcePath": "C:\\Users\\gobes\\Documents\\Codex\\2026-10-08\\new-chat\\outputs\\references\\ref_113s.png",
+      "bytes": 252806,
+      "sha256": "539d888f8f67a345e3f75ac92206b0f25db2a17f9ef33ff9dbb43d77a48e2e61"
+    },
+    {
+      "path": "source-video.mp4",
+      "sourcePath": "C:/Users/gobes/Downloads/From Klickpin.com- Romantic love reminders for people who love practical beauty with easy charm to make someone smile-pin-id-741264419964062408.mp4",
+      "bytes": 9462084,
+      "sha256": "5bd3c45f94b81e09127b7bff0a9ddad7e27bfdd7e3706f6b89533380733ca7e7"
+    }
+  ]
+}
