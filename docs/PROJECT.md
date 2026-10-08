@@ -11,7 +11,8 @@
 | src/presentation/animation.ts, timings.ts | Кадрово-независимый маршрут движения, слияния, поворота и остановки; пауза/отмена, без изменения committed state |
 | index.html, src/style.css | Оболочка приложения и адаптивная сцена |
 | tsconfig.json | Строгая проверка TypeScript runtime, тестов и инструментов |
-| src/game/ | Правила, модель уровня и контроллер (в последующих задачах) |
+| src/game/ | Правила, модель уровня, симулятор, поиск решения и контроллер |
+| src/storage/store.ts, save-schema.ts | Устойчивое локальное сохранение: IndexedDB → localStorage → память; проверка версии и состояния |
 | src/render/webgl-renderer.ts | Основной Three.js WebGL renderer, процедурные плитки и владение GPU ресурсами |
 | src/render/canvas-renderer.ts | Совместимый 2D renderer с тем же view state, projection и hit-test |
 | src/render/renderer-factory.ts | WebGL2 → Canvas 2D fallback и режим Unsupported; QA-переключение без сброса state |

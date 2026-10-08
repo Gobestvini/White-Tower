@@ -70,6 +70,30 @@ export function createGameController() {
     return snapshot();
   }
 
+  function restoreAttempt(state: GameState, previousStates: readonly GameState[]): GameSnapshot {
+    if (disposed || !level || state.levelId !== level.id || (phase !== 'Idle' && phase !== 'Won')) return snapshot();
+    const validHistory = previousStates.slice(-50);
+    generationId++;
+    attemptId++;
+    committedState = deepFreeze(state);
+    displayedState = committedState;
+    history.splice(0, history.length, ...validHistory.map(item => deepFreeze(item)));
+    animation = undefined;
+    phase = isWon(committedState) ? 'Won' : 'Idle';
+    if (phase === 'Won') completed.add(level.id);
+    return snapshot();
+  }
+
+  function restoreCompleted(ids: readonly string[]): GameSnapshot {
+    if (disposed) return snapshot();
+    completed.clear();
+    for (const id of ids) completed.add(id);
+    if (level && phase === 'Won') completed.add(level.id);
+    return snapshot();
+  }
+
+  function historySnapshot(): readonly GameState[] { return Object.freeze(history.slice(-50)); }
+
   function launch(start: Readonly<{ u: number; v: number }>): GameSnapshot {
     if (disposed || phase !== 'Idle' || !level || !committedState || !displayedState) return snapshot();
     const result = simulateMove(level, committedState, start);
@@ -156,5 +180,5 @@ export function createGameController() {
     history.length = 0;
   }
 
-  return Object.freeze({ snapshot, loadLevel, launch, finishAnimation, undo, restart, openMenu, closeMenu, setLoadError, setUnsupported, dispose });
+  return Object.freeze({ snapshot, loadLevel, restoreAttempt, restoreCompleted, historySnapshot, launch, finishAnimation, undo, restart, openMenu, closeMenu, setLoadError, setUnsupported, dispose });
 }

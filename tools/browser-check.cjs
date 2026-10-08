@@ -277,11 +277,105 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       assert.deepEqual(errors, []);
       await page.close();
     }
+    const savePage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
+    await savePage.goto(baseUrl);
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    await savePage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    let restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    const persistedSave = await savePage.evaluate(() => new Promise(resolve => {
+      const request = indexedDB.open('white-tower', 1);
+      request.onsuccess = () => { const get = request.result.transaction('save', 'readonly').objectStore('save').get('white-tower.save.v1'); get.onsuccess = () => resolve(get.result); get.onerror = () => resolve({ error: String(get.error) }); };
+      request.onerror = () => resolve({ error: String(request.error) });
+    }));
+    assert.equal(restored.phase, 'Won', `reload during animation restores the committed route result: ${JSON.stringify({ restored, persistedSave })}`);
+    assert.equal(restored.committedState.moveCount, 1);
+    assert.equal(restored.canUndo, true, 'the move preceding the committed result remains undoable');
+    assert.deepEqual(restored.completedLevelIds, ['level-001']);
+    await savePage.evaluate(() => window.gameDebug.undo());
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.equal(restored.phase, 'Idle', 'Undo state survives reload');
+    assert.equal(restored.canUndo, false);
+    assert.deepEqual(restored.completedLevelIds, ['level-001'], 'Undo does not revoke completion');
+    await savePage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+    await savePage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won');
+    await savePage.locator('.victory-layer.is-visible').waitFor({ timeout: 1500 });
+    await savePage.locator('.next-button').evaluate(button => button.click());
+    await savePage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-002');
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.equal(restored.levelId, 'level-002', 'selected level survives reload');
+    assert.deepEqual(restored.completedLevelIds, ['level-001'], 'Next does not duplicate or clear completion');
+    await savePage.evaluate(() => window.gameDebug.setLevelById('level-004'));
+    await savePage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.equal(restored.phase, 'Won', 'reload during the redirected ring route restores the committed result');
+    assert.equal(restored.committedState.stacks.reduce((sum, stack) => sum + stack.height, 0), 7, 'the redirected route retains every tile');
+    await savePage.evaluate(() => new Promise((resolve, reject) => {
+      const request = indexedDB.open('white-tower', 1);
+      request.onsuccess = () => {
+        const tx = request.result.transaction('save', 'readwrite'); const store = tx.objectStore('save');
+        const get = store.get('white-tower.save.v1');
+        get.onsuccess = () => store.put({ ...get.result, settings: { sound: false, reducedMotion: true } }, 'white-tower.save.v1');
+        tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error);
+      };
+      request.onerror = () => reject(request.error);
+    }));
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.deepEqual(restored.settings, { sound: false, reducedMotion: true }, 'settings values roundtrip with the save');
+    await savePage.evaluate(() => new Promise((resolve, reject) => {
+      const request = indexedDB.open('white-tower', 1);
+      request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction('save', 'readwrite');
+        const store = tx.objectStore('save');
+        const get = store.get('white-tower.save.v1');
+        get.onsuccess = () => { store.put({ ...get.result, levelChecksum: 'bad-content-hash' }, 'white-tower.save.v1'); };
+        tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error);
+      };
+      request.onerror = () => reject(request.error);
+    }));
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.deepEqual(restored.completedLevelIds, ['level-001'], 'invalid state recovery salvages valid campaign progress');
+    await savePage.evaluate(() => window.gameDebug.setLevelById('level-002'));
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.deepEqual(restored.completedLevelIds, ['level-001'], 'saving after recovery does not erase prior completion');
+    await savePage.close();
+
+    const deniedStorage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
+    await deniedStorage.addInitScript(() => {
+      Object.defineProperty(window, 'indexedDB', { configurable: true, get() { throw new DOMException('denied', 'SecurityError'); } });
+      Object.defineProperty(window, 'localStorage', { configurable: true, get() { throw new DOMException('denied', 'SecurityError'); } });
+    });
+    await deniedStorage.goto(baseUrl);
+    await deniedStorage.waitForFunction(() => window.gameDebug?.snapshot().loaded && window.gameDebug.persistenceInfo().memoryOnly);
+    assert.match(await deniedStorage.locator('#status').textContent(), /Прогресс временный/);
+    await deniedStorage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+    assert.equal((await deniedStorage.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 1, 'storage denial does not block a move');
+    await deniedStorage.close();
+
     const unsupported = await browser.newPage();
     await unsupported.goto(`${baseUrl}?renderer=unsupported`);
     await unsupported.waitForFunction(() => document.querySelector('#status')?.textContent.includes('WebGL и Canvas 2D недоступны'));
     assert.equal(await unsupported.locator('#status').getAttribute('role'), 'status');
     await unsupported.close();
-    console.log('Desktop/mobile layout, pause/reset, input and runtime errors: passed.');
+    console.log('Desktop/mobile layout, input, stable local saves, memory-only fallback and runtime errors: passed.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

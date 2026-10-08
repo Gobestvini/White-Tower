@@ -1,17 +1,21 @@
-import { loadCatalog, loadLevelAt, loadLevelById } from './content/catalog.ts';
+import { loadCatalog, loadLevelById } from './content/catalog.ts';
 import { validateLevel } from './game/level-schema.js';
 import { createGameController } from './game/controller.ts';
 import { createRenderView } from './render/presets.ts';
 import { createRendererFactory } from './render/renderer-factory.ts';
 import { createProjection, worldToScreen } from './render/projection.ts';
 import { createAnimationPlayer } from './presentation/animation.ts';
+import { createStore } from './storage/store.ts';
+import { validateGameSave, createGameSave } from './storage/save-schema.ts';
 
 export function createScene(canvas, rendererMode = 'auto') {
   let activeCanvas = canvas;
   let selection = createRendererFactory(canvas, { mode: rendererMode });
   let renderer = selection.renderer;
   const controller = createGameController();
-  const animation = createAnimationPlayer({ onComplete: generationId => showSnapshot(controller.finishAnimation(generationId)) });
+  const store = createStore();
+  let pendingSave = Promise.resolve();
+  const animation = createAnimationPlayer({ onComplete: generationId => { showSnapshot(controller.finishAnimation(generationId)); persistSnapshot(); } });
   let catalog;
   let level;
   let elapsed = 0;
@@ -20,6 +24,31 @@ export function createScene(canvas, rendererMode = 'auto') {
   let towerDemo = false;
   let selectedStackId;
   let nextPending = false;
+  let recoveryNotice = '';
+  let unlockedLevel = 1;
+  let settings = Object.freeze({});
+
+  function persistSnapshot() {
+    const snapshot = controller.snapshot();
+    const entry = catalog?.levels.find(item => item.id === snapshot.level?.id);
+    if (!entry || !snapshot.level || !snapshot.committedState) return pendingSave;
+    const completed = snapshot.completedLevelIds;
+    let derivedUnlocked = 1;
+    while (derivedUnlocked <= catalog.levels.length && completed.includes(catalog.levels[derivedUnlocked - 1]?.id ?? '')) derivedUnlocked++;
+    unlockedLevel = Math.max(unlockedLevel, derivedUnlocked);
+    const save = createGameSave({
+      contentVersion: catalog.contentVersion,
+      levelChecksum: entry.sha256,
+      selectedLevelId: snapshot.level.id,
+      unlockedLevel,
+      completedLevelIds: completed,
+      settings,
+      committedState: snapshot.committedState,
+      history: controller.historySnapshot(),
+    });
+    pendingSave = store.write(save);
+    return pendingSave;
+  }
 
   function selectableStacks(snapshot = controller.snapshot()) {
     if (snapshot.phase !== 'Idle' || !snapshot.level || !snapshot.displayedState) return [];
@@ -62,6 +91,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     selectedStackId = id;
     const started = controller.launch({ u: stack.u, v: stack.v });
     if (started.phase !== 'Animating') return false;
+    persistSnapshot();
     animation.start({ stacks: started.displayedState.stacks, steps: started.animation.steps, events: started.animation.events, generationId: started.generationId });
     showPresentation(animation.snapshot().stacks, started);
     return true;
@@ -104,6 +134,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     level = nextLevel;
     towerDemo = false;
     showSnapshot(controller.loadLevel(level));
+    await persistSnapshot();
   }
 
   async function nextLevel() {
@@ -114,6 +145,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     if (!next) return { advanced: false, message: 'More levels are coming soon.' };
     nextPending = true;
     try {
+      await pendingSave;
       await setLevelById(next.id);
       return { advanced: true };
     } catch {
@@ -125,9 +157,36 @@ export function createScene(canvas, rendererMode = 'auto') {
     .then(async loadedCatalog => {
       if (disposed) return;
       catalog = loadedCatalog;
-      level = await loadLevelAt(catalog, 0);
+      await store.ready;
+      const rawSave = await store.read();
+      const savedLevelId = rawSave && typeof rawSave === 'object' && 'selectedLevelId' in rawSave && typeof rawSave.selectedLevelId === 'string'
+        ? rawSave.selectedLevelId : catalog.levels[0]?.id;
+      const selectedEntry = catalog.levels.some(item => item.id === savedLevelId) ? catalog.levels.find(item => item.id === savedLevelId) : catalog.levels[0];
+      if (!selectedEntry) throw new Error('Catalog has no starting level.');
+      level = await loadLevelById(catalog, selectedEntry.id);
       if (disposed) return;
       showSnapshot(controller.loadLevel(level));
+      if (rawSave !== undefined) {
+        const validation = validateGameSave(rawSave, catalog, new Map([[level.id, level]]));
+        if (validation.ok) {
+          unlockedLevel = validation.value.unlockedLevel;
+          settings = validation.value.settings;
+          controller.restoreCompleted(validation.value.completedLevelIds);
+          controller.restoreAttempt(validation.value.committedState, validation.value.history);
+        } else {
+          recoveryNotice = `Сохранение не восстановлено: ${validation.reason}`;
+          if (typeof rawSave === 'object' && rawSave !== null && !Array.isArray(rawSave)) {
+            const candidate = rawSave;
+            const completed = Array.isArray(candidate.completedLevelIds)
+              ? candidate.completedLevelIds.filter(id => typeof id === 'string' && catalog.levels.some(item => item.id === id)) : [];
+            controller.restoreCompleted(completed);
+            if (Number.isSafeInteger(candidate.unlockedLevel) && candidate.unlockedLevel >= 1 && candidate.unlockedLevel <= catalog.levels.length + 1)
+              unlockedLevel = candidate.unlockedLevel;
+          }
+        }
+      }
+      showSnapshot(controller.snapshot());
+      if (rawSave === undefined) persistSnapshot();
       return level;
     });
 
@@ -152,7 +211,7 @@ export function createScene(canvas, rendererMode = 'auto') {
       animation.reset();
       const current = controller.snapshot();
       if (current.phase === 'Animating') controller.finishAnimation(current.generationId);
-      if (level) showSnapshot(controller.restart());
+      if (level) { showSnapshot(controller.restart()); persistSnapshot(); }
     },
     async setLevelById(id) { return setLevelById(id); },
     async nextLevel() { return nextLevel(); },
@@ -183,7 +242,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     snapshot() {
       const snapshot = controller.snapshot();
       const levelIndex = catalog?.levels.findIndex(entry => entry.id === snapshot.level?.id) ?? -1;
-      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0 };
+      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0, unlockedLevel, settings };
     },
     presentationSnapshot() { return animation.snapshot(); },
     resourceCounts() { return renderer.resourceCounts(); },
@@ -196,13 +255,16 @@ export function createScene(canvas, rendererMode = 'auto') {
     debugLaunch(start) {
       const snapshot = controller.launch(start);
       if (snapshot.phase === 'Animating') {
+        persistSnapshot();
         animation.start({ stacks: snapshot.displayedState.stacks, steps: snapshot.animation.steps, events: snapshot.animation.events, generationId: snapshot.generationId });
         showPresentation(animation.snapshot().stacks, snapshot);
       } else showSnapshot(snapshot);
       return snapshot;
     },
     debugFinishAnimation(generationId) { animation.reset(); const snapshot = controller.finishAnimation(generationId); showSnapshot(snapshot); return snapshot; },
-    undo() { const snapshot = controller.undo(); showSnapshot(snapshot); return snapshot; },
+    undo() { const snapshot = controller.undo(); showSnapshot(snapshot); persistSnapshot(); return snapshot; },
+    persistenceInfo() { return Object.freeze({ mode: store.mode(), memoryOnly: store.memoryOnly(), reason: store.unavailableReason(), recoveryNotice }); },
+    flushPersistence() { return store.flush(); },
     dispose() {
       if (disposed) return;
       disposed = true;

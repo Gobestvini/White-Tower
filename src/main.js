@@ -72,6 +72,9 @@ function tick(now) {
   let alpha = 0;
   if (!paused && !document.hidden) alpha = stepper.advance(delta, dt => scene.update(dt, input)).alpha;
   hud.update(scene.snapshot(), scene.presentationSnapshot(), !paused && !document.hidden ? Math.min(delta, 0.1) : 0);
+  const persistence = scene.persistenceInfo();
+  if (persistence.memoryOnly) status.textContent = 'Прогресс временный: хранилище браузера недоступно.';
+  else if (persistence.recoveryNotice) status.textContent = persistence.recoveryNotice;
   scene.render();
   frame = requestAnimationFrame(tick);
 }
@@ -129,6 +132,8 @@ if (import.meta.env.DEV) {
     launch: start => scene.debugLaunch(start),
     finishAnimation: generationId => scene.debugFinishAnimation(generationId),
     undo: () => scene.undo(),
+    persistenceInfo: () => scene.persistenceInfo(),
+    flushPersistence: () => scene.flushPersistence(),
     loadLevel: level => scene.debugLoadLevel(level),
     pointForStack: id => scene.pointForStack(id),
     selectedStackId: () => scene.selectedStackId(),
