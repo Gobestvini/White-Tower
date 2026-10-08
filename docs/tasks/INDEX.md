@@ -16,7 +16,7 @@
 | [TASK-0010 Подключить точный ввод мышью, touch и клавиатурой](TASK-0010-pointer-keyboard-input.md) | done | normal | TASK-0005, TASK-0008 | средняя |
 | [TASK-0011 Воспроизвести сбор и повороты с анимацией](TASK-0011-move-animation.md) | done | normal | TASK-0005, TASK-0008, TASK-0010 | сильная |
 | [TASK-0012 Собрать игровой HUD и экран победы](TASK-0012-reference-hud-victory.md) | done | normal | TASK-0007, TASK-0010, TASK-0011 | средняя |
-| [TASK-0013 Откалибровать и принять визуальный срез](TASK-0013-visual-slice-acceptance.md) | ready | high | TASK-0009, TASK-0011, TASK-0012 | сильная |
+| [TASK-0013 Откалибровать и принять визуальный срез](TASK-0013-visual-slice-acceptance.md) | review | high | TASK-0009, TASK-0011, TASK-0012 | сильная |
 | [TASK-0014 Сохранять устойчивую попытку и прогресс локально](TASK-0014-local-save.md) | ready | normal | TASK-0005, TASK-0007 | сильная |
 | [TASK-0015 Добавить настройки, локализацию и выбор уровня](TASK-0015-settings-level-select-i18n.md) | draft | normal | TASK-0009, TASK-0012, TASK-0014 | средняя |
 | [TASK-0016 Добавить обучение, подсказку и честное сообщение о тупике](TASK-0016-hints-tutorial-deadlock.md) | draft | normal | TASK-0006, TASK-0015 | средняя |

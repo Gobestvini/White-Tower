@@ -12,11 +12,12 @@ main.is-won canvas { pointer-events: none; }
 .hud-icon { position: absolute; left: 10.56%; top: 7.27%; width: 64px; height: 64px; min-width: 44px; min-height: 44px; display: grid; place-items: center; padding: 10px; border-radius: 50%; background: #3C7EA9; box-shadow: 0 2px 4px #1d5d8240; transform: translate(-50%, -50%); }
 .restart-button { left: 89.44%; }
 .hud-icon svg { width: 100%; height: 100%; fill: #fff; stroke: #fff; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.restart-button svg { fill: none; stroke: #fff; }
 .hud-icon .icon-cutout { fill: #3C7EA9; stroke: none; }
 .hud-icon:disabled { opacity: .45; cursor: default; }
 .hud-counter { position: absolute; left: 50%; top: 9.77%; transform: translate(-50%, -50%); min-width: min(156px, 38vw); min-height: 60px; padding: 8px 22px; display: grid; place-items: center; border-radius: 28px; background: #3C7EA9; color: #fff; font-size: clamp(24px, 4.1vw, 32px); font-weight: 800; letter-spacing: .02em; }
-.hud-level { position: absolute; left: 4.86%; top: 12.34%; color: #67899a; font-size: clamp(20px, 4.4vw, 34px); font-weight: 700; }
-.hud-undo { position: absolute; left: 50%; top: 87.73%; transform: translate(-50%, -50%); min-width: min(184px, 55vw); min-height: 64px; padding: 8px 18px; display: flex; align-items: center; justify-content: center; gap: 9px; border-radius: 34px; background: #3C7EA9; color: #fff; font-size: clamp(19px, 3.2vw, 25px); font-weight: 800; letter-spacing: .01em; }
+.hud-level { position: absolute; left: 5.83%; top: 12.34%; color: #67899a; font-size: clamp(20px, 4.4vw, 34px); font-weight: 700; }
+.hud .hud-undo { position: absolute; left: 50%; top: 87.73%; transform: translate(-50%, -50%); min-width: min(184px, 55vw); min-height: 64px; padding: 8px 18px; display: flex; align-items: center; justify-content: center; gap: 9px; border-radius: 34px; background: #3C7EA9; color: #fff; font-size: clamp(19px, 3.2vw, 25px); font-weight: 800; letter-spacing: .01em; }
 .hud-undo svg { width: 42px; height: 42px; fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
 .hud-undo:disabled { opacity: .42; cursor: default; }
 .is-hidden { display: none !important; }
@@ -25,27 +26,28 @@ main.is-won canvas { pointer-events: none; }
 .settings-card { width: min(82%, 430px); padding: 28px; border-radius: 22px; background: #3C7EA9; color: #fff; box-shadow: 0 12px 38px #14385055; text-align: center; }
 .settings-card h2 { margin: 0 0 12px; font-size: 28px; }
 .settings-card p { margin: 0 0 22px; }
-.settings-close { min-height: 48px; padding: 10px 18px; border-radius: 24px; background: #286a91; font-weight: 800; }
+.settings-panel .settings-close { min-height: 48px; padding: 10px 18px; border-radius: 24px; background: #286a91; font-weight: 800; }
 .victory-layer { position: absolute; inset: 0; z-index: 3; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 180ms ease; }
 .victory-layer.is-visible { visibility: visible; opacity: 1; pointer-events: none; }
-.victory-shade { position: absolute; inset: 0; pointer-events: none; background: #103b5780; }
-.victory-ribbon { position: absolute; top: 26%; left: -5%; width: 110%; min-height: 29%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transform: rotate(-4deg); pointer-events: none; background: #52E000; color: #fff; text-shadow: 0 2px 2px #33990066; box-shadow: 0 7px 0 #38C600; font-size: clamp(32px, 7vw, 52px); line-height: 1.03; font-weight: 900; text-align: center; }
-.victory-ribbon::before, .victory-ribbon::after { content: ""; position: absolute; top: 0; bottom: 0; width: 12%; background: repeating-linear-gradient(135deg, #fff 0 12px, transparent 12px 32px); }
+.victory-shade { position: absolute; inset: 0; pointer-events: none; background: #103b5740; }
+.victory-ribbon { position: absolute; top: 14%; left: -5%; width: 110%; min-height: 24.3%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transform: rotate(-4deg); pointer-events: none; background: #52E000; color: #fff; text-shadow: 0 2px 2px #33990066; box-shadow: 0 7px 0 #38C600; font-size: clamp(32px, 7.6vw, 56px); line-height: 1.03; font-weight: 900; text-align: center; }
+.victory-ribbon::before { content: ""; position: absolute; top: 0; bottom: 0; width: 12%; background: repeating-linear-gradient(135deg, #fff 0 12px, transparent 12px 32px); }
 .victory-ribbon::before { left: 0; }
-.victory-ribbon::after { right: 0; }
-.next-button { position: absolute; left: 50%; bottom: 7.5%; transform: translateX(-50%); width: min(280px, 64vw); min-height: 108px; padding: 14px 22px; display: flex; align-items: center; justify-content: center; gap: 14px; border-radius: 10px; background: linear-gradient(#59EB05 0 82%, #38C600 82%); color: #fff; box-shadow: 0 9px 0 #236db040; font-size: clamp(30px, 6vw, 44px); font-weight: 900; text-shadow: 0 2px 2px #27970066; }
+.hud .next-button { position: absolute; left: 50%; bottom: 7.5%; transform: translateX(-50%) skewX(-2deg); width: min(280px, 64vw); min-height: 108px; padding: 14px 22px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: linear-gradient(#59EB05 0 82%, #38C600 82%); color: #fff; box-shadow: 0 9px 0 #236db040; font-size: clamp(38px, 7.8vw, 56px); font-weight: 900; text-shadow: 0 2px 2px #27970066; }
 .next-button:disabled { opacity: .75; cursor: wait; }
 .next-button[hidden], .victory-undo[hidden] { display: none; }
 .next-button svg { width: 32px; height: 32px; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .victory-undo { position: absolute; z-index: 10; left: 9%; bottom: 8%; min-width: 90px; min-height: 48px; padding: 8px 12px; border-radius: 24px; background: #3C7EA9; color: #fff; font-weight: 800; }
 .victory-undo, .next-button { z-index: 10; pointer-events: auto !important; }
+.hud .settings-button, .hud .restart-button { z-index: 4; }
+main.is-won .hud .restart-button { opacity: .45; }
 .victory-undo:disabled { opacity: .4; }
 .campaign-end { position: absolute; left: 50%; bottom: 2%; transform: translateX(-50%); margin: 0; color: #fff; font-weight: 700; text-shadow: 0 1px 3px #123; text-align: center; }
 @media (max-height: 650px) and (orientation: landscape) {
   main { width: min(100vw, 56.25vh); height: min(100vh, 177.7778vw); }
   .hud-icon { width: 56px; height: 56px; }
   .hud-undo { top: 91%; }
-  .victory-ribbon { top: 17%; min-height: 35%; }
+  .victory-ribbon { top: 9%; min-height: 34%; }
   .next-button { min-height: 78px; bottom: 4%; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }

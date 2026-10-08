@@ -145,9 +145,10 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     const occupied = new Set(view.stacks.map(stack => key(stack.u, stack.v)));
     for (const cell of [...view.level.cells].sort((a, b) => a.u + a.v - b.u - b.v)) {
       if (cell.kind === 'blocked') continue;
+      if (occupied.has(key(cell.u, cell.v))) continue;
       const point = worldToScreen(cell.u, cell.v, 0, activeProjection);
       drawDiamond(point.x, point.y, 80, WHITE_TOWER_COLORS.floor, WHITE_TOWER_COLORS.floorSeam);
-      if (!occupied.has(key(cell.u, cell.v)) && cell.kind === 'redirect' && cell.direction) drawChevron(point.x, point.y, cell.direction);
+      if (cell.kind === 'redirect' && cell.direction) drawChevron(point.x, point.y, cell.direction);
     }
     for (const stack of [...view.stacks].sort((a, b) => a.u + a.v - b.u - b.v)) drawStack(stack, activeProjection);
   }

@@ -13,7 +13,7 @@ export function createVictoryOverlay(root: HTMLElement, actions: { undo(): void;
   nextButton.type = 'button';
   nextButton.className = 'next-button';
   nextButton.setAttribute('aria-label', 'Next level');
-  nextButton.innerHTML = '<span>NEXT</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>';
+  nextButton.innerHTML = '<span>NEXT</span>';
   root.append(nextButton);
   const undoButton = document.createElement('button');
   undoButton.type = 'button';

@@ -130,6 +130,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     let order = 1;
     for (const cell of sortedCells) {
       if (cell.kind === 'blocked') continue;
+      if (occupied.has(pointKey(cell.u, cell.v))) continue;
       const point = pixelPoint(cell.u, cell.v, 0, projection);
       const depth = (cell.u + cell.v + 1000) * 0.00001;
       addMesh(geometry.floor, materials.floor, { x: point.x, y: point.y, z: depth }, order++);
@@ -137,7 +138,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
       outline.position.set(point.x, point.y, depth + 0.001);
       outline.renderOrder = order++;
       viewLayer.add(outline);
-      if (!occupied.has(pointKey(cell.u, cell.v)) && cell.kind === 'redirect' && cell.direction) {
+      if (cell.kind === 'redirect' && cell.direction) {
         addMesh(geometry.chevrons[cell.direction], materials.chevron, { x: point.x, y: point.y, z: depth + 0.002 }, order++);
       }
     }

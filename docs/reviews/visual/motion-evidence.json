@@ -1,0 +1,247 @@
+[
+  {
+    "name": "row",
+    "durationMs": 600,
+    "elapsedAtMiddleMs": 133.33333333333334,
+    "event": "merge",
+    "middle": {
+      "active": true,
+      "elapsedMs": 133.33333333333334,
+      "durationMs": 600,
+      "stacks": [
+        {
+          "id": "stack:0,0",
+          "u": 0.925925925925926,
+          "v": 0,
+          "height": 1.8521857695411414,
+          "launchDirection": "SE",
+          "tilt": 0.09499999999999999,
+          "lift": 0.1104126418371379
+        },
+        {
+          "id": "stack:2,0",
+          "u": 2,
+          "v": 0,
+          "height": 1
+        },
+        {
+          "id": "stack:3,0",
+          "u": 3,
+          "v": 0,
+          "height": 1
+        }
+      ],
+      "event": "merge"
+    },
+    "terminalPhase": "Won",
+    "terminalStacks": [
+      {
+        "id": "stack:0,0",
+        "u": 3,
+        "v": 0,
+        "height": 4
+      }
+    ],
+    "terminalPose": {
+      "active": false,
+      "elapsedMs": 600,
+      "durationMs": 600,
+      "stacks": [
+        {
+          "id": "stack:0,0",
+          "u": 3,
+          "v": 0,
+          "height": 4,
+          "launchDirection": "SE"
+        }
+      ]
+    }
+  },
+  {
+    "name": "ring",
+    "durationMs": 1700,
+    "elapsedAtMiddleMs": 116.66666666666669,
+    "event": "merge",
+    "middle": {
+      "active": true,
+      "elapsedMs": 116.66666666666669,
+      "durationMs": 1700,
+      "stacks": [
+        {
+          "id": "stack:2,2",
+          "u": 1.1803204571759258,
+          "v": 2,
+          "height": 1.656704788936194,
+          "launchDirection": "NW",
+          "tilt": 0.14284956342100572,
+          "lift": 0.15120013099434695
+        },
+        {
+          "id": "stack:0,1",
+          "u": 0,
+          "v": 1,
+          "height": 1
+        },
+        {
+          "id": "stack:1,0",
+          "u": 1,
+          "v": 0,
+          "height": 1
+        },
+        {
+          "id": "stack:2,1",
+          "u": 2,
+          "v": 1,
+          "height": 1
+        }
+      ],
+      "event": "merge"
+    },
+    "terminalPhase": "Won",
+    "terminalStacks": [
+      {
+        "id": "stack:2,2",
+        "u": 2,
+        "v": 2,
+        "height": 5
+      }
+    ],
+    "terminalPose": {
+      "active": false,
+      "elapsedMs": 1700,
+      "durationMs": 1700,
+      "stacks": [
+        {
+          "id": "stack:2,2",
+          "u": 2,
+          "v": 2,
+          "height": 5,
+          "launchDirection": "SW"
+        }
+      ]
+    }
+  },
+  {
+    "name": "tower",
+    "durationMs": 2800,
+    "elapsedAtMiddleMs": 116.66666666666669,
+    "event": "merge",
+    "middle": {
+      "active": true,
+      "elapsedMs": 116.66666666666669,
+      "durationMs": 2800,
+      "stacks": [
+        {
+          "id": "stack:0,0",
+          "u": 0.8196795428240742,
+          "v": 0,
+          "height": 1.656704788936194,
+          "launchDirection": "SE",
+          "tilt": 0.14284956342100572,
+          "lift": 0.15120013099434695
+        },
+        {
+          "id": "stack:2,0",
+          "u": 2,
+          "v": 0,
+          "height": 1,
+          "launchDirection": "NW"
+        },
+        {
+          "id": "stack:3,0",
+          "u": 3,
+          "v": 0,
+          "height": 1
+        },
+        {
+          "id": "stack:3,1",
+          "u": 3,
+          "v": 1,
+          "height": 1
+        },
+        {
+          "id": "stack:2,1",
+          "u": 2,
+          "v": 1,
+          "height": 1,
+          "launchDirection": "SE"
+        },
+        {
+          "id": "stack:1,1",
+          "u": 1,
+          "v": 1,
+          "height": 1
+        },
+        {
+          "id": "stack:0,1",
+          "u": 0,
+          "v": 1,
+          "height": 1,
+          "launchDirection": "NW"
+        },
+        {
+          "id": "stack:0,2",
+          "u": 0,
+          "v": 2,
+          "height": 1
+        },
+        {
+          "id": "stack:1,2",
+          "u": 1,
+          "v": 2,
+          "height": 1
+        },
+        {
+          "id": "stack:2,2",
+          "u": 2,
+          "v": 2,
+          "height": 1,
+          "launchDirection": "SE"
+        },
+        {
+          "id": "stack:3,2",
+          "u": 3,
+          "v": 2,
+          "height": 1
+        },
+        {
+          "id": "stack:3,3",
+          "u": 3,
+          "v": 3,
+          "height": 1,
+          "launchDirection": "NW"
+        },
+        {
+          "id": "stack:2,3",
+          "u": 2,
+          "v": 3,
+          "height": 1
+        }
+      ],
+      "event": "merge"
+    },
+    "terminalPhase": "Won",
+    "terminalStacks": [
+      {
+        "id": "stack:0,0",
+        "u": 2,
+        "v": 3,
+        "height": 14
+      }
+    ],
+    "terminalPose": {
+      "active": false,
+      "elapsedMs": 2800,
+      "durationMs": 2800,
+      "stacks": [
+        {
+          "id": "stack:0,0",
+          "u": 2,
+          "v": 3,
+          "height": 14,
+          "launchDirection": "NW"
+        }
+      ]
+    }
+  }
+]
