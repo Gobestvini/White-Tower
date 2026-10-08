@@ -17,7 +17,7 @@
 
 ## 2. Проверенный контекст
 
-Сверено 2026-10-08, исходная ревизия `71d9f41bfe9dfbea925d325499d369bfb2c13065`. Сейчас `createScene` в `src/scene.js` лишь считает elapsed и заливает Canvas; правил, уровней, WebGL и постоянного прогресса нет. `src/main.js` владеет единственным RAF, resize, pause/reset/visibility и HMR dispose; `createStepper` в `src/loop.js` использует 1/60 с и максимум 8 шагов. `createInput` в `src/input.js` сейчас обрабатывает клавиатуру/blur. `package.json` — JS/Vite 7.1.9, node: test; TypeScript ещё отсутствует.
+Сверено 2026-10-08 после TASK-0001–0003. TypeScript строгий; `src/game/model.ts` содержит readonly `Level`, `GameState`, eight-direction vectors, `validateLevel`, `createInitialState`, `deriveCounter`, `isWon` и `stateKey`. Рендерер и симулятор маршрута ещё не реализованы. Техническая проекция и несовпадение экранного знака с GDD отмечены в [ADR renderer](../decisions/renderer.md); логические векторы из GDD остаются нормативными для чистой симуляции.
 
 Каркас пока не отслеживается Git; исходная ревизия содержит знания и навигацию. Его версия зафиксирована хэшами `docs/tasks/baseline.json`; TASK-0001 должна осознанно сохранить основу. Контракты/файлы из TASK-0003 ожидаются после их выполнения; сейчас они ещё не реализованы. Перед началом прочитай их отчёты и ADR TASK-0002, если он применим. Предлагаемые ниже новые пути не выдаются за существующие.
 

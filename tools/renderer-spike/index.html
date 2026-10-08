@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>White Tower renderer comparison</title>
+  <link rel="icon" href="data:,">
+  <style>
+    body{margin:0;background:#eef2f5;color:#172b3a;font:16px system-ui}
+    .samples{display:flex;align-items:flex-start;gap:16px;padding:16px;max-width:1500px;margin:auto}
+    article{width:min(50%,720px)} h1{font-size:20px}
+    .stage{position:relative;aspect-ratio:9/16;background:#60c0fe;box-shadow:0 2px 18px #1624352b}
+    .stage canvas{position:absolute;inset:0;width:100%;height:100%}.ui{pointer-events:none}
+    .note{color:#536779;font-size:14px}
+    @media(max-width:750px){.samples{display:block}article{width:100%;margin-bottom:20px}}
+  </style>
+  <main class="samples">
+    <article><h1>Three.js WebGL2</h1><p class="note">720×1280 artboard, orthographic camera, reference projection</p><div class="stage"><canvas id="three"></canvas><canvas class="ui" id="three-ui"></canvas></div></article>
+    <article><h1>Специализированный WebGL2</h1><p class="note">Same coordinate transform and color batches, custom shader</p><div class="stage"><canvas id="raw-webgl"></canvas><canvas class="ui" id="raw-ui"></canvas></div></article>
+    <article><h1>Custom Canvas 2D</h1><p class="note">Same coordinates, colours and polygon geometry</p><div class="stage"><canvas id="canvas"></canvas><canvas class="ui" id="canvas-ui"></canvas></div></article>
+  </main>
+  <script type="module" src="./main.js"></script>
+</html>
