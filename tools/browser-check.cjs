@@ -112,6 +112,38 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       assert.equal(fallbackState.mode, '2d');
       assert.deepEqual(fallbackState.afterSwitch, fallbackState.before);
       assert.deepEqual(fallbackUndo, { moveCount: 1, canUndo: true, attemptId: fallbackState.before.attemptId, phase: 'Idle' });
+      if (name === 'desktop') {
+        const routes = [
+          exampleLevels.find(level => level.id === 'D_ring'),
+          await page.evaluate(async () => (await (await fetch('/content/levels/006.json')).json()), null),
+        ];
+        for (const route of routes) {
+          await page.evaluate(level => window.gameDebug.loadLevel(level), route);
+          const launch = await page.evaluate(level => window.gameDebug.launch(level.knownSolution[0]), route);
+          assert.equal(launch.phase, 'Animating', `${route.id} starts its move animation`);
+          await page.waitForTimeout(100);
+          const presentation = await page.evaluate(() => window.gameDebug.presentationSnapshot());
+          assert.equal(presentation.active, true, `${route.id} remains in presentation during movement`);
+          assert.ok(presentation.stacks.some(stack => stack.tilt !== undefined || stack.height % 1 !== 0), `${route.id} exposes a moving pose`);
+          await page.locator('canvas').screenshot({ path: `artifacts/screenshots/animation-${route.id}.png` });
+          await page.waitForFunction(() => window.gameDebug.snapshot().phase !== 'Animating', null, { timeout: 6000 });
+        }
+        await page.evaluate(() => window.gameDebug.setRendererMode('2d'));
+        await page.evaluate(level => window.gameDebug.loadLevel(level), exampleLevels.find(level => level.id === 'A_line'));
+        await page.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+        await page.waitForTimeout(100);
+        assert.equal((await page.evaluate(() => window.gameDebug.presentationSnapshot())).active, true, 'Canvas 2D presents a move in progress');
+        await page.waitForFunction(() => window.gameDebug.snapshot().phase !== 'Animating', null, { timeout: 6000 });
+        await page.evaluate(() => window.gameDebug.setRendererMode('webgl'));
+        await page.evaluate(level => window.gameDebug.loadLevel(level), exampleLevels.find(level => level.id === 'A_line'));
+        await page.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+        await page.getByRole('button', { name: 'Пауза', exact: true }).click();
+        const pausedAnimation = await page.evaluate(() => window.gameDebug.presentationSnapshot().elapsedMs);
+        await page.waitForTimeout(120);
+        assert.equal(await page.evaluate(() => window.gameDebug.presentationSnapshot().elapsedMs), pausedAnimation, 'pause freezes an active move');
+        await page.getByRole('button', { name: 'Продолжить', exact: true }).click();
+        await page.waitForFunction(() => window.gameDebug.snapshot().phase !== 'Animating', null, { timeout: 6000 });
+      }
       const replay = await page.evaluate(async levels => {
         const outcomes = [];
         for (const mode of ['webgl', '2d']) {
@@ -137,7 +169,10 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       await page.keyboard.press('ArrowRight');
       await page.keyboard.press('Enter');
       let keyboardState = await page.evaluate(() => window.gameDebug.snapshot());
-      assert.equal(keyboardState.phase, 'Won', 'keyboard can complete level A');
+      assert.equal(keyboardState.phase, 'Animating', 'keyboard starts the presentation phase');
+      await page.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 5000 });
+      keyboardState = await page.evaluate(() => window.gameDebug.snapshot());
+      assert.equal(keyboardState.phase, 'Won', 'keyboard completes level A after the stop animation');
       assert.equal(keyboardState.committedState.moveCount, 1);
       await page.keyboard.press('Control+z');
       keyboardState = await page.evaluate(() => window.gameDebug.snapshot());

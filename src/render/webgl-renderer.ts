@@ -13,7 +13,7 @@ import { DIRECTIONS, type Direction } from '../game/directions.js';
 import type { Level, Stack } from '../game/model.js';
 import { createBevelGeometry, createChevronGeometry, createDiamondGeometry, createDiamondOutlineGeometry, createArrowGeometry, createShadowGeometry, createSideGeometry } from './geometry.js';
 import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, pickVisibleStack, type Projection } from './projection.js';
-import { WHITE_TOWER_COLORS, type RenderViewState } from './presets.js';
+import { WHITE_TOWER_COLORS, type RenderStack, type RenderViewState } from './presets.js';
 
 export type RenderViewport = Readonly<{ width: number; height: number; pixelRatio: number }>;
 export type RendererResourceCounts = Readonly<{ geometries: number; textures: number; programs: number; children: number }>;
@@ -92,24 +92,30 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     return mesh;
   }
 
-  function addStack(stack: Stack, level: Level, selectedProjection: Projection, baseOrder: number): number {
+  function addStack(stack: RenderStack, level: Level, selectedProjection: Projection, baseOrder: number): number {
     const base = pixelPoint(stack.u, stack.v, 0, selectedProjection);
     const depth = (stack.u + stack.v + 1000) * 0.00001;
     const shadow = addMesh(geometry.shadow, materials.shadow, { x: base.x - 25, y: base.y + 24, z: depth + 0.001 }, baseOrder);
     shadow.scale.set(48 + Math.min(stack.height, 14) * 1.2, 16 + Math.min(stack.height, 14) * 0.6, 1);
 
     let order = baseOrder + 1;
-    for (let layer = 0; layer < stack.height; layer++) {
-      const point = pixelPoint(stack.u, stack.v, layer, selectedProjection);
+    for (let layer = 0; layer < Math.ceil(stack.height); layer++) {
+      const fraction = Math.min(1, stack.height - layer);
+      const point = pixelPoint(stack.u, stack.v, layer + (layer === Math.floor(stack.height) ? (stack.lift ?? 0) : 0), selectedProjection);
+      point.x += (stack.tilt ?? 0) * layer * 42;
+      point.y -= (stack.tilt ?? 0) * layer * 22;
       const layerDepth = depth + 0.01 + layer * 0.00001;
-      addMesh(geometry.tileSide, [materials.sideLight, materials.sideDark], { x: point.x, y: point.y, z: layerDepth }, order++);
-      addMesh(geometry.tileBevel, materials.tileBevel, { x: point.x, y: point.y, z: layerDepth + 0.001 }, order++);
-      addMesh(geometry.tileTop, materials.tileTop, { x: point.x, y: point.y, z: layerDepth + 0.002 }, order++);
+      const popScale = layer === Math.floor(stack.height) && stack.height % 1 > 0 ? Math.max(0.08, fraction) : 1;
+      addMesh(geometry.tileSide, [materials.sideLight, materials.sideDark], { x: point.x, y: point.y, z: layerDepth }, order++, 1, popScale);
+      addMesh(geometry.tileBevel, materials.tileBevel, { x: point.x, y: point.y, z: layerDepth + 0.001 }, order++, 1, popScale);
+      addMesh(geometry.tileTop, materials.tileTop, { x: point.x, y: point.y, z: layerDepth + 0.002 }, order++, 1, popScale);
     }
     const direction = stack.launchDirection;
     if (direction) {
-      const top = pixelPoint(stack.u, stack.v, stack.height - 1, selectedProjection);
-      addMesh(geometry.arrows[direction], materials.arrow, { x: top.x, y: top.y, z: depth + 0.03 + stack.height * 0.00001 }, order++);
+      const top = pixelPoint(stack.u, stack.v, stack.height - 1 + (stack.lift ?? 0), selectedProjection);
+      top.x += (stack.tilt ?? 0) * Math.max(0, stack.height - 1) * 42;
+      top.y -= (stack.tilt ?? 0) * Math.max(0, stack.height - 1) * 22;
+      addMesh(geometry.arrows[direction], materials.arrow, { x: top.x, y: top.y, z: depth + 0.03 + stack.height * 0.00001 }, order++).rotation.z = stack.turnRotation ?? 0;
     }
     return order + Math.max(1, level.cells.length);
   }
@@ -139,7 +145,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     for (const stack of sortedStacks) {
       order = addStack(stack, nextView.level, projection, order + 2);
       if (stack.id === nextView.selectedStackId) {
-        const top = pixelPoint(stack.u, stack.v, stack.height - 1, projection);
+        const top = pixelPoint(stack.u, stack.v, stack.height - 1 + (stack.lift ?? 0), projection);
         const outline = new LineSegments(geometry.selection, materials.selection);
         outline.position.set(top.x, top.y, 0.08 + (stack.u + stack.v) * 0.00001);
         outline.renderOrder = order++;

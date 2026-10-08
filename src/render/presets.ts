@@ -14,15 +14,17 @@ export const WHITE_TOWER_COLORS = Object.freeze({
   shadow: '#3D83D2',
 });
 
+export type RenderStack = Stack & Readonly<{ tilt?: number; lift?: number; turnRotation?: number }>;
+
 export type RenderViewState = Readonly<{
   revision: number;
   level: Level;
-  stacks: readonly Stack[];
+  stacks: readonly RenderStack[];
   selectedStackId?: string;
 }>;
 
-export function createRenderView(level: Level, state: GameState, revision = state.moveCount, selectedStackId?: string): RenderViewState {
-  return Object.freeze({ revision, level, stacks: state.stacks, ...(selectedStackId ? { selectedStackId } : {}) });
+export function createRenderView(level: Level, state: GameState, revision = state.moveCount, selectedStackId?: string, stacks: RenderViewState['stacks'] = state.stacks): RenderViewState {
+  return Object.freeze({ revision, level, stacks, ...(selectedStackId ? { selectedStackId } : {}) });
 }
 
 export function createLevelPreset(level: Level) {

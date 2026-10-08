@@ -4,12 +4,14 @@ import { createGameController } from './game/controller.ts';
 import { createRenderView } from './render/presets.ts';
 import { createRendererFactory } from './render/renderer-factory.ts';
 import { createProjection, worldToScreen } from './render/projection.ts';
+import { createAnimationPlayer } from './presentation/animation.ts';
 
 export function createScene(canvas, rendererMode = 'auto') {
   let activeCanvas = canvas;
   let selection = createRendererFactory(canvas, { mode: rendererMode });
   let renderer = selection.renderer;
   const controller = createGameController();
+  const animation = createAnimationPlayer({ onComplete: generationId => showSnapshot(controller.finishAnimation(generationId)) });
   let catalog;
   let level;
   let elapsed = 0;
@@ -40,6 +42,12 @@ export function createScene(canvas, rendererMode = 'auto') {
     renderer.setView(createRenderView(snapshot.level, state, revision, selectedStackId));
   }
 
+  function showPresentation(stacks, snapshot = controller.snapshot()) {
+    if (!snapshot.level || !snapshot.committedState || disposed) return;
+    revision++;
+    renderer.setView(createRenderView(snapshot.level, snapshot.committedState, revision, selectedStackId, stacks));
+  }
+
   function selectStack(id) {
     if (!selectableStacks().some(stack => stack.id === id)) return false;
     selectedStackId = id;
@@ -53,8 +61,8 @@ export function createScene(canvas, rendererMode = 'auto') {
     selectedStackId = id;
     const started = controller.launch({ u: stack.u, v: stack.v });
     if (started.phase !== 'Animating') return false;
-    showSnapshot(started);
-    showSnapshot(controller.finishAnimation(started.generationId));
+    animation.start({ stacks: started.displayedState.stacks, steps: started.animation.steps, events: started.animation.events, generationId: started.generationId });
+    showPresentation(animation.snapshot().stacks, started);
     return true;
   }
 
@@ -87,6 +95,9 @@ export function createScene(canvas, rendererMode = 'auto') {
 
   async function setLevelById(id) {
     if (!catalog || disposed) throw new Error('Каталог ещё загружается.');
+    animation.reset();
+    const current = controller.snapshot();
+    if (current.phase === 'Animating') showSnapshot(controller.finishAnimation(current.generationId));
     const nextLevel = await loadLevelById(catalog, id);
     if (disposed) return;
     level = nextLevel;
@@ -115,12 +126,16 @@ export function createScene(canvas, rendererMode = 'auto') {
     selectStack,
     launchStack,
     toggleMenu,
-    update(dt) { elapsed += dt; },
+    update(dt) { elapsed += dt; if (controller.snapshot().phase === 'Animating') showPresentation(animation.update(dt).stacks); },
+    pause(value) { animation.pause(value); },
     render() { renderer.render(); },
     resize(viewport) { renderer.resize(viewport); },
     reset() {
       elapsed = 0;
       towerDemo = false;
+      animation.reset();
+      const current = controller.snapshot();
+      if (current.phase === 'Animating') controller.finishAnimation(current.generationId);
       if (level) showSnapshot(controller.restart());
     },
     async setLevelById(id) { return setLevelById(id); },
@@ -129,6 +144,7 @@ export function createScene(canvas, rendererMode = 'auto') {
       if (!result.ok) throw new Error(`Invalid debug level: ${result.errors.map(issue => issue.message).join(' ')}`);
       level = result.value;
       towerDemo = false;
+      animation.reset();
       const snapshot = controller.loadLevel(level);
       showSnapshot(snapshot);
       return snapshot;
@@ -148,6 +164,7 @@ export function createScene(canvas, rendererMode = 'auto') {
       return true;
     },
     snapshot() { return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...controller.snapshot() }; },
+    presentationSnapshot() { return animation.snapshot(); },
     resourceCounts() { return renderer.resourceCounts(); },
     pickStack(point) {
       const snapshot = controller.snapshot();
@@ -155,12 +172,20 @@ export function createScene(canvas, rendererMode = 'auto') {
       const id = renderer.pickStack(point, createRenderView(snapshot.level, snapshot.displayedState, revision, selectedStackId));
       return id && selectableStacks(snapshot).some(stack => stack.id === id) ? id : undefined;
     },
-    debugLaunch(start) { const snapshot = controller.launch(start); showSnapshot(snapshot); return snapshot; },
-    debugFinishAnimation(generationId) { const snapshot = controller.finishAnimation(generationId); showSnapshot(snapshot); return snapshot; },
+    debugLaunch(start) {
+      const snapshot = controller.launch(start);
+      if (snapshot.phase === 'Animating') {
+        animation.start({ stacks: snapshot.displayedState.stacks, steps: snapshot.animation.steps, events: snapshot.animation.events, generationId: snapshot.generationId });
+        showPresentation(animation.snapshot().stacks, snapshot);
+      } else showSnapshot(snapshot);
+      return snapshot;
+    },
+    debugFinishAnimation(generationId) { animation.reset(); const snapshot = controller.finishAnimation(generationId); showSnapshot(snapshot); return snapshot; },
     undo() { const snapshot = controller.undo(); showSnapshot(snapshot); return snapshot; },
     dispose() {
       if (disposed) return;
       disposed = true;
+      animation.dispose();
       controller.dispose();
       renderer.dispose();
     },

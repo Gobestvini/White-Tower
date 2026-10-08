@@ -52,12 +52,13 @@ function resize() {
 }
 function setPaused(value) {
   paused = value;
+  scene.pause(paused || document.hidden);
   clearTiming();
   pauseButton.textContent = paused ? 'Продолжить' : 'Пауза';
   status.textContent = paused ? 'Пауза' : 'Готово';
 }
 function reset() { scene.reset(); clearTiming(); scene.render(); }
-function visibility() { clearTiming(); }
+function visibility() { scene.pause(document.hidden || paused); clearTiming(); }
 function tick(now) {
   if (disposed) return;
   const delta = previous === null ? 0 : (now - previous) / 1000;
@@ -115,6 +116,7 @@ function dispose() {
 if (import.meta.env.DEV) {
   window.gameDebug = {
     snapshot: () => ({ ...scene.snapshot(), paused, keys: [...input.keys] }),
+    presentationSnapshot: () => scene.presentationSnapshot(),
     reset,
     setLevelById: id => scene.setLevelById(id),
     setTowerDemo: height => scene.setTowerDemo(height),

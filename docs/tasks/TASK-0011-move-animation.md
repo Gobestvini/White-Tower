@@ -1,6 +1,6 @@
 # TASK-0011: Воспроизвести сбор и повороты с анимацией
 
-- Статус: ready
+- Статус: done
 - Приоритет: normal
 - Создана: 2026-10-08
 - Обновлена: 2026-10-08
@@ -17,15 +17,13 @@
 
 ## 2. Проверенный контекст
 
-Сверено 2026-10-08, исходная ревизия `71d9f41bfe9dfbea925d325499d369bfb2c13065`. Сейчас `createScene` в `src/scene.js` лишь считает elapsed и заливает Canvas; правил, уровней, WebGL и постоянного прогресса нет. `src/main.js` владеет единственным RAF, resize, pause/reset/visibility и HMR dispose; `createStepper` в `src/loop.js` использует 1/60 с и максимум 8 шагов. `createInput` в `src/input.js` сейчас обрабатывает клавиатуру/blur. `package.json` — JS/Vite 7.1.9, node: test; TypeScript ещё отсутствует.
-
-Каркас пока не отслеживается Git; исходная ревизия содержит знания и навигацию. Его версия зафиксирована хэшами `docs/tasks/baseline.json`; TASK-0001 должна осознанно сохранить основу. Контракты/файлы из TASK-0005, TASK-0008 ожидаются после их выполнения; сейчас они ещё не реализованы. Перед началом прочитай их отчёты и ADR TASK-0002, если он применим. Предлагаемые ниже новые пути не выдаются за существующие.
+Сверено 2026-10-08 после `4804e71`. `createGameController.launch` сразу фиксирует `committedState`, хранит исходный `displayedState`, `steps/events` и generation ID; `finishAnimation(id)` идемпотентно переводит к Won/Idle. `src/scene.js` связывает controller и WebGL/Canvas; `src/main.js` владеет единственным RAF и `createStepper` 1/60 с, максимум 8 шагов. Ввод и отмена при blur/reset/visibility уже реализованы в TASK-0010. Каталог содержит 11 уровней, неизвестные визуальные детали размечены provisional до TASK-0013.
 
 Минимальные входы: `docs/knowledge/white-tower/White_Tower_GDD.md`, `src/main.js`, `src/scene.js`, `src/loop.js`, `src/input.js`, `package.json`, `docs/PROJECT.md`, `docs/tasks/PLAN.md`; затем только файлы своей области. Видео и reference кадры: `docs/knowledge/white-tower/source-video.mp4`, `references/` рядом. Нужные разделы GDD указаны в метаданных; для визуальных задач открыть также соответствующие кадры, не ограничиваться текстом.
 
 ## 3. Область изменений
 
-Допустимые существующие/новые пути: src/presentation/animation.ts, src/presentation/timings.ts (новые), src/scene.js, src/main.js, tests/game-animation.test.js. Новые пути — предложение автора, API уточняются ADR с явным обновлением зависимых задач.
+Допустимые пути: src/presentation/animation.ts, src/presentation/timings.ts, src/scene.js, src/main.js, src/render/presets.ts, src/render/webgl-renderer.ts, src/render/canvas-renderer.ts, tests/game-animation.test.js. Рендереры добавлены в scope, чтобы показать дробную позицию/высоту, перекат и поворот стрелки в обоих режимах. Контракт presentation-позы зафиксирован в `docs/decisions/renderer.md`; он не меняет integer model или игровые правила.
 
 Без физического движка, звука и победного DOM оформления. Сохранять fixed-step, очистку ввода при blur/reset/hidden, единственный RAF и освобождение ресурсов. Не редактировать импортированные оригиналы видео/GDD/кадров; поправки дизайна оформлять отдельным решением с evidence.
 
@@ -65,7 +63,7 @@
 
 Факт: исходная реализация — пустой каркас; GDD 1.0 содержит наблюдения видео и предложенные правила/цели. Решение автора: использовать нормативные разделы 6–7 до сверки TASK-0007/0013, выпускать 120 уровней, предусмотреть 2D и PWA согласно GDD. Музыка, вибрация, сетевой analytics SDK, TV/консоли и внешняя публикация не обязательны.
 
-Статус draft из-за невыполненных зависимостей. Перевести в ready только после их done, проверки отчётов и актуализации контекста. При существенном расхождении кода с контекстом или противоречии видео/правил остановить затронутую работу и записать конкретное требуемое решение. Недоступная обязательная проверка оставляет review/blocked; не ослаблять критерий молча. После изменения renderer/общих правил обновить визуальное evidence и replay контента.
+Зависимости TASK-0005/0008/0010 проверены done. Предположение: наклон представлен небольшим экранным сдвигом слоёв, не полноценной 3D rigid-body симуляцией; это доступно для настройки на TASK-0013. При существенном расхождении кода с контекстом или противоречии видео/правил записать конкретное требуемое решение. Реальные телефоны не проверялись; headless viewport не является физическим устройством.
 
 ## 9. Сообщение для передачи модели
 
@@ -75,10 +73,10 @@
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: Реализован deterministic presentation-only player; каждый шаг следует маршруту симулятора, merge добавляет слои в течение 110 мс контакта, поворот стрелки занимает 100 мс, остановка стабилизируется 120 мс. Скорость и reduced motion меняют только отображение. Единственный RAF обновляет player; hidden/pause замораживают время, а reset/load/dispose сбрасывают временную позу. Renderer contract и зависимые карты обновлены.
+- Изменённые файлы и зачем: `src/presentation/animation.ts`, `timings.ts` — таймлайн и визуальные позы; `src/scene.js`, `src/main.js` — интеграция и lifecycle; `src/render/presets.ts`, `webgl-renderer.ts`, `canvas-renderer.ts` — дробные движения, подъём слоёв, перекат/поворот; `tests/game-animation.test.js`, `tools/browser-check.cjs` — поведение и браузерные сценарии; `docs/PROJECT.md`, `docs/decisions/renderer.md`, `docs/knowledge/README.md`, этот отчёт и INDEX — актуальная архитектура и состояние задачи.
+- Команды и фактические результаты: `pnpm test` — 78/78; `pnpm typecheck` — passed; `pnpm test:browser` при `GAME_BASE_URL=http://127.0.0.1:5175` — passed: A/D, крупная башня level-006, pause/resume во время хода, WebGL/Canvas, desktop/mobile viewport; `pnpm check:full` — passed (тесты и production build).
+- Ручные проверки и evidence: просмотрены browser captures `artifacts/screenshots/animation-D_ring.png`, `animation-level-006.png`; движение и поглощение видимы, в браузере пауза удерживает текущий кадр. Полное выравнивание замедленного ролика и художественная калибровка остаются TASK-0013, как разрешено владельцем для provisional visual decisions.
+- Выполненные критерии: последовательность step/turn/merge/stop; стабильное committedState и один completion при 30/60/120/144 FPS и stall; pause/resume, reduced motion, reset cancellation; A/D/high stack browser replay.
+- Непроверенное, блокеры и отклонения от плана: не проверено на физическом телефоне и не выполнено финальное наложение на референсное видео; это записано как ограничение визуальной приёмки TASK-0013. UI настройки speed/reduced motion будет подключён TASK-0015; API работает с параметрами.
+- Итоговый статус и дата: done, 2026-10-08.

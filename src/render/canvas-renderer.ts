@@ -1,7 +1,7 @@
 import type { Level, Stack } from '../game/model.js';
 import { DIRECTION_VECTORS, type Direction } from '../game/directions.js';
 import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, pickVisibleStack, type Projection } from './projection.js';
-import { WHITE_TOWER_COLORS, type RenderViewState } from './presets.js';
+import { WHITE_TOWER_COLORS, type RenderStack, type RenderViewState } from './presets.js';
 import type { RenderViewport, WhiteTowerRenderer } from './webgl-renderer.js';
 
 const key = (u: number, v: number) => `${u},${v}`;
@@ -33,8 +33,9 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     if (stroke) { context!.strokeStyle = stroke; context!.lineWidth = 1; context!.stroke(); }
   }
 
-  function drawArrow(x: number, y: number, direction: Direction, length = 48, width = 21): void {
-    const forward = screenVector(direction);
+  function drawArrow(x: number, y: number, direction: Direction, length = 48, width = 21, rotation = 0): void {
+    const base = screenVector(direction);
+    const forward = { x: base.x * Math.cos(rotation) - base.y * Math.sin(rotation), y: base.x * Math.sin(rotation) + base.y * Math.cos(rotation) };
     const perpendicular = { x: -forward.y, y: forward.x };
     const tip = { x: forward.x * length / 2, y: forward.y * length / 2 };
     const shoulder = { x: -forward.x * length * 0.08, y: -forward.y * length * 0.08 };
@@ -74,7 +75,7 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     }
   }
 
-  function drawStack(stack: Stack, selectedProjection: Projection): void {
+  function drawStack(stack: RenderStack, selectedProjection: Projection): void {
     const base = worldToScreen(stack.u, stack.v, 0, selectedProjection);
     const gradient = context!.createRadialGradient(base.x - 25, base.y + 24, 1, base.x - 25, base.y + 24, 48);
     gradient.addColorStop(0, 'rgba(61,131,210,0.58)');
@@ -84,21 +85,31 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     context!.ellipse(base.x - 25, base.y + 24, 48, 16, 0, 0, Math.PI * 2);
     context!.fill();
 
-    for (let layer = 0; layer < stack.height; layer++) {
-      const point = worldToScreen(stack.u, stack.v, layer, selectedProjection);
+    for (let layer = 0; layer < Math.ceil(stack.height); layer++) {
+      const projected = worldToScreen(stack.u, stack.v, layer + (layer === Math.floor(stack.height) ? (stack.lift ?? 0) : 0), selectedProjection);
+      const point = { x: projected.x, y: projected.y };
+      point.x += (stack.tilt ?? 0) * layer * 42;
+      point.y -= (stack.tilt ?? 0) * layer * 22;
       const radius = TILE_RADIUS;
       const side = 9;
+      const fraction = layer === Math.floor(stack.height) && stack.height % 1 > 0 ? Math.max(0.08, stack.height % 1) : 1;
+      context!.save(); context!.translate(point.x, point.y); context!.scale(1, fraction); context!.translate(-point.x, -point.y);
       context!.beginPath(); context!.moveTo(point.x + radius, point.y); context!.lineTo(point.x, point.y + radius); context!.lineTo(point.x, point.y + radius + side); context!.lineTo(point.x + radius, point.y + side); context!.closePath(); context!.fillStyle = WHITE_TOWER_COLORS.tileSideDark; context!.fill();
       context!.beginPath(); context!.moveTo(point.x, point.y + radius); context!.lineTo(point.x - radius, point.y); context!.lineTo(point.x - radius, point.y + side); context!.lineTo(point.x, point.y + radius + side); context!.closePath(); context!.fillStyle = WHITE_TOWER_COLORS.tileSideLight; context!.fill();
       drawDiamond(point.x, point.y, radius, WHITE_TOWER_COLORS.tileBevel);
       drawDiamond(point.x, point.y, radius - 4, WHITE_TOWER_COLORS.tileTop);
+      context!.restore();
     }
     if (stack.launchDirection) {
-      const point = worldToScreen(stack.u, stack.v, stack.height - 1, selectedProjection);
-      drawArrow(point.x, point.y, stack.launchDirection);
+      const projected = worldToScreen(stack.u, stack.v, stack.height - 1 + (stack.lift ?? 0), selectedProjection);
+      const point = { x: projected.x, y: projected.y };
+      point.x += (stack.tilt ?? 0) * Math.max(0, stack.height - 1) * 42;
+      point.y -= (stack.tilt ?? 0) * Math.max(0, stack.height - 1) * 22;
+      drawArrow(point.x, point.y, stack.launchDirection, 48, 21, stack.turnRotation ?? 0);
     }
     if (view?.selectedStackId === stack.id) {
-      const point = worldToScreen(stack.u, stack.v, stack.height - 1, selectedProjection);
+      const projected = worldToScreen(stack.u, stack.v, stack.height - 1 + (stack.lift ?? 0), selectedProjection);
+      const point = { x: projected.x, y: projected.y };
       context!.beginPath(); context!.moveTo(point.x, point.y - TILE_RADIUS - 7); context!.lineTo(point.x + TILE_RADIUS + 7, point.y); context!.lineTo(point.x, point.y + TILE_RADIUS + 7); context!.lineTo(point.x - TILE_RADIUS - 7, point.y); context!.closePath();
       context!.strokeStyle = '#3C7EA9'; context!.lineWidth = 3; context!.stroke();
     }

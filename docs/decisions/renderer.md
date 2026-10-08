@@ -32,7 +32,7 @@ interface Renderer {
 }
 ```
 
-The simulation owns integer board coordinates, heights, directions, move count, and stable state. It emits a new immutable `ViewState` revision after a committed logical action. The renderer owns GPU/Canvas resources, projection, visual interpolation, hit testing, and selected-stack presentation; it may read snapshots but cannot modify them. World coordinates are tile units, height is layer count, direction is a quarter-turn enum. Pixel coordinates are CSS pixels; drawing-buffer scaling uses bounded DPR. `resize` changes backing storage/camera without changing game state. `pickStack` returns stable ID only; controller validates whether the action is legal.
+The simulation owns integer board coordinates, heights, directions, move count, and stable state. It emits a new immutable `ViewState` revision after a committed logical action. The animation player owns the transient presentation timeline; each renderer may receive fractional position/height plus tilt, lift and arrow-turn offsets for display, while the controller's `displayedState` and `committedState` remain immutable. WebGL and Canvas consume the same presentation pose. World coordinates are tile units, stable height is layer count, direction is an eight-way enum. Pixel coordinates are CSS pixels; drawing-buffer scaling uses bounded DPR. `resize` changes backing storage/camera without changing game state. `pickStack` returns stable ID only; controller validates whether the action is legal.
 
 Module boundaries:
 
@@ -40,7 +40,7 @@ Module boundaries:
 - `simulateMove(state, stackId): MoveResult` is pure and deterministic; it returns either a new state, trace, and outcome or a typed rejection. It has no DOM or renderer dependency.
 - `createGameController({ level, onSnapshot })` owns committed state, pending input, Undo history, Restart, and generation ID. Animation completion cannot commit game rules a second time.
 - `solve(level, options, signal)` runs in a Worker and reports bounded progress/result tagged with generation ID; stale results are ignored.
-- `createAnimationPlayer(renderer)` owns only transient poses and cancellation tokens, never stable state.
+- `createAnimationPlayer({ onComplete })` owns only transient poses and cancellation tokens, never stable state. The single main RAF advances it; hidden/pause freezes elapsed time, and completion is guarded by controller generation ID.
 - `createStore(storage)` persists versioned completed progress/settings, with migrations isolated from active-attempt snapshots.
 - `createAudio()` owns lazily-created audio context and effect voices; disposal releases all resources.
 
