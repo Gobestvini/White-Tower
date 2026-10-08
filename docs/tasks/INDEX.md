@@ -1,15 +1,15 @@
 # Очередь White Tower
 
-Подготовлено 34 задания для полной реализации GDD. [План, этапы и покрытие GDD](PLAN.md). TASK-0001–0003 завершены; далее выполняются задачи по зависимостям. Статус в файле задачи — источник истины.
+Подготовлено 34 задания для полной реализации GDD. [План, этапы и покрытие GDD](PLAN.md). TASK-0001–0005 завершены; TASK-0006 доступна по зависимостям, последующие ожидают предпосылок. Статус в файле задачи — источник истины.
 
 | Задача | Статус | Приоритет | Зависимости | Исполнитель |
 | --- | --- | --- | --- | --- |
 | [TASK-0001 Подготовить воспроизводимую основу White Tower](TASK-0001-project-foundation.md) | done | high | нет | средняя |
 | [TASK-0002 Выбрать рендер и зафиксировать контракты подсистем](TASK-0002-renderer-decision.md) | done | high | TASK-0001 | сильная |
 | [TASK-0003 Реализовать модель уровня и проверку JSON](TASK-0003-level-model.md) | done | normal | TASK-0001 | средняя |
-| [TASK-0004 Реализовать расчёт полного хода и защиту от циклов](TASK-0004-move-simulator.md) | ready | high | TASK-0003 | сильная |
-| [TASK-0005 Связать игровые состояния с Undo и Restart](TASK-0005-game-controller-undo.md) | draft | normal | TASK-0004 | средняя |
-| [TASK-0006 Реализовать решатель в Worker с ограниченным бюджетом](TASK-0006-solver-worker.md) | draft | normal | TASK-0004 | сильная |
+| [TASK-0004 Реализовать расчёт полного хода и защиту от циклов](TASK-0004-move-simulator.md) | done | high | TASK-0003 | сильная |
+| [TASK-0005 Связать игровые состояния с Undo и Restart](TASK-0005-game-controller-undo.md) | done | normal | TASK-0004 | средняя |
+| [TASK-0006 Реализовать решатель в Worker с ограниченным бюджетом](TASK-0006-solver-worker.md) | ready | normal | TASK-0004 | сильная |
 | [TASK-0007 Восстановить одиннадцать уровней из видео](TASK-0007-reference-levels.md) | draft | normal | TASK-0002, TASK-0004, TASK-0006 | сильная |
 | [TASK-0008 Отрисовать эталонное поле в WebGL](TASK-0008-webgl-scene.md) | draft | normal | TASK-0002, TASK-0003, TASK-0007 | сильная |
 | [TASK-0009 Добавить совместимый Canvas 2D renderer](TASK-0009-canvas-fallback.md) | draft | normal | TASK-0002, TASK-0005, TASK-0008 | средняя |
