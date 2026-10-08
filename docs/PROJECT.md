@@ -3,6 +3,7 @@
 | Путь | Назначение |
 | --- | --- |
 | src/main.js | Canvas, RAF, resize, visibility, пауза/reset, HMR dispose |
+| src/ui/hud.ts, victory.ts | DOM HUD, Settings placeholder, счётчик, Undo/Restart, отложенная победа и Next поверх canvas |
 | src/loop.js / createStepper | Шаг 1/60 с, максимум 8 шагов кадра, dropped time, alpha |
 | src/input.js / createInput | Удерживаемые event.code клавиши, blur/reset/dispose |
 | src/input/pointer.ts, game-actions.ts | Pointer цель и CSS-порог; keyboard selection и controller intents |
@@ -24,6 +25,7 @@
 | docs/knowledge/README.md | Выбор справочника по теме и правила сохранения знаний |
 | docs/knowledge/white-tower/README.md | Материалы White Tower из исходного диалога: видео, полный GDD, 12 кадров и примеры уровней |
 | docs/knowledge/white-tower/import-manifest.json | Происхождение, размеры и SHA-256 перенесённых материалов |
+| docs/ASSETS.md | Происхождение, права, версия и назначение UI-графики и системного шрифта |
 | docs/tasks/INDEX.md, docs/tasks/PLAN.md | Очередь из 34 заданий на полную реализацию White Tower, этапы и покрытие GDD |
 | docs/tasks/baseline.json | Ревизия и хэши локальных входов, проверенных при подготовке очереди |
 | docs/knowledge/game-architecture.md | Контракты и владельцы при расширении каркаса |

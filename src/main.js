@@ -4,9 +4,9 @@ import { createInput } from './input.js';
 import { createPointerInput } from './input/pointer.ts';
 import { createGameActions } from './input/game-actions.ts';
 import { createScene } from './scene.js';
+import { createHud } from './ui/hud.ts';
 
 let canvas = document.querySelector('canvas');
-const pauseButton = document.querySelector('#pause');
 const status = document.querySelector('#status');
 const input = createInput();
 let scene;
@@ -35,6 +35,13 @@ function installPointerInput() {
   });
 }
 installPointerInput();
+const hud = createHud({
+  root: document.querySelector('#hud'),
+  onReset: reset,
+  onUndo: () => scene.undo(),
+  onNext: () => scene.nextLevel(),
+  onMenu: () => scene.toggleMenu(),
+});
 const gameActions = createGameActions({
   canvas: () => scene.canvas,
   scene,
@@ -54,7 +61,6 @@ function setPaused(value) {
   paused = value;
   scene.pause(paused || document.hidden);
   clearTiming();
-  pauseButton.textContent = paused ? 'Продолжить' : 'Пауза';
   status.textContent = paused ? 'Пауза' : 'Готово';
 }
 function reset() { scene.reset(); clearTiming(); scene.render(); }
@@ -65,12 +71,10 @@ function tick(now) {
   previous = now;
   let alpha = 0;
   if (!paused && !document.hidden) alpha = stepper.advance(delta, dt => scene.update(dt, input)).alpha;
+  hud.update(scene.snapshot(), scene.presentationSnapshot(), !paused && !document.hidden ? Math.min(delta, 0.1) : 0);
   scene.render();
   frame = requestAnimationFrame(tick);
 }
-const toggle = () => setPaused(!paused);
-pauseButton.addEventListener('click', toggle);
-document.querySelector('#reset').addEventListener('click', reset);
 document.addEventListener('visibilitychange', visibility);
 window.addEventListener('resize', resize);
 resize();
@@ -106,17 +110,16 @@ scene.ready.then(async () => {
 function dispose() {
   disposed = true;
   cancelAnimationFrame(frame);
-  input.dispose(); pointerInput?.dispose(); gameActions.dispose(); scene.dispose();
+  input.dispose(); pointerInput?.dispose(); gameActions.dispose(); hud.dispose(); scene.dispose();
   window.removeEventListener('resize', resize);
   document.removeEventListener('visibilitychange', visibility);
-  pauseButton.removeEventListener('click', toggle);
-  document.querySelector('#reset').removeEventListener('click', reset);
   if (import.meta.env.DEV) delete window.gameDebug;
 }
 if (import.meta.env.DEV) {
   window.gameDebug = {
     snapshot: () => ({ ...scene.snapshot(), paused, keys: [...input.keys] }),
     presentationSnapshot: () => scene.presentationSnapshot(),
+    setPaused: value => setPaused(!!value),
     reset,
     setLevelById: id => scene.setLevelById(id),
     setTowerDemo: height => scene.setTowerDemo(height),

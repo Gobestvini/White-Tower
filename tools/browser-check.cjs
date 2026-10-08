@@ -16,12 +16,23 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       ['mobile', { width: 390, height: 844 }, true],
     ]) {
       const page = await browser.newPage({ viewport, hasTouch: touch, isMobile: touch, deviceScaleFactor: touch ? 2 : 1 });
+      page.setDefaultTimeout(7000);
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
       page.on('response', response => { if (response.status() >= 400 && response.url().startsWith(baseUrl)) errors.push(`HTTP ${response.status()}`); });
       await page.goto(baseUrl);
       await page.waitForFunction(() => window.gameDebug?.snapshot().loaded && window.gameDebug.snapshot().elapsed > 0);
+      assert.equal(await page.locator('.hud-counter').textContent(), '0/4');
+      assert.equal(await page.locator('.hud-level').textContent(), 'Lv.1');
+      assert.equal(await page.getByRole('button', { name: 'Undo last move' }).isDisabled(), true);
+      for (const label of ['Settings', 'Restart level', 'Undo last move']) {
+        const box = await page.getByRole('button', { name: label }).boundingBox();
+        assert.ok(box.width >= 44 && box.height >= 44, `${label} hit area is at least 44 CSS px`);
+      }
+      await page.getByRole('button', { name: 'Settings' }).click();
+      await page.getByRole('dialog', { name: 'Settings' }).waitFor();
+      await page.getByRole('button', { name: 'BACK TO GAME' }).click();
       if (touch) {
         await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
         const mobileTap = await page.evaluate(() => {
@@ -34,7 +45,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
         assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 1, 'touch on the active top face launches once at DPR 2');
         await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
       }
-      await page.getByRole('button', { name: 'Пауза', exact: true }).click();
+      await page.evaluate(() => window.gameDebug.setPaused(true));
       const before = await page.evaluate(() => window.gameDebug.snapshot().elapsed);
       await page.waitForTimeout(150);
       assert.equal(await page.evaluate(() => window.gameDebug.snapshot().elapsed), before);
@@ -43,9 +54,9 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       await page.evaluate(() => window.dispatchEvent(new Event('blur')));
       assert.deepEqual(await page.evaluate(() => window.gameDebug.snapshot().keys), []);
       await page.keyboard.up('KeyW');
-      await page.getByRole('button', { name: 'Сброс', exact: true }).click();
+      await page.getByRole('button', { name: 'Restart level' }).click();
       assert.equal(await page.evaluate(() => window.gameDebug.snapshot().elapsed), 0);
-      await page.getByRole('button', { name: 'Продолжить', exact: true }).click();
+      await page.evaluate(() => window.gameDebug.setPaused(false));
       await page.waitForFunction(() => window.gameDebug.snapshot().elapsed > 0);
       await page.evaluate(async () => {
         const ids = Array.from({ length: 11 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
@@ -69,11 +80,10 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       assert.equal(repeatedCounts.children, warmCounts.children, 'scene object count should return to baseline after reset');
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       await page.screenshot({ path: `artifacts/screenshots/${name}.png` });
+      if (!touch) await page.setViewportSize({ width: 720, height: 1280 });
       await page.evaluate(() => {
-        const canvas = document.querySelector('canvas');
-        canvas.style.width = '720px';
-        canvas.style.height = '1280px';
         document.querySelector('main').style.width = '720px';
+        document.querySelector('main').style.height = '1280px';
         document.querySelector('main').style.margin = '0';
         window.dispatchEvent(new Event('resize'));
       });
@@ -81,6 +91,10 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       for (const [id, file] of [['level-001', 'r01'], ['level-006', 'r06'], ['level-007', 'r08']]) {
         await page.evaluate(async value => { await window.gameDebug.setLevelById(value); await new Promise(requestAnimationFrame); }, id);
         await page.locator('canvas').screenshot({ path: `artifacts/screenshots/${file}-${name}.png` });
+      }
+      if (!touch) {
+        await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
+        await page.screenshot({ path: 'artifacts/screenshots/r01-hud.png' });
       }
       await page.evaluate(async () => { await window.gameDebug.setLevelById('level-006'); window.gameDebug.setTowerDemo(14); await new Promise(requestAnimationFrame); });
       await page.locator('canvas').screenshot({ path: `artifacts/screenshots/r07-${name}.png` });
@@ -137,11 +151,11 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
         await page.evaluate(() => window.gameDebug.setRendererMode('webgl'));
         await page.evaluate(level => window.gameDebug.loadLevel(level), exampleLevels.find(level => level.id === 'A_line'));
         await page.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
-        await page.getByRole('button', { name: 'Пауза', exact: true }).click();
+        await page.evaluate(() => window.gameDebug.setPaused(true));
         const pausedAnimation = await page.evaluate(() => window.gameDebug.presentationSnapshot().elapsedMs);
         await page.waitForTimeout(120);
         assert.equal(await page.evaluate(() => window.gameDebug.presentationSnapshot().elapsedMs), pausedAnimation, 'pause freezes an active move');
-        await page.getByRole('button', { name: 'Продолжить', exact: true }).click();
+        await page.evaluate(() => window.gameDebug.setPaused(false));
         await page.waitForFunction(() => window.gameDebug.snapshot().phase !== 'Animating', null, { timeout: 6000 });
       }
       const replay = await page.evaluate(async levels => {
@@ -170,21 +184,58 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       await page.keyboard.press('Enter');
       let keyboardState = await page.evaluate(() => window.gameDebug.snapshot());
       assert.equal(keyboardState.phase, 'Animating', 'keyboard starts the presentation phase');
+      assert.equal(await page.getByRole('button', { name: 'Undo last move' }).isDisabled(), true, 'Undo is unavailable while a route is moving');
+      for (const count of ['2/4', '3/4', '4/4']) await page.waitForFunction(value => document.querySelector('.hud-counter').textContent === value, count, { timeout: 5000 });
       await page.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 5000 });
       keyboardState = await page.evaluate(() => window.gameDebug.snapshot());
       assert.equal(keyboardState.phase, 'Won', 'keyboard completes level A after the stop animation');
       assert.equal(keyboardState.committedState.moveCount, 1);
+      assert.equal(await page.locator('.victory-layer').evaluate(element => element.classList.contains('is-visible')), false, 'victory waits for its 250–350 ms reveal delay');
+      await page.locator('.victory-layer.is-visible').waitFor({ timeout: 1500 });
+      await page.waitForTimeout(220);
+      if (!touch) await page.screenshot({ path: 'artifacts/screenshots/r12-hud.png' });
+      assert.equal(await page.getByText('LEVEL', { exact: true }).count(), 1);
+      assert.equal(await page.getByText('COMPLETED!', { exact: true }).count(), 1);
+      const victoryUndo = page.getByRole('button', { name: 'Undo last move' }).last();
+      await victoryUndo.evaluate(button => button.click());
+      assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Idle', 'Undo after victory restores an interactive field');
+      await page.waitForFunction(() => !document.querySelector('.victory-layer').classList.contains('is-visible'));
+      assert.equal(await page.locator('.victory-layer').evaluate(element => element.classList.contains('is-visible')), false);
+      await page.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+      await page.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 5000 });
+      await page.locator('.victory-layer.is-visible').waitFor({ timeout: 1500 });
+      await page.evaluate(() => {
+        const next = document.querySelector('.next-button');
+        next.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        next.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+      await page.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-002', null, { timeout: 5000 });
+      await page.waitForFunction(() => document.querySelector('.hud-level').textContent === 'Lv.2' && !document.querySelector('main').classList.contains('is-won'));
+      const nextState = await page.evaluate(() => window.gameDebug.snapshot());
+      assert.equal(nextState.committedState.moveCount, 0, 'double NEXT advances exactly one level');
+      assert.equal(nextState.phase, 'Idle', 'NEXT starts the new level in a stable phase');
+      const startedSecondLevel = await page.evaluate(() => {
+        const started = window.gameDebug.launch({ u: 2, v: 0 });
+        return window.gameDebug.finishAnimation(started.generationId);
+      });
+      assert.equal(startedSecondLevel.committedState.moveCount, 1, 'the next level accepts a move before Restart');
+      await page.getByRole('button', { name: 'Restart level' }).evaluate(button => button.click());
+      const restartedSecondLevel = await page.evaluate(() => window.gameDebug.snapshot());
+      assert.equal(restartedSecondLevel.phase, 'Idle', 'Restart returns to a playable phase');
+      assert.equal(restartedSecondLevel.committedState.moveCount, 0, 'Restart clears the current level attempt');
+      assert.equal(restartedSecondLevel.canUndo, false, 'Restart clears the attempt undo history');
       await page.keyboard.press('Control+z');
       keyboardState = await page.evaluate(() => window.gameDebug.snapshot());
       assert.equal(keyboardState.phase, 'Idle');
       assert.equal(keyboardState.committedState.moveCount, 0);
+      await page.locator('canvas').focus();
       await page.keyboard.press('Escape');
       assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Menu');
       await page.keyboard.press('Escape');
       assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Idle');
       await page.keyboard.press('r');
       const beforeOutsideShortcut = await page.evaluate(() => window.gameDebug.snapshot().attemptId);
-      await page.locator('#pause').focus();
+      await page.getByRole('button', { name: 'Settings' }).focus();
       await page.keyboard.press('r');
       assert.equal(await page.evaluate(() => window.gameDebug.snapshot().attemptId), beforeOutsideShortcut, 'R outside the game must not restart');
 

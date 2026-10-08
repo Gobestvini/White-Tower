@@ -19,6 +19,7 @@ export function createScene(canvas, rendererMode = 'auto') {
   let disposed = false;
   let towerDemo = false;
   let selectedStackId;
+  let nextPending = false;
 
   function selectableStacks(snapshot = controller.snapshot()) {
     if (snapshot.phase !== 'Idle' || !snapshot.level || !snapshot.displayedState) return [];
@@ -105,6 +106,21 @@ export function createScene(canvas, rendererMode = 'auto') {
     showSnapshot(controller.loadLevel(level));
   }
 
+  async function nextLevel() {
+    const snapshot = controller.snapshot();
+    if (disposed || snapshot.phase !== 'Won' || nextPending) return { advanced: false, message: 'Next level is not ready.' };
+    const currentIndex = catalog?.levels.findIndex(entry => entry.id === snapshot.level?.id) ?? -1;
+    const next = catalog?.levels[currentIndex + 1];
+    if (!next) return { advanced: false, message: 'More levels are coming soon.' };
+    nextPending = true;
+    try {
+      await setLevelById(next.id);
+      return { advanced: true };
+    } catch {
+      return { advanced: false, message: 'Could not load the next level. Try again.' };
+    } finally { nextPending = false; }
+  }
+
   const ready = loadCatalog()
     .then(async loadedCatalog => {
       if (disposed) return;
@@ -139,6 +155,7 @@ export function createScene(canvas, rendererMode = 'auto') {
       if (level) showSnapshot(controller.restart());
     },
     async setLevelById(id) { return setLevelById(id); },
+    async nextLevel() { return nextLevel(); },
     debugLoadLevel(raw) {
       const result = validateLevel(raw);
       if (!result.ok) throw new Error(`Invalid debug level: ${result.errors.map(issue => issue.message).join(' ')}`);
@@ -163,7 +180,11 @@ export function createScene(canvas, rendererMode = 'auto') {
       }
       return true;
     },
-    snapshot() { return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...controller.snapshot() }; },
+    snapshot() {
+      const snapshot = controller.snapshot();
+      const levelIndex = catalog?.levels.findIndex(entry => entry.id === snapshot.level?.id) ?? -1;
+      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0 };
+    },
     presentationSnapshot() { return animation.snapshot(); },
     resourceCounts() { return renderer.resourceCounts(); },
     pickStack(point) {

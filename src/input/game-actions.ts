@@ -37,9 +37,10 @@ export function createGameActions(options: Readonly<{
   function down(event: KeyboardEvent): void {
     const canvas = options.canvas();
     if (options.enabled && !options.enabled()) return;
-    const intent = gameIntentForKey(event, document.activeElement === canvas, isEditable(event.target));
-    if (!intent || (event.repeat && intent !== 'next' && intent !== 'previous')) return;
     const snapshot = options.scene.snapshot();
+    const escapeFromMenu = event.key === 'Escape' && snapshot.phase === 'Menu';
+    const intent = gameIntentForKey(event, document.activeElement === canvas || escapeFromMenu, isEditable(event.target));
+    if (!intent || (event.repeat && intent !== 'next' && intent !== 'previous')) return;
     if (intent === 'next' || intent === 'previous') {
       const stacks = options.scene.selectableStacks();
       if (!stacks.length) return;

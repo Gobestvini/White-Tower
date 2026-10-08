@@ -1,6 +1,6 @@
 # TASK-0012: Собрать игровой HUD и экран победы
 
-- Статус: draft
+- Статус: done
 - Приоритет: normal
 - Создана: 2026-10-08
 - Обновлена: 2026-10-08
@@ -17,15 +17,13 @@
 
 ## 2. Проверенный контекст
 
-Сверено 2026-10-08, исходная ревизия `71d9f41bfe9dfbea925d325499d369bfb2c13065`. Сейчас `createScene` в `src/scene.js` лишь считает elapsed и заливает Canvas; правил, уровней, WebGL и постоянного прогресса нет. `src/main.js` владеет единственным RAF, resize, pause/reset/visibility и HMR dispose; `createStepper` в `src/loop.js` использует 1/60 с и максимум 8 шагов. `createInput` в `src/input.js` сейчас обрабатывает клавиатуру/blur. `package.json` — JS/Vite 7.1.9, node: test; TypeScript ещё отсутствует.
-
-Каркас пока не отслеживается Git; исходная ревизия содержит знания и навигацию. Его версия зафиксирована хэшами `docs/tasks/baseline.json`; TASK-0001 должна осознанно сохранить основу. Контракты/файлы из TASK-0007, TASK-0010, TASK-0011 ожидаются после их выполнения; сейчас они ещё не реализованы. Перед началом прочитай их отчёты и ADR TASK-0002, если он применим. Предлагаемые ниже новые пути не выдаются за существующие.
+Сверено 2026-10-08 после `6bfff63` и повторно перед реализацией. Загружен каталог из 11 уровней; scene предоставляет `levelId`, `phase`, `canUndo`, состояния controller и `generationId`; animation player — текущие visual stack poses и завершение после остановки. Main владеет единственным RAF, pause/reset. HUD теперь читает snapshot и presentation snapshot, не создавая своё состояние игры. TASK-0007/0010/0011 подтверждены done. TASK-0014 владеет persistence; отдельное хранилище побед не добавлялось.
 
 Минимальные входы: `docs/knowledge/white-tower/White_Tower_GDD.md`, `src/main.js`, `src/scene.js`, `src/loop.js`, `src/input.js`, `package.json`, `docs/PROJECT.md`, `docs/tasks/PLAN.md`; затем только файлы своей области. Видео и reference кадры: `docs/knowledge/white-tower/source-video.mp4`, `references/` рядом. Нужные разделы GDD указаны в метаданных; для визуальных задач открыть также соответствующие кадры, не ограничиваться текстом.
 
 ## 3. Область изменений
 
-Допустимые существующие/новые пути: index.html, src/style.css, src/ui/hud.ts, src/ui/victory.ts (новые), src/main.js, src/scene.js, tools/browser-check.cjs, assets/ui/, public/fonts/ при необходимости, docs/ASSETS.md. Новые пути — предложение автора, API уточняются ADR с явным обновлением зависимых задач.
+Допустимые пути: index.html, src/style.css, src/ui/hud.ts, src/ui/victory.ts, src/main.js, src/scene.js, src/input/game-actions.ts, tools/browser-check.cjs, assets/ui/, public/fonts/ при необходимости, docs/ASSETS.md. `game-actions.ts` included so Escape remains able to close the focused Settings dialog. HUD additions stay in DOM and use controller snapshots; no separate game-state store.
 
 Без выбора уровня, сохранений и полного меню; окончательное pixel сравнение — TASK-0013. Сохранять fixed-step, очистку ввода при blur/reset/hidden, единственный RAF и освобождение ресурсов. Не редактировать импортированные оригиналы видео/GDD/кадров; поправки дизайна оформлять отдельным решением с evidence.
 
@@ -47,16 +45,16 @@
 
 ## 6. Критерии готовности
 
-- [ ] R01 и R12 представлены одним приложением; A показывает 0/4→2/4→3/4→4/4.
-- [ ] M08 и double NEXT проходят; в начале Undo недоступен, в Animating команды не копятся.
-- [ ] Номер и счётчик читаются, шаблонные элементы не закрывают поле.
-- [ ] Обязательные проверки выполнены фактически; отчёт содержит результат, ограничения и ссылки на evidence. Невыполненный обязательный критерий не обозначен done.
+- [x] R01 и R12 представлены одним приложением; A показывает 0/4→2/4→3/4→4/4.
+- [x] M08 и double NEXT проходят; в начале Undo недоступен, в Animating команды не копятся.
+- [x] Номер и счётчик читаются, шаблонные элементы не закрывают поле.
+- [x] Обязательные проверки выполнены фактически; отчёт содержит результат, ограничения и ссылки на evidence. Невыполненный обязательный критерий не обозначен done.
 
 ## 7. Проверки
 
 ### Автоматические
 
-Все команды из корня проекта. pnpm check: full; pnpm test: browser для запуска A, победы, Undo, Restart и Next с проверкой отсутствия pageerror/HTTP ошибок. Команды, отмеченные «добавить», создаются этой задачей/её зависимостью, а не существуют в исходном каркасе. Для browser script сначала pnpm dev либо production preview; GAME_BASE_URL/PLAYWRIGHT_MODULE и браузер настроить по актуальному README. Полные логи сохранять, в отчёт — итог и ошибки. Автор очереди не выполнял эти сценарии игры.
+Все команды из корня проекта. Выполнены `pnpm check:full` и `pnpm test:browser`; для browser сценария заданы `PLAYWRIGHT_MODULE=playwright-core`, `GAME_BASE_URL=http://127.0.0.1:5175`. Полные логи `check:full` находятся в `.telegram-check-logs/`; screenshots — в игнорируемом `artifacts/screenshots/`.
 
 ### Ручные
 
@@ -66,7 +64,7 @@
 
 Факт: исходная реализация — пустой каркас; GDD 1.0 содержит наблюдения видео и предложенные правила/цели. Решение автора: использовать нормативные разделы 6–7 до сверки TASK-0007/0013, выпускать 120 уровней, предусмотреть 2D и PWA согласно GDD. Музыка, вибрация, сетевой analytics SDK, TV/консоли и внешняя публикация не обязательны.
 
-Статус draft из-за невыполненных зависимостей. Перевести в ready только после их done, проверки отчётов и актуализации контекста. При существенном расхождении кода с контекстом или противоречии видео/правил остановить затронутую работу и записать конкретное требуемое решение. Недоступная обязательная проверка оставляет review/blocked; не ослаблять критерий молча. После изменения renderer/общих правил обновить визуальное evidence и replay контента.
+Зависимости TASK-0007/0010/0011 проверены done. Only 11 levels are currently present; Next advances within this catalog and reports that more campaign levels are not yet available at the end. Completion persistence waits for TASK-0014. Positions and artwork remain provisional until TASK-0013.
 
 ## 9. Сообщение для передачи модели
 
@@ -76,10 +74,10 @@
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: собран HUD, ограниченный Settings, экран победы с задержкой 300 мс, Undo после победы, защищённый от повтора Next; Restart сбрасывает текущую попытку. Номер уровня и X/N берутся из scene/controller. Настройки остаются placeholder до TASK-0015, запись прогресса — TASK-0014.
+- Изменённые файлы и зачем: `index.html`, `src/style.css`, `src/ui/hud.ts`, `src/ui/victory.ts` — интерфейс; `src/main.js`, `src/scene.js`, `src/input/game-actions.ts` — интеграция HUD, номер/смена уровня и Escape из Settings; `tools/browser-check.cjs` — интеграционные сценарии и стабильные desktop screenshots; `docs/ASSETS.md`, `docs/PROJECT.md` — происхождение UI-графики и карта; текущий task report и INDEX.
+- Команды и фактические результаты: `pnpm check:full` — 78/78 тестов, typecheck и build прошли; `PLAYWRIGHT_MODULE=playwright-core GAME_BASE_URL=http://127.0.0.1:5175 pnpm test:browser` — прошёл desktop/mobile viewport, включая запуск, pause/blur, Settings, Undo, restart попытки, Next/double Next, renderer continuity, ошибки страницы и HTTP; `git diff --check` — без ошибок.
+- Ручные проверки и evidence: просмотрены `artifacts/screenshots/r01-hud.png` и `artifacts/screenshots/r12-hud.png` при 720×1280. R01 HUD и игровые элементы видимы; R12 показывает затемнение, ленту, Undo и Next. Screenshots сняты браузерной автоматизацией; физическое устройство не проверялось.
+- Выполненные критерии: все четыре пункта раздела 6. Сценарий A проверил значения 0/4→2/4→3/4→4/4. Double NEXT загружает только Lv.2. После одного хода Restart возвращает 0 ходов и пустую историю Undo.
+- Непроверенное, блокеры и отклонения от плана: точная геометрическая калибровка R01/R12 и арт остаются provisional до TASK-0013. Проверка mobile — viewport/DPR эмуляция, не настоящий телефон. В каталоге пока 11 уровней; на последнем Next корректно сообщает, что следующие уровни ещё готовятся.
+- Итоговый статус и дата: done, 2026-10-08.
