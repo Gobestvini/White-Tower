@@ -42,7 +42,7 @@ pnpm check:full
 - `AGENTS.md` — короткие обязательные инструкции.
 - `docs/PROJECT.md` — карта кода и команд.
 - `docs/GAME_BRIEF.md` — идея, устройства, стиль и измеримые бюджеты.
-- `docs/tasks/` — пустая очередь и шаблон задания другой модели.
+- [Очередь реализации White Tower](docs/tasks/INDEX.md) — 34 задания с зависимостями, [этапами и покрытием GDD](docs/tasks/PLAN.md).
 - `docs/knowledge/README.md` — база знаний и выбор нужного раздела.
 - `docs/knowledge/playbook.md` — инженерные практики игр.
 - `docs/knowledge/game-architecture.md` — владельцы подсистем, физика, lifecycle, NPC и карта мира.

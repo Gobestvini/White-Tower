@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "checkedAt": "2026-10-08",
+  "revision": "71d9f41bfe9dfbea925d325499d369bfb2c13065",
+  "description": "Read-only snapshot for task preparation. Runtime/template inputs are local and untracked at this revision. Future task APIs are proposed, not existing.",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "tracked": false,
+      "sha256": "c2993af14f3da058d757d65b3d7d9fb9553f266310ab752db1cc9c76b98edc5d"
+    },
+    {
+      "path": ".agents/skills/create-task/SKILL.md",
+      "tracked": false,
+      "sha256": "bc3c2fb0965947901fb658f332e596c937f1be36bbea9b209e7257db9e9c5e87"
+    },
+    {
+      "path": ".agents/skills/ai-economy/SKILL.md",
+      "tracked": false,
+      "sha256": "be0abd0f63190799be6a457a9aadf305fa46774c58198208ff2a8a84e09b3d70"
+    },
+    {
+      "path": ".agents/skills/game-quality/SKILL.md",
+      "tracked": false,
+      "sha256": "1d3141570c930374fd24be0eca776234ede3cbcd870ee7f6650e0829d09022de"
+    },
+    {
+      "path": "src/main.js",
+      "tracked": false,
+      "sha256": "ce6b2d4b6a9cdafa9e1b717451c41317cb1ec9f20c32bf4c3c422064516ca5f8"
+    },
+    {
+      "path": "src/scene.js",
+      "tracked": false,
+      "sha256": "744bc90d4fe1521449c4f059f2b0a978db517fc0b1d428af3940183f9248c44e"
+    },
+    {
+      "path": "src/loop.js",
+      "tracked": false,
+      "sha256": "953cf8a892b7d71ab92326887805ef22dad6d8b48f0b4567495610f773e9b241"
+    },
+    {
+      "path": "src/input.js",
+      "tracked": false,
+      "sha256": "8fd9d0132bdae8202ccbe59ad0bc823787624a740050f94ef19a99a113e57390"
+    },
+    {
+      "path": "src/style.css",
+      "tracked": false,
+      "sha256": "290505c9045c6120bd9c0caa1a8159843fe649cdfefe94e48bfc9c6bd5aa5ca7"
+    },
+    {
+      "path": "index.html",
+      "tracked": false,
+      "sha256": "d30f1bad6f4a095476871ac099e5887f9b3b829cd6dfdff202f91469405e7dab"
+    },
+    {
+      "path": "package.json",
+      "tracked": false,
+      "sha256": "b2f17894f5d371676a81056c16c42f25f5ed502d4bcf0bf7961eb85b120e77d4"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "tracked": false,
+      "sha256": "d06c743d9b9d68b8ea20fe2ca3b76d5015cae66a05cba24190f6db3f06da3cbd"
+    },
+    {
+      "path": "vite.config.js",
+      "tracked": false,
+      "sha256": "320350dced549cebe2ae248283028ee7ae0fdbb36576a694f70cfbd755f3a30d"
+    },
+    {
+      "path": "tools/telegram/verify.js",
+      "tracked": false,
+      "sha256": "8a22bc8bfd5a89e48a36549662ce7f357481622d6a5b416ad9f0a3e4ec56ec11"
+    },
+    {
+      "path": "tools/browser-check.cjs",
+      "tracked": false,
+      "sha256": "b9429ce219e9fc8002ce2c99aab9beb4fc8f9d528301fa789cec60d750048a03"
+    },
+    {
+      "path": ".github/workflows/check.yml",
+      "tracked": false,
+      "sha256": "bff132667b5775efa7105744400ca4dc593589afc96b94650be8404856a097a4"
+    },
+    {
+      "path": "tests/input.test.js",
+      "tracked": false,
+      "sha256": "55db640fce2847dfa510a0c121539f7194d7ee78ee10822da28078aaa4d406d4"
+    },
+    {
+      "path": "tests/loop.test.js",
+      "tracked": false,
+      "sha256": "f657604632ad44a5f5516953bddbf110083cd57fb309a3f543d6dd2ae1cc0ad7"
+    },
+    {
+      "path": "docs/knowledge/white-tower/White_Tower_GDD.md",
+      "tracked": true,
+      "sha256": "e2df5fc09d4bfc62312b6e1615c1706de2f6ff8549f54b41bdb8715554371057"
+    },
+    {
+      "path": "docs/knowledge/white-tower/levels_examples.json",
+      "tracked": true,
+      "sha256": "a48327fc60b5ec8262d46eba77460e1996d3ab8685b5b8807f8f3c6ada7ce7df"
+    }
+  ]
+}
