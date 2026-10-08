@@ -3,19 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>White Tower</title>
+    <title>White Tower — эталонное поле</title>
     <link rel="icon" href="data:," />
   </head>
   <body>
     <main>
-      <h1>White Tower</h1>
-      <p>Чистая основа для новой игры</p>
-      <canvas aria-label="Пустая игровая сцена"></canvas>
+      <h1 class="visually-hidden">White Tower</h1>
+      <canvas aria-label="Игровое поле White Tower, уровень 1"></canvas>
       <div class="controls">
         <button id="pause" type="button">Пауза</button>
         <button id="reset" type="button">Сброс</button>
       </div>
-      <p id="status" role="status">Готово</p>
+      <p id="status" class="visually-hidden" role="status">Готово</p>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>

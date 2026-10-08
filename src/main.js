@@ -4,12 +4,16 @@ import { createInput } from './input.js';
 import { createScene } from './scene.js';
 
 const canvas = document.querySelector('canvas');
-const context = canvas.getContext('2d');
-if (!context) throw new Error('Canvas 2D is unavailable');
 const pauseButton = document.querySelector('#pause');
 const status = document.querySelector('#status');
 const input = createInput();
-const scene = createScene();
+let scene;
+try {
+  scene = createScene(canvas);
+} catch (error) {
+  status.textContent = error instanceof Error ? `WebGL недоступен: ${error.message}` : 'WebGL недоступен.';
+  throw error;
+}
 const stepper = createStepper();
 let paused = false;
 let previous = null;
@@ -19,9 +23,8 @@ let disposed = false;
 function clearTiming() { previous = null; stepper.reset(); input.reset(); }
 function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width = Math.max(1, Math.round(canvas.clientWidth * dpr));
-  canvas.height = Math.max(1, Math.round(canvas.clientHeight * dpr));
-  scene.render(context, canvas.width, canvas.height, 0);
+  scene.resize({ width: canvas.clientWidth, height: canvas.clientHeight, pixelRatio: dpr });
+  scene.render();
 }
 function setPaused(value) {
   paused = value;
@@ -29,7 +32,7 @@ function setPaused(value) {
   pauseButton.textContent = paused ? 'Продолжить' : 'Пауза';
   status.textContent = paused ? 'Пауза' : 'Готово';
 }
-function reset() { scene.reset(); clearTiming(); scene.render(context, canvas.width, canvas.height, 0); }
+function reset() { scene.reset(); clearTiming(); scene.render(); }
 function visibility() { clearTiming(); }
 function tick(now) {
   if (disposed) return;
@@ -37,7 +40,7 @@ function tick(now) {
   previous = now;
   let alpha = 0;
   if (!paused && !document.hidden) alpha = stepper.advance(delta, dt => scene.update(dt, input)).alpha;
-  scene.render(context, canvas.width, canvas.height, alpha);
+  scene.render();
   frame = requestAnimationFrame(tick);
 }
 const toggle = () => setPaused(!paused);
@@ -47,6 +50,34 @@ document.addEventListener('visibilitychange', visibility);
 window.addEventListener('resize', resize);
 resize();
 frame = requestAnimationFrame(tick);
+scene.ready.then(async () => {
+  const params = new URLSearchParams(window.location.search);
+  if (import.meta.env.DEV && params.has('resource-check')) {
+    const ids = Array.from({ length: 11 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
+    for (const id of ids) await scene.setLevelById(id);
+    await scene.setLevelById('level-006');
+    scene.setTowerDemo(14);
+    await new Promise(requestAnimationFrame);
+    const before = scene.resourceCounts();
+    for (let index = 0; index < 20; index++) await scene.setLevelById(ids[index % ids.length]);
+    await scene.setLevelById('level-006');
+    scene.setTowerDemo(14);
+    await new Promise(requestAnimationFrame);
+    const after = scene.resourceCounts();
+    const stable = before.geometries === after.geometries && before.textures === after.textures && before.programs === after.programs && before.children === after.children;
+    status.textContent = stable
+      ? `WebGL resources stable after 20 level changes: ${after.geometries} geometries, ${after.textures} textures, ${after.programs} programs, ${after.children} scene objects.`
+      : `WebGL resource count changed: ${JSON.stringify({ before, after })}`;
+    return;
+  } else {
+    const levelId = params.get('level');
+    if (levelId) await scene.setLevelById(levelId);
+    if (params.has('tower')) scene.setTowerDemo(Number(params.get('tower')) || undefined);
+  }
+  status.textContent = 'Готово';
+}).catch(error => {
+  status.textContent = error instanceof Error ? `Ошибка уровня: ${error.message}` : 'Не удалось загрузить уровень.';
+});
 function dispose() {
   disposed = true;
   cancelAnimationFrame(frame);
@@ -58,6 +89,12 @@ function dispose() {
   if (import.meta.env.DEV) delete window.gameDebug;
 }
 if (import.meta.env.DEV) {
-  window.gameDebug = { snapshot: () => ({ ...scene.snapshot(), paused, keys: [...input.keys] }), reset };
+  window.gameDebug = {
+    snapshot: () => ({ ...scene.snapshot(), paused, keys: [...input.keys] }),
+    reset,
+    setLevelById: id => scene.setLevelById(id),
+    setTowerDemo: height => scene.setTowerDemo(height),
+    resourceCounts: () => scene.resourceCounts(),
+  };
 }
 if (import.meta.hot) import.meta.hot.dispose(dispose);

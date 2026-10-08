@@ -9,7 +9,9 @@
 | index.html, src/style.css | Оболочка приложения и адаптивная сцена |
 | tsconfig.json | Строгая проверка TypeScript runtime, тестов и инструментов |
 | src/game/ | Правила, модель уровня и контроллер (в последующих задачах) |
-| src/render/ | Выбранный WebGL renderer, общая проекция и Canvas fallback (в последующих задачах) |
+| src/render/webgl-renderer.ts | Основной Three.js WebGL renderer, процедурные плитки и владение GPU ресурсами |
+| src/render/projection.ts, geometry.ts, presets.ts | Единая проекция/inverse, переиспользуемая геометрия и palette/view state |
+| src/render/ (future) | Canvas fallback будет добавлен отдельной задачей 0009 |
 | tests/game-*.test.js | Поведенческие проверки игровых систем, запускаются вместе с общей suite |
 | tests/loop.test.js, tests/input.test.js | Частоты кадров, stalls, ввод и очистка |
 | tools/telegram/knowledge.js | Память, актуальность хэшей, ограничение контекста |

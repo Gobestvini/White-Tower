@@ -6,7 +6,8 @@
     {
       "u": 0,
       "v": 0,
-      "kind": "normal"
+      "kind": "redirect",
+      "direction": "SE"
     },
     {
       "u": 0,
@@ -43,16 +44,15 @@
     {
       "u": 2,
       "v": 2,
-      "kind": "redirect",
-      "direction": "NW"
+      "kind": "normal"
     }
   ],
   "stacks": [
     {
-      "u": 0,
-      "v": 0,
+      "u": 2,
+      "v": 2,
       "height": 1,
-      "launchDirection": "SE"
+      "launchDirection": "NW"
     },
     {
       "u": 0,
@@ -81,8 +81,8 @@
   "parMoves": 1,
   "knownSolution": [
     {
-      "u": 0,
-      "v": 0
+      "u": 2,
+      "v": 2
     }
   ]
 }

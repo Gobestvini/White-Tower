@@ -15,7 +15,7 @@ Three.js was chosen over a custom WebGL2 renderer because the small comparison s
 
 The comparison app's production JS is 519,671 bytes minified and 131,080 bytes gzip; it includes all three candidates, so this is a conservative combined spike measurement rather than a fair per-renderer bundle measure. It fits the GDD's 3 MB initial JS budget. TASK-0031 measures the actual production renderer. Exact dependency selected: `three@0.186.0`, recorded in package.json/lockfile. It is pinned exactly so upgrades are deliberate. Three's renderer requires WebGL2; Canvas is the fallback when WebGL2 is unavailable.
 
-The prototype matches the board footprint and layer count but does not reproduce rounded bevels, shadow shape, exact HUD, or calibrated camera. TASK-0013 owns artistic acceptance. The GDD's initial projection equation uses screenY increasing with `u+v`, while R01's route rises toward the upper-right. This prototype uses `screenY = originY - (u+v)*b - z*c` to match observed screen orientation. TASK-0007 must settle logical coordinate handedness against move arrows and all eleven reference scenes before gameplay picking or level data depends on it.
+The prototype matches the board footprint and layer count but does not reproduce rounded bevels, shadow shape, exact HUD, or calibrated camera. TASK-0008 uses a shared 2D projection contract and procedural bevel/side geometry; provisional coordinates approved for TASK-0007 remain subject to TASK-0013 artistic acceptance. The GDD's initial projection equation uses screenY increasing with `u+v`, while R01's route rises toward the upper-right. The renderer uses `screenY = originY - (u+v)*b - z*c` to match the observed screen orientation.
 
 ## Contracts
 

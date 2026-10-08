@@ -18,7 +18,7 @@ The GDD reports white-tile counts by level as 4, 5, 4, 7, 8, 14, 5, 5, 13, 9, 12
 | 4 | 7 | R05 / 13s | Medium | Seven tiles visible; coordinate transcription is provisional pending renderer comparison. |
 | 5 | 8 | No extracted start frame | Low; approximate reconstruction authorized by owner | Reconstructed as an eight-tile playable layout. No visual claim is made. |
 | 6 | 14 | R06 / 23s | Medium for count and dense symmetric silhouette; low for exact arrows | Fourteen-tile cluster recorded; individual redirects and logical coordinates are provisional. |
-| 7 | 5 | R08 / 35s; R07 / 33s is post-collection | Medium | Five-tile ring/branch arrangement is visible. R07 is a tall-stack outcome, not a reliable start-state substitute. |
+| 7 | 5 | R08 / 35s; R07 / 33s is post-collection | Medium silhouette; provisional coordinate/arrows | Reconstructed as a five-tile ring with three redirects, top-ring start and a one-move route. R07 is a tall-stack outcome, not a reliable start-state substitute. Revised layout is solver-validated and remains provisional pending TASK-0013. |
 | 8 | 5 | No extracted start frame | Low; approximate reconstruction authorized by owner | Reconstructed as a five-tile playable layout. No visual claim is made. |
 | 9 | 13 | R09 / 57s | Medium for count; low for exact coordinates/arrows | Dense thirteen-tile shape is visible; JSON includes provisional logical placement and redirect details. |
 | 10 | 9 | No extracted start frame | Low; approximate reconstruction authorized by owner | Reconstructed as a nine-tile playable layout. No visual claim is made. |
