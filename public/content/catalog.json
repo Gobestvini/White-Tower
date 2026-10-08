@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "levels": [
+    {
+      "id": "level-001",
+      "path": "/content/levels/001.json",
+      "sha256": "0a1800185b7076950d9c98ea6aaf0ed3d0fa8bd74bcb40823868d9da8671b7d9"
+    },
+    {
+      "id": "level-002",
+      "path": "/content/levels/002.json",
+      "sha256": "fa88773368a39075c991dd3fef1caf6132ca11675af7a11d10401108e3eeac38"
+    },
+    {
+      "id": "level-003",
+      "path": "/content/levels/003.json",
+      "sha256": "0546396cb40eee25ce86f3011b9efd7141c3f9c7f145fd1910e1c42aa01746d2"
+    },
+    {
+      "id": "level-004",
+      "path": "/content/levels/004.json",
+      "sha256": "a409058f229e6655c781e218b66d015462b6bc71b931529c83562126c207dbb5"
+    },
+    {
+      "id": "level-005",
+      "path": "/content/levels/005.json",
+      "sha256": "b3fbf577572ad4e8aebd25bcab75913118577c0ab60d973398fccf0045220b43"
+    },
+    {
+      "id": "level-006",
+      "path": "/content/levels/006.json",
+      "sha256": "31524026e88061eb1987a1074fda97124fa7dc157d7742868b91034b377a0a66"
+    },
+    {
+      "id": "level-007",
+      "path": "/content/levels/007.json",
+      "sha256": "142f2b600f140ce6bb8a94fd74a3f6486e8993dea97cdb3795810dbdd2e26583"
+    },
+    {
+      "id": "level-008",
+      "path": "/content/levels/008.json",
+      "sha256": "364afdee49c724916b69298f853888082cf4417ea1044a857032f77b9acf4bfe"
+    },
+    {
+      "id": "level-009",
+      "path": "/content/levels/009.json",
+      "sha256": "718d5ca83ea95a1d34de940e2f4b80208ac883771be8260516ff6f1f44587558"
+    },
+    {
+      "id": "level-010",
+      "path": "/content/levels/010.json",
+      "sha256": "49abcb9003111b7ad06d6115b9d4451910d40dda4f5b2dbcf87bb88ab18d7c01"
+    },
+    {
+      "id": "level-011",
+      "path": "/content/levels/011.json",
+      "sha256": "c50796e46032eb656b7d96e9b4c3dffa496eb176295b7655b745e0dc1fb4259d"
+    }
+  ]
+}

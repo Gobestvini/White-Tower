@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "level-002",
+  "title": "Level 2",
+  "cells": [
+    {
+      "u": 0,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 1,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 0,
+      "v": 1,
+      "kind": "normal"
+    },
+    {
+      "u": 0,
+      "v": 2,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 0,
+      "v": 0,
+      "height": 1
+    },
+    {
+      "u": 1,
+      "v": 0,
+      "height": 1
+    },
+    {
+      "u": 2,
+      "v": 0,
+      "height": 1,
+      "launchDirection": "NW"
+    },
+    {
+      "u": 0,
+      "v": 1,
+      "height": 1
+    },
+    {
+      "u": 0,
+      "v": 2,
+      "height": 1,
+      "launchDirection": "NE"
+    }
+  ],
+  "totalTiles": 5,
+  "cameraPreset": "reference",
+  "tutorialKey": "tutorial.level.2",
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 2,
+      "v": 0
+    },
+    {
+      "u": 0,
+      "v": 2
+    }
+  ]
+}

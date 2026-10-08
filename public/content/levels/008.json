@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "level-008",
+  "title": "Level 8",
+  "cells": [
+    {
+      "u": 0,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 1,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 4,
+      "v": 0,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 0,
+      "v": 0,
+      "height": 1,
+      "launchDirection": "SE"
+    },
+    {
+      "u": 1,
+      "v": 0,
+      "height": 1
+    },
+    {
+      "u": 2,
+      "v": 0,
+      "height": 1
+    },
+    {
+      "u": 3,
+      "v": 0,
+      "height": 1
+    },
+    {
+      "u": 4,
+      "v": 0,
+      "height": 1
+    }
+  ],
+  "totalTiles": 5,
+  "cameraPreset": "reference-inferred",
+  "tutorialKey": null,
+  "parMoves": 1,
+  "knownSolution": [
+    {
+      "u": 0,
+      "v": 0
+    }
+  ]
+}
