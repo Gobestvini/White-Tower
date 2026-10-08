@@ -3,13 +3,15 @@ import { createStepper } from './loop.js';
 import { createInput } from './input.js';
 import { createScene } from './scene.js';
 
-const canvas = document.querySelector('canvas');
+let canvas = document.querySelector('canvas');
 const pauseButton = document.querySelector('#pause');
 const status = document.querySelector('#status');
 const input = createInput();
 let scene;
 try {
-  scene = createScene(canvas);
+  const initialRendererMode = import.meta.env.DEV ? new URLSearchParams(window.location.search).get('renderer') ?? 'auto' : 'auto';
+  scene = createScene(canvas, initialRendererMode);
+  canvas = scene.canvas;
 } catch (error) {
   status.textContent = error instanceof Error ? `WebGL недоступен: ${error.message}` : 'WebGL недоступен.';
   throw error;
@@ -22,6 +24,7 @@ let disposed = false;
 
 function clearTiming() { previous = null; stepper.reset(); input.reset(); }
 function resize() {
+  canvas = scene.canvas;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   scene.resize({ width: canvas.clientWidth, height: canvas.clientHeight, pixelRatio: dpr });
   scene.render();
@@ -74,7 +77,7 @@ scene.ready.then(async () => {
     if (levelId) await scene.setLevelById(levelId);
     if (params.has('tower')) scene.setTowerDemo(Number(params.get('tower')) || undefined);
   }
-  status.textContent = 'Готово';
+  status.textContent = scene.rendererInfo().message ?? (scene.rendererInfo().mode === '2d' ? 'Упрощённый графический режим.' : 'Готово');
 }).catch(error => {
   status.textContent = error instanceof Error ? `Ошибка уровня: ${error.message}` : 'Не удалось загрузить уровень.';
 });
@@ -95,6 +98,12 @@ if (import.meta.env.DEV) {
     setLevelById: id => scene.setLevelById(id),
     setTowerDemo: height => scene.setTowerDemo(height),
     resourceCounts: () => scene.resourceCounts(),
+    rendererInfo: () => scene.rendererInfo(),
+    setRendererMode: mode => { const changed = scene.setRendererMode(mode); if (changed) { resize(); status.textContent = scene.rendererInfo().message ?? (scene.rendererInfo().mode === '2d' ? 'Упрощённый графический режим.' : 'Готово'); } return changed; },
+    launch: start => scene.debugLaunch(start),
+    finishAnimation: generationId => scene.debugFinishAnimation(generationId),
+    undo: () => scene.undo(),
+    loadLevel: level => scene.debugLoadLevel(level),
   };
 }
 if (import.meta.hot) import.meta.hot.dispose(dispose);

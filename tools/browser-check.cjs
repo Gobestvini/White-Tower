@@ -3,6 +3,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const baseUrl = process.env.GAME_BASE_URL || 'http://127.0.0.1:5173';
+const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/levels_examples.json', 'utf8')).levels;
 (async () => {
   const options = { headless: true };
   if (process.env.BROWSER_CHANNEL) options.channel = process.env.BROWSER_CHANNEL;
@@ -69,9 +70,60 @@ const baseUrl = process.env.GAME_BASE_URL || 'http://127.0.0.1:5173';
       }
       await page.evaluate(async () => { await window.gameDebug.setLevelById('level-006'); window.gameDebug.setTowerDemo(14); await new Promise(requestAnimationFrame); });
       await page.locator('canvas').screenshot({ path: `artifacts/screenshots/r07-${name}.png` });
+      const fallbackState = await page.evaluate(async () => {
+        await window.gameDebug.setLevelById('level-002');
+        let complete;
+        for (const start of [{ u: 2, v: 0 }, { u: 0, v: 2 }]) {
+          const launched = window.gameDebug.launch(start);
+          complete = window.gameDebug.finishAnimation(launched.generationId);
+        }
+        const before = { moveCount: complete.committedState.moveCount, canUndo: complete.canUndo, attemptId: complete.attemptId };
+        if (!window.gameDebug.setRendererMode('2d')) throw new Error('Could not switch to Canvas 2D.');
+        await new Promise(requestAnimationFrame);
+        const mode = window.gameDebug.rendererInfo().mode;
+        const afterSwitch = window.gameDebug.snapshot();
+        return { before, mode, afterSwitch: { moveCount: afterSwitch.committedState.moveCount, canUndo: afterSwitch.canUndo, attemptId: afterSwitch.attemptId } };
+      });
+      await page.locator('canvas').screenshot({ path: `artifacts/screenshots/r02-2d-${name}.png` });
+      const fallbackUndo = await page.evaluate(() => {
+        const undone = window.gameDebug.undo();
+        const state = { moveCount: undone.committedState.moveCount, canUndo: undone.canUndo, attemptId: undone.attemptId, phase: undone.phase };
+        if (!window.gameDebug.setRendererMode('webgl')) throw new Error('Could not switch back to WebGL.');
+        return state;
+      });
+      assert.equal(fallbackState.before.moveCount, 2);
+      assert.equal(fallbackState.before.canUndo, true);
+      assert.equal(fallbackState.mode, '2d');
+      assert.deepEqual(fallbackState.afterSwitch, fallbackState.before);
+      assert.deepEqual(fallbackUndo, { moveCount: 1, canUndo: true, attemptId: fallbackState.before.attemptId, phase: 'Idle' });
+      const replay = await page.evaluate(async levels => {
+        const outcomes = [];
+        for (const mode of ['webgl', '2d']) {
+          if (!window.gameDebug.setRendererMode(mode)) throw new Error(`Could not select ${mode}.`);
+          for (const level of levels) {
+            window.gameDebug.loadLevel(level);
+            let completed;
+            for (const start of level.knownSolution) {
+              const started = window.gameDebug.launch(start);
+              if (started.phase !== 'Animating') throw new Error(`${level.id} rejected the known move.`);
+              completed = window.gameDebug.finishAnimation(started.generationId);
+            }
+            if (completed.phase !== 'Won') throw new Error(`${level.id} did not reach victory in ${mode}.`);
+            outcomes.push({ levelId: level.id, mode, moves: completed.committedState.moveCount });
+          }
+        }
+        window.gameDebug.setRendererMode('webgl');
+        return outcomes;
+      }, exampleLevels.filter(level => ['A_line', 'D_ring'].includes(level.id)));
+      assert.deepEqual(replay.map(item => [item.levelId, item.mode]), [['A_line', 'webgl'], ['D_ring', 'webgl'], ['A_line', '2d'], ['D_ring', '2d']]);
       assert.deepEqual(errors, []);
       await page.close();
     }
+    const unsupported = await browser.newPage();
+    await unsupported.goto(`${baseUrl}?renderer=unsupported`);
+    await unsupported.waitForFunction(() => document.querySelector('#status')?.textContent.includes('WebGL и Canvas 2D недоступны'));
+    assert.equal(await unsupported.locator('#status').getAttribute('role'), 'status');
+    await unsupported.close();
     console.log('Desktop/mobile layout, pause/reset, input and runtime errors: passed.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

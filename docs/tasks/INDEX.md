@@ -12,13 +12,13 @@
 | [TASK-0006 Реализовать решатель в Worker с ограниченным бюджетом](TASK-0006-solver-worker.md) | done | normal | TASK-0004 | сильная |
 | [TASK-0007 Восстановить одиннадцать уровней из видео](TASK-0007-reference-levels.md) | done | normal | TASK-0002, TASK-0004, TASK-0006 | сильная |
 | [TASK-0008 Отрисовать эталонное поле в WebGL](TASK-0008-webgl-scene.md) | done | normal | TASK-0002, TASK-0003, TASK-0007 | сильная |
-| [TASK-0009 Добавить совместимый Canvas 2D renderer](TASK-0009-canvas-fallback.md) | ready | normal | TASK-0002, TASK-0005, TASK-0008 | средняя |
+| [TASK-0009 Добавить совместимый Canvas 2D renderer](TASK-0009-canvas-fallback.md) | done | normal | TASK-0002, TASK-0005, TASK-0008 | средняя |
 | [TASK-0010 Подключить точный ввод мышью, touch и клавиатурой](TASK-0010-pointer-keyboard-input.md) | ready | normal | TASK-0005, TASK-0008 | средняя |
 | [TASK-0011 Воспроизвести сбор и повороты с анимацией](TASK-0011-move-animation.md) | ready | normal | TASK-0005, TASK-0008 | сильная |
 | [TASK-0012 Собрать игровой HUD и экран победы](TASK-0012-reference-hud-victory.md) | draft | normal | TASK-0007, TASK-0010, TASK-0011 | средняя |
 | [TASK-0013 Откалибровать и принять визуальный срез](TASK-0013-visual-slice-acceptance.md) | draft | high | TASK-0009, TASK-0011, TASK-0012 | сильная |
 | [TASK-0014 Сохранять устойчивую попытку и прогресс локально](TASK-0014-local-save.md) | ready | normal | TASK-0005, TASK-0007 | сильная |
-| [TASK-0015 Добавить настройки, локализацию и выбор уровня](TASK-0015-settings-level-select-i18n.md) | draft | normal | TASK-0012, TASK-0014 | средняя |
+| [TASK-0015 Добавить настройки, локализацию и выбор уровня](TASK-0015-settings-level-select-i18n.md) | draft | normal | TASK-0009, TASK-0012, TASK-0014 | средняя |
 | [TASK-0016 Добавить обучение, подсказку и честное сообщение о тупике](TASK-0016-hints-tutorial-deadlock.md) | draft | normal | TASK-0006, TASK-0015 | средняя |
 | [TASK-0017 Проверить адаптивный экран и доступное управление](TASK-0017-responsive-accessibility.md) | draft | normal | TASK-0009, TASK-0010, TASK-0011, TASK-0015 | средняя |
 | [TASK-0018 Добавить тихие звуковые эффекты с безопасным lifecycle](TASK-0018-audio-feedback.md) | draft | normal | TASK-0011, TASK-0015 | средняя |

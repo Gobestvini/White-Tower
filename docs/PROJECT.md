@@ -5,19 +5,20 @@
 | src/main.js | Canvas, RAF, resize, visibility, пауза/reset, HMR dispose |
 | src/loop.js / createStepper | Шаг 1/60 с, максимум 8 шагов кадра, dropped time, alpha |
 | src/input.js / createInput | Клавиатура event.code, blur/reset/dispose |
-| src/scene.js / createScene | Пустая точка расширения: update/render/reset/snapshot/dispose |
+| src/scene.js / createScene | Связывает game controller, загруженный уровень и сменный renderer |
 | index.html, src/style.css | Оболочка приложения и адаптивная сцена |
 | tsconfig.json | Строгая проверка TypeScript runtime, тестов и инструментов |
 | src/game/ | Правила, модель уровня и контроллер (в последующих задачах) |
 | src/render/webgl-renderer.ts | Основной Three.js WebGL renderer, процедурные плитки и владение GPU ресурсами |
+| src/render/canvas-renderer.ts | Совместимый 2D renderer с тем же view state, projection и hit-test |
+| src/render/renderer-factory.ts | WebGL2 → Canvas 2D fallback и режим Unsupported; QA-переключение без сброса state |
 | src/render/projection.ts, geometry.ts, presets.ts | Единая проекция/inverse, переиспользуемая геометрия и palette/view state |
-| src/render/ (future) | Canvas fallback будет добавлен отдельной задачей 0009 |
 | tests/game-*.test.js | Поведенческие проверки игровых систем, запускаются вместе с общей suite |
 | tests/loop.test.js, tests/input.test.js | Частоты кадров, stalls, ввод и очистка |
 | tools/telegram/knowledge.js | Память, актуальность хэшей, ограничение контекста |
 | tools/telegram/verify.js | Тесты, TypeScript, сборка, логи и проверяемая квитанция |
 | tools/telegram/economy.js | Инструкции экономии, JSONL usage, учёт кэша |
-| tools/browser-check.cjs | Desktop/mobile layout, pause/reset, ввод, ошибки |
+| tools/browser-check.cjs | Desktop/mobile layout, pause/reset, ввод, fallback/state continuity, ошибки |
 | docs/knowledge/README.md | Выбор справочника по теме и правила сохранения знаний |
 | docs/knowledge/white-tower/README.md | Материалы White Tower из исходного диалога: видео, полный GDD, 12 кадров и примеры уровней |
 | docs/knowledge/white-tower/import-manifest.json | Происхождение, размеры и SHA-256 перенесённых материалов |
