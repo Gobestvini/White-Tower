@@ -7,6 +7,7 @@ import { createProjection, worldToScreen } from './render/projection.ts';
 import { createAnimationPlayer } from './presentation/animation.ts';
 import { createStore } from './storage/store.ts';
 import { validateGameSave, createGameSave } from './storage/save-schema.ts';
+import { parseSettings } from './ui/i18n.ts';
 
 export function createScene(canvas, rendererMode = 'auto') {
   let activeCanvas = canvas;
@@ -26,7 +27,8 @@ export function createScene(canvas, rendererMode = 'auto') {
   let nextPending = false;
   let recoveryNotice = '';
   let unlockedLevel = 1;
-  let settings = Object.freeze({});
+  const defaultSettings = parseSettings({ reducedMotion: typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches });
+  let settings = defaultSettings;
 
   function persistSnapshot() {
     const snapshot = controller.snapshot();
@@ -92,7 +94,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     const started = controller.launch({ u: stack.u, v: stack.v });
     if (started.phase !== 'Animating') return false;
     persistSnapshot();
-    animation.start({ stacks: started.displayedState.stacks, steps: started.animation.steps, events: started.animation.events, generationId: started.generationId });
+    animation.start({ stacks: started.displayedState.stacks, steps: started.animation.steps, events: started.animation.events, generationId: started.generationId, reducedMotion: settings.reducedMotion });
     showPresentation(animation.snapshot().stacks, started);
     return true;
   }
@@ -113,7 +115,7 @@ export function createScene(canvas, rendererMode = 'auto') {
 
   function setRendererMode(mode) {
     const snapshot = controller.snapshot();
-    if (disposed || (snapshot.phase !== 'Idle' && snapshot.phase !== 'Won')) return false;
+    if (disposed || !['Idle', 'Won', 'Menu'].includes(snapshot.phase)) return false;
     const next = createRendererFactory(activeCanvas, { mode, replaceCanvas: true });
     const previous = renderer;
     selection = next;
@@ -135,6 +137,31 @@ export function createScene(canvas, rendererMode = 'auto') {
     towerDemo = false;
     showSnapshot(controller.loadLevel(level));
     await persistSnapshot();
+  }
+
+  async function selectLevel(id) {
+    const index = catalog?.levels.findIndex(entry => entry.id === id) ?? -1;
+    if (index < 0 || index + 1 > unlockedLevel || !['Menu', 'Idle', 'Won'].includes(controller.snapshot().phase)) return false;
+    await setLevelById(id);
+    return true;
+  }
+
+  function updateSettings(nextSettings) {
+    const previous = settings;
+    settings = parseSettings({ ...settings, ...nextSettings });
+    if (previous.rendererMode !== settings.rendererMode) setRendererMode(settings.rendererMode);
+    persistSnapshot();
+    return settings;
+  }
+
+  async function clearProgress() {
+    if (disposed || !catalog) return false;
+    await store.clear();
+    controller.restoreCompleted([]);
+    unlockedLevel = 1;
+    recoveryNotice = '';
+    await setLevelById(catalog.levels[0].id);
+    return true;
   }
 
   async function nextLevel() {
@@ -170,11 +197,12 @@ export function createScene(canvas, rendererMode = 'auto') {
         const validation = validateGameSave(rawSave, catalog, new Map([[level.id, level]]));
         if (validation.ok) {
           unlockedLevel = validation.value.unlockedLevel;
-          settings = validation.value.settings;
+          settings = parseSettings(validation.value.settings);
           controller.restoreCompleted(validation.value.completedLevelIds);
           controller.restoreAttempt(validation.value.committedState, validation.value.history);
+          if (selection.mode !== settings.rendererMode) setRendererMode(settings.rendererMode);
         } else {
-          recoveryNotice = `Сохранение не восстановлено: ${validation.reason}`;
+          recoveryNotice = settings.language === 'ru' ? `Сохранение не восстановлено: ${validation.reason}` : `Save could not be restored: ${validation.reason}`;
           if (typeof rawSave === 'object' && rawSave !== null && !Array.isArray(rawSave)) {
             const candidate = rawSave;
             const completed = Array.isArray(candidate.completedLevelIds)
@@ -214,6 +242,9 @@ export function createScene(canvas, rendererMode = 'auto') {
       if (level) { showSnapshot(controller.restart()); persistSnapshot(); }
     },
     async setLevelById(id) { return setLevelById(id); },
+    async selectLevel(id) { return selectLevel(id); },
+    updateSettings,
+    async clearProgress() { return clearProgress(); },
     async nextLevel() { return nextLevel(); },
     debugLoadLevel(raw) {
       const result = validateLevel(raw);
@@ -242,7 +273,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     snapshot() {
       const snapshot = controller.snapshot();
       const levelIndex = catalog?.levels.findIndex(entry => entry.id === snapshot.level?.id) ?? -1;
-      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0, unlockedLevel, settings };
+      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0, unlockedLevel, settings, persistence: { memoryOnly: store.memoryOnly(), recoveryNotice } };
     },
     presentationSnapshot() { return animation.snapshot(); },
     resourceCounts() { return renderer.resourceCounts(); },
@@ -256,7 +287,7 @@ export function createScene(canvas, rendererMode = 'auto') {
       const snapshot = controller.launch(start);
       if (snapshot.phase === 'Animating') {
         persistSnapshot();
-        animation.start({ stacks: snapshot.displayedState.stacks, steps: snapshot.animation.steps, events: snapshot.animation.events, generationId: snapshot.generationId });
+        animation.start({ stacks: snapshot.displayedState.stacks, steps: snapshot.animation.steps, events: snapshot.animation.events, generationId: snapshot.generationId, reducedMotion: settings.reducedMotion });
         showPresentation(animation.snapshot().stacks, snapshot);
       } else showSnapshot(snapshot);
       return snapshot;

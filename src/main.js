@@ -41,6 +41,16 @@ const hud = createHud({
   onUndo: () => scene.undo(),
   onNext: () => scene.nextLevel(),
   onMenu: () => scene.toggleMenu(),
+  getSettings: () => scene.snapshot().settings,
+  onSettings: nextSettings => {
+    const previousCanvas = scene.canvas;
+    scene.updateSettings(nextSettings);
+    if (scene.canvas !== previousCanvas) { installPointerInput(); resize(); }
+  },
+  onSelectLevel: id => { void scene.selectLevel(id); },
+  onClearProgress: () => { void scene.clearProgress().then(() => { installPointerInput(); resize(); }); },
+  onRetry: () => window.location.reload(),
+  onChooseLevels: () => { scene.toggleMenu(); },
 });
 const gameActions = createGameActions({
   canvas: () => scene.canvas,
@@ -73,7 +83,7 @@ function tick(now) {
   if (!paused && !document.hidden) alpha = stepper.advance(delta, dt => scene.update(dt, input)).alpha;
   hud.update(scene.snapshot(), scene.presentationSnapshot(), !paused && !document.hidden ? Math.min(delta, 0.1) : 0);
   const persistence = scene.persistenceInfo();
-  if (persistence.memoryOnly) status.textContent = 'Прогресс временный: хранилище браузера недоступно.';
+  if (persistence.memoryOnly) status.textContent = scene.snapshot().settings.language === 'ru' ? 'Прогресс временный: хранилище браузера недоступно.' : 'Progress is temporary because browser storage is unavailable.';
   else if (persistence.recoveryNotice) status.textContent = persistence.recoveryNotice;
   scene.render();
   frame = requestAnimationFrame(tick);
@@ -83,6 +93,7 @@ window.addEventListener('resize', resize);
 resize();
 frame = requestAnimationFrame(tick);
 scene.ready.then(async () => {
+  installPointerInput(); resize();
   const params = new URLSearchParams(window.location.search);
   if (import.meta.env.DEV && params.has('resource-check')) {
     const ids = Array.from({ length: 11 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);

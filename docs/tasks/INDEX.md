@@ -18,7 +18,7 @@
 | [TASK-0012 Собрать игровой HUD и экран победы](TASK-0012-reference-hud-victory.md) | done | normal | TASK-0007, TASK-0010, TASK-0011 | средняя |
 | [TASK-0013 Откалибровать и принять визуальный срез](TASK-0013-visual-slice-acceptance.md) | review | high | TASK-0009, TASK-0011, TASK-0012 | сильная |
 | [TASK-0014 Сохранять устойчивую попытку и прогресс локально](TASK-0014-local-save.md) | done | normal | TASK-0005, TASK-0007 | сильная |
-| [TASK-0015 Добавить настройки, локализацию и выбор уровня](TASK-0015-settings-level-select-i18n.md) | draft | normal | TASK-0009, TASK-0012, TASK-0014 | средняя |
+| [TASK-0015 Добавить настройки, локализацию и выбор уровня](TASK-0015-settings-level-select-i18n.md) | done | normal | TASK-0009, TASK-0012, TASK-0014 | средняя |
 | [TASK-0016 Добавить обучение, подсказку и честное сообщение о тупике](TASK-0016-hints-tutorial-deadlock.md) | draft | normal | TASK-0006, TASK-0015 | средняя |
 | [TASK-0017 Проверить адаптивный экран и доступное управление](TASK-0017-responsive-accessibility.md) | draft | normal | TASK-0009, TASK-0010, TASK-0011, TASK-0015 | средняя |
 | [TASK-0018 Добавить тихие звуковые эффекты с безопасным lifecycle](TASK-0018-audio-feedback.md) | draft | normal | TASK-0011, TASK-0015 | средняя |

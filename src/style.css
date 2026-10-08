@@ -23,10 +23,28 @@ main.is-won canvas { pointer-events: none; }
 .is-hidden { display: none !important; }
 .settings-panel { position: absolute; inset: 0; display: none; place-items: center; pointer-events: auto; background: #12334b55; }
 .settings-panel.is-visible { display: grid; }
-.settings-card { width: min(82%, 430px); padding: 28px; border-radius: 22px; background: #3C7EA9; color: #fff; box-shadow: 0 12px 38px #14385055; text-align: center; }
+.settings-card { width: min(88%, 460px); max-height: 88%; overflow: auto; padding: clamp(18px, 4vw, 28px); border-radius: 22px; background: #3C7EA9; color: #fff; box-shadow: 0 12px 38px #14385055; text-align: center; }
 .settings-card h2 { margin: 0 0 12px; font-size: 28px; }
-.settings-card p { margin: 0 0 22px; }
+.settings-card p { margin: 0 0 14px; }
 .settings-panel .settings-close { min-height: 48px; padding: 10px 18px; border-radius: 24px; background: #286a91; font-weight: 800; }
+.settings-controls { display: grid; gap: 10px; }
+.setting-row { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: 12px; background: #286a91; text-align: left; font-weight: 700; }
+.setting-row select { max-width: 54%; min-height: 38px; padding: 4px 8px; border: 0; border-radius: 8px; color: #163e56; background: #fff; font: inherit; }
+.setting-row input { width: 24px; height: 24px; accent-color: #52e000; }
+.menu-secondary, .menu-danger { min-height: 46px; padding: 9px 14px; border-radius: 12px; background: #286a91; color: #fff; font-weight: 800; }
+.menu-danger { background: #853d49 !important; }
+.settings-note { color: #e0f2fc; font-size: 14px; }
+.settings-status:not(:empty) { padding: 9px; border-radius: 10px; background: #174a69; }
+.settings-status.is-warning { background: #674d2d; }
+.storage-retry { width: 100%; }
+.clear-confirmation { padding: 14px; border: 2px solid #fff8; border-radius: 14px; }
+.clear-confirmation[hidden], .level-select-page[hidden] { display: none; }
+.level-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; max-height: 48vh; overflow-y: auto; padding: 4px; }
+.level-card { min-height: 58px; border-radius: 14px; background: #286a91; color: #fff; font-size: 20px; font-weight: 900; }
+.level-card.is-selected { outline: 3px solid #fff; outline-offset: 1px; }
+.level-card.is-completed { background: #34834c; }
+.level-card:disabled { opacity: .55; cursor: not-allowed; }
+.settings-panel [hidden] { display: none !important; }
 .victory-layer { position: absolute; inset: 0; z-index: 3; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 180ms ease; }
 .victory-layer.is-visible { visibility: visible; opacity: 1; pointer-events: none; }
 .victory-shade { position: absolute; inset: 0; pointer-events: none; background: #103b5740; }
@@ -49,5 +67,10 @@ main.is-won .hud .restart-button { opacity: .45; }
   .hud-undo { top: 91%; }
   .victory-ribbon { top: 9%; min-height: 34%; }
   .next-button { min-height: 78px; bottom: 4%; }
+}
+@media (max-width: 420px) {
+  .settings-card { width: 92%; }
+  .settings-card h2 { font-size: 24px; }
+  .level-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }

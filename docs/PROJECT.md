@@ -3,7 +3,7 @@
 | Путь | Назначение |
 | --- | --- |
 | src/main.js | Canvas, RAF, resize, visibility, пауза/reset, HMR dispose |
-| src/ui/hud.ts, victory.ts | DOM HUD, Settings placeholder, счётчик, Undo/Restart, отложенная победа и Next поверх canvas |
+| src/ui/hud.ts, victory.ts, settings.ts, level-select.ts, i18n.ts | DOM HUD, двуязычные Settings/level select, счётчик, Undo/Restart, финал кампании и Next поверх canvas |
 | src/loop.js / createStepper | Шаг 1/60 с, максимум 8 шагов кадра, dropped time, alpha |
 | src/input.js / createInput | Удерживаемые event.code клавиши, blur/reset/dispose |
 | src/input/pointer.ts, game-actions.ts | Pointer цель и CSS-порог; keyboard selection и controller intents |

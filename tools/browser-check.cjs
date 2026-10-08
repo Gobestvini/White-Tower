@@ -31,8 +31,44 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
         assert.ok(box.width >= 44 && box.height >= 44, `${label} hit area is at least 44 CSS px`);
       }
       await page.getByRole('button', { name: 'Settings' }).click();
-      await page.getByRole('dialog', { name: 'Settings' }).waitFor();
-      await page.getByRole('button', { name: 'BACK TO GAME' }).click();
+      const settingsDialog = page.locator('.settings-panel');
+      await settingsDialog.waitFor({ state: 'visible' });
+      const menuBounds = await settingsDialog.locator('.settings-card').boundingBox();
+      const gameBounds = await page.locator('main').boundingBox();
+      assert.ok(menuBounds.x >= gameBounds.x && menuBounds.y >= gameBounds.y && menuBounds.x + menuBounds.width <= gameBounds.x + gameBounds.width && menuBounds.y + menuBounds.height <= gameBounds.y + gameBounds.height, `${name} settings fit inside the game viewport`);
+      const boardOccluded = await page.evaluate(() => {
+        const point = window.gameDebug.pointForStack(window.gameDebug.selectedStackId());
+        const rect = document.querySelector('canvas').getBoundingClientRect();
+        const scale = Math.min(rect.width / 720, rect.height / 1280);
+        const x = rect.left + (rect.width - 720 * scale) / 2 + point.x * scale;
+        const y = rect.top + (rect.height - 1280 * scale) / 2 + point.y * scale;
+        return document.elementFromPoint(x, y)?.closest('canvas') === null;
+      });
+      assert.equal(boardOccluded, true, 'the modal layer intercepts the board hit area');
+      await page.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+      assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 0, 'the menu phase cannot start a move');
+      await page.getByRole('button', { name: 'Clear progress' }).click();
+      await page.getByRole('button', { name: 'CANCEL' }).click();
+      assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).levelId, 'level-001', 'canceling clear leaves the current progress intact');
+      await settingsDialog.getByLabel('Language').selectOption('ru');
+      await settingsDialog.getByRole('heading', { name: 'Настройки' }).waitFor();
+      await settingsDialog.locator('select').first().focus();
+      await page.keyboard.press('Shift+Tab');
+      assert.equal(await page.evaluate(() => document.activeElement?.textContent), 'ВЕРНУТЬСЯ В ИГРУ', 'focus wraps to the final dialog action');
+      await page.keyboard.press('Escape');
+      await page.getByRole('button', { name: 'Настройки' }).waitFor();
+      await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label') === 'Настройки');
+      assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('aria-label')), 'Настройки', 'closing the dialog returns focus to its opener');
+      await page.getByRole('button', { name: 'Настройки' }).click();
+      const russianDialog = page.locator('.settings-panel');
+      await russianDialog.locator('select').first().selectOption('en');
+      await russianDialog.getByRole('button', { name: /Choose level/ }).click();
+      const levelGridBounds = await russianDialog.locator('.level-grid').boundingBox();
+      assert.ok(levelGridBounds.height > 0 && levelGridBounds.width > 0, `${name} level grid remains visible`);
+      assert.equal(await russianDialog.getByRole('button', { name: 'Level 1', exact: true }).isDisabled(), false);
+      assert.equal(await russianDialog.getByRole('button', { name: 'Level 2, Locked', exact: true }).isDisabled(), true, 'unopened future levels are locked');
+      await russianDialog.getByRole('button', { name: 'BACK TO SETTINGS' }).click();
+      await russianDialog.getByRole('button', { name: 'BACK TO GAME' }).click();
       if (touch) {
         await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
         const mobileTap = await page.evaluate(() => {
@@ -305,7 +341,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
     await savePage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won');
     await savePage.locator('.victory-layer.is-visible').waitFor({ timeout: 1500 });
-    await savePage.locator('.next-button').evaluate(button => button.click());
+    await savePage.locator('.next-button:not(.victory-choose)').evaluate(button => button.click());
     await savePage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-002');
     await savePage.evaluate(() => window.gameDebug.flushPersistence());
     await savePage.reload();
@@ -313,6 +349,40 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
     assert.equal(restored.levelId, 'level-002', 'selected level survives reload');
     assert.deepEqual(restored.completedLevelIds, ['level-001'], 'Next does not duplicate or clear completion');
+    assert.equal(restored.unlockedLevel, 2, 'the next level remains unlocked after reload');
+    await savePage.getByRole('button', { name: 'Settings' }).click();
+    let levelMenu = savePage.locator('.settings-panel');
+    await levelMenu.getByRole('button', { name: /Choose level/ }).click();
+    assert.equal(await levelMenu.getByRole('button', { name: 'Level 2', exact: true }).isDisabled(), false, 'the next level is selectable after completion');
+    await levelMenu.getByRole('button', { name: 'Level 1, Completed', exact: true }).click();
+    await savePage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-001');
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    assert.equal((await savePage.evaluate(() => window.gameDebug.snapshot())).levelId, 'level-001', 'a level selected from the menu resumes after reload');
+    await savePage.getByRole('button', { name: 'Settings' }).click();
+    levelMenu = savePage.locator('.settings-panel');
+    await levelMenu.getByRole('button', { name: /Choose level/ }).click();
+    await levelMenu.getByRole('button', { name: 'Level 2', exact: true }).click();
+    await savePage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-002');
+    await savePage.getByRole('button', { name: 'Settings' }).click();
+    let preferences = savePage.locator('.settings-panel');
+    await preferences.getByLabel('Language').selectOption('ru');
+    await preferences.getByLabel('Уменьшить движение').check();
+    await preferences.getByLabel('Режим графики').selectOption('2d');
+    await savePage.waitForFunction(() => window.gameDebug.rendererInfo().mode === '2d');
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: '2d' }, 'locale, reduced motion and renderer preference survive reload');
+    assert.equal(await savePage.evaluate(() => window.gameDebug.rendererInfo().mode), '2d');
+    await savePage.getByRole('button', { name: 'Настройки' }).click();
+    preferences = savePage.locator('.settings-panel');
+    await preferences.locator('select').first().selectOption('en');
+    await preferences.getByLabel('Graphics mode').selectOption('auto');
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    await preferences.getByRole('button', { name: 'BACK TO GAME' }).click();
     await savePage.evaluate(() => window.gameDebug.setLevelById('level-004'));
     await savePage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
     await savePage.evaluate(() => window.gameDebug.flushPersistence());
@@ -326,7 +396,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       request.onsuccess = () => {
         const tx = request.result.transaction('save', 'readwrite'); const store = tx.objectStore('save');
         const get = store.get('white-tower.save.v1');
-        get.onsuccess = () => store.put({ ...get.result, settings: { sound: false, reducedMotion: true } }, 'white-tower.save.v1');
+        get.onsuccess = () => store.put({ ...get.result, settings: { language: 'ru', reducedMotion: true, rendererMode: 'auto' } }, 'white-tower.save.v1');
         tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error);
       };
       request.onerror = () => reject(request.error);
@@ -334,7 +404,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
-    assert.deepEqual(restored.settings, { sound: false, reducedMotion: true }, 'settings values roundtrip with the save');
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: 'auto' }, 'settings values roundtrip with the save');
     await savePage.evaluate(() => new Promise((resolve, reject) => {
       const request = indexedDB.open('white-tower', 1);
       request.onsuccess = () => {
@@ -357,7 +427,39 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
     assert.deepEqual(restored.completedLevelIds, ['level-001'], 'saving after recovery does not erase prior completion');
+    await savePage.getByRole('button', { name: 'Settings' }).click();
+    let resetDialog = savePage.locator('.settings-panel');
+    await resetDialog.getByRole('button', { name: 'Clear progress' }).click();
+    await resetDialog.getByRole('button', { name: 'CANCEL' }).click();
+    assert.deepEqual((await savePage.evaluate(() => window.gameDebug.snapshot())).completedLevelIds, ['level-001'], 'cancel preserves already completed progress');
+    await resetDialog.locator('select').first().selectOption('ru');
+    await resetDialog.getByRole('button', { name: 'Сбросить прогресс' }).click();
+    await resetDialog.getByRole('button', { name: 'СБРОСИТЬ ПРОГРЕСС' }).click();
+    await savePage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-001' && window.gameDebug.snapshot().unlockedLevel === 1);
+    await savePage.evaluate(() => window.gameDebug.flushPersistence());
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.deepEqual(restored.completedLevelIds, [], 'confirmed reset clears campaign progress');
+    assert.equal(restored.settings.language, 'ru', 'clearing campaign progress preserves user preferences');
+    await savePage.reload();
+    await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    restored = await savePage.evaluate(() => window.gameDebug.snapshot());
+    assert.deepEqual(restored.completedLevelIds, [], 'confirmed reset survives reload');
+    assert.equal(restored.levelId, 'level-001');
     await savePage.close();
+
+    const campaignPage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
+    await campaignPage.goto(baseUrl);
+    await campaignPage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    await campaignPage.evaluate(() => window.gameDebug.setLevelById('level-011'));
+    const finalMove = await campaignPage.evaluate(() => window.gameDebug.snapshot().level.knownSolution[0]);
+    await campaignPage.evaluate(move => window.gameDebug.launch(move), finalMove);
+    await campaignPage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 8000 });
+    await campaignPage.getByRole('button', { name: 'CHOOSE LEVEL' }).waitFor({ timeout: 1500 });
+    assert.equal(await campaignPage.locator('.next-button:not(.victory-choose):not([hidden])').count(), 0, 'the final campaign level offers level selection instead of a nonexistent Next');
+    await campaignPage.getByRole('button', { name: 'CHOOSE LEVEL' }).click();
+    await campaignPage.locator('.settings-panel[aria-labelledby="level-select-title"]').waitFor();
+    assert.equal(await campaignPage.locator('.level-select-page .level-card').first().isDisabled(), false);
+    await campaignPage.close();
 
     const deniedStorage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
     await deniedStorage.addInitScript(() => {
@@ -366,7 +468,11 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     });
     await deniedStorage.goto(baseUrl);
     await deniedStorage.waitForFunction(() => window.gameDebug?.snapshot().loaded && window.gameDebug.persistenceInfo().memoryOnly);
-    assert.match(await deniedStorage.locator('#status').textContent(), /Прогресс временный/);
+    assert.match(await deniedStorage.locator('#status').textContent(), /Progress is temporary/);
+    await deniedStorage.getByRole('button', { name: 'Settings' }).click();
+    await deniedStorage.locator('.settings-status.is-warning').waitFor();
+    await deniedStorage.getByRole('button', { name: 'Retry storage' }).waitFor();
+    await deniedStorage.getByRole('button', { name: 'BACK TO GAME' }).click();
     await deniedStorage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
     assert.equal((await deniedStorage.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 1, 'storage denial does not block a move');
     await deniedStorage.close();
