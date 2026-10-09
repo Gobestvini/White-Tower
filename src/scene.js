@@ -8,6 +8,8 @@ import { createAnimationPlayer } from './presentation/animation.ts';
 import { createStore } from './storage/store.ts';
 import { validateGameSave, createGameSave } from './storage/save-schema.ts';
 import { parseSettings } from './ui/i18n.ts';
+import { createSolverClient } from './game/solver-client.ts';
+import { createHintService } from './game/hint-service.ts';
 
 export function createScene(canvas, rendererMode = 'auto') {
   let activeCanvas = canvas;
@@ -16,7 +18,10 @@ export function createScene(canvas, rendererMode = 'auto') {
   const controller = createGameController();
   const store = createStore();
   let pendingSave = Promise.resolve();
-  const animation = createAnimationPlayer({ onComplete: generationId => { showSnapshot(controller.finishAnimation(generationId)); persistSnapshot(); } });
+  const animation = createAnimationPlayer({ onComplete: generationId => {
+    const snapshot = controller.finishAnimation(generationId);
+    showSnapshot(snapshot); persistSnapshot(); scheduleDeadlock(snapshot);
+  } });
   let catalog;
   let level;
   let elapsed = 0;
@@ -26,9 +31,54 @@ export function createScene(canvas, rendererMode = 'auto') {
   let selectedStackId;
   let nextPending = false;
   let recoveryNotice = '';
+  let levelRequestId = 0;
   let unlockedLevel = 1;
   const defaultSettings = parseSettings({ reducedMotion: typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches });
   let settings = defaultSettings;
+  let tutorialElapsed = 0;
+  let tutorialVisible = false;
+  let hintView = Object.freeze({ kind: 'idle' });
+  let hintRemaining = 0;
+  let deadlockTimer;
+  const solver = createSolverClient();
+  const hintService = createHintService(solver, view => {
+    if (disposed) return;
+    hintView = view;
+    hintRemaining = ['move', 'undo-proven', 'undo-suggestion', 'deadlock', 'timeout', 'error'].includes(view.kind) ? 2.5 : 0;
+    if (view.kind === 'move') {
+      const stack = selectableStacks().find(item => item.u === view.move.u && item.v === view.move.v);
+      if (stack) selectStack(stack.id);
+    }
+  });
+
+  function clearDeadlockTimer() { if (deadlockTimer !== undefined) clearTimeout(deadlockTimer); deadlockTimer = undefined; }
+
+  function scheduleDeadlock(snapshot = controller.snapshot()) {
+    clearDeadlockTimer();
+    if (snapshot.phase !== 'Idle' || !snapshot.committedState || snapshot.committedState.stacks.length < 2 || selectableStacks(snapshot).length) return;
+    const expectedGeneration = snapshot.generationId;
+    deadlockTimer = setTimeout(() => {
+      deadlockTimer = undefined;
+      const current = controller.snapshot();
+      if (disposed || current.phase !== 'Idle' || current.generationId !== expectedGeneration || selectableStacks(current).length) return;
+      hintView = Object.freeze({ kind: 'deadlock' }); hintRemaining = 2;
+    }, 600);
+  }
+
+  function requestHint() {
+    let snapshot = controller.snapshot();
+    if (snapshot.phase === 'Menu') { snapshot = controller.closeMenu(); showSnapshot(snapshot); }
+    if (snapshot.phase !== 'Idle' || !snapshot.level || !snapshot.committedState) return false;
+    clearDeadlockTimer();
+    hintService.request(snapshot.level, snapshot.committedState, controller.historySnapshot());
+    return true;
+  }
+
+  function completeTutorial() {
+    if (settings.tutorialCompleted) return;
+    settings = parseSettings({ ...settings, tutorialCompleted: true });
+    tutorialVisible = false;
+  }
 
   function persistSnapshot() {
     const snapshot = controller.snapshot();
@@ -91,8 +141,11 @@ export function createScene(canvas, rendererMode = 'auto') {
     const stack = selectableStacks().find(item => item.id === id);
     if (!stack) return false;
     selectedStackId = id;
+    clearDeadlockTimer();
     const started = controller.launch({ u: stack.u, v: stack.v });
     if (started.phase !== 'Animating') return false;
+    hintService.cancel();
+    completeTutorial();
     persistSnapshot();
     animation.start({ stacks: started.displayedState.stacks, steps: started.animation.steps, events: started.animation.events, generationId: started.generationId, reducedMotion: settings.reducedMotion });
     showPresentation(animation.snapshot().stacks, started);
@@ -101,6 +154,8 @@ export function createScene(canvas, rendererMode = 'auto') {
 
   function toggleMenu() {
     const snapshot = controller.snapshot();
+    hintService.cancel();
+    tutorialVisible = false;
     if (snapshot.phase === 'Menu') { showSnapshot(controller.closeMenu()); return true; }
     if (snapshot.phase === 'Idle' || snapshot.phase === 'Won') { showSnapshot(controller.openMenu()); return true; }
     return false;
@@ -128,15 +183,18 @@ export function createScene(canvas, rendererMode = 'auto') {
 
   async function setLevelById(id) {
     if (!catalog || disposed) throw new Error('Каталог ещё загружается.');
+    const requestId = ++levelRequestId;
     animation.reset();
+    hintService.cancel(); tutorialElapsed = 0; tutorialVisible = false; clearDeadlockTimer();
     const current = controller.snapshot();
     if (current.phase === 'Animating') showSnapshot(controller.finishAnimation(current.generationId));
     const nextLevel = await loadLevelById(catalog, id);
-    if (disposed) return;
+    if (disposed || requestId !== levelRequestId) return;
     level = nextLevel;
     towerDemo = false;
     showSnapshot(controller.loadLevel(level));
     await persistSnapshot();
+    scheduleDeadlock(controller.snapshot());
   }
 
   async function selectLevel(id) {
@@ -215,6 +273,11 @@ export function createScene(canvas, rendererMode = 'auto') {
       }
       showSnapshot(controller.snapshot());
       if (rawSave === undefined) persistSnapshot();
+      if (settings.tutorialCompleted || controller.snapshot().committedState?.moveCount) {
+        tutorialVisible = false;
+        if (!settings.tutorialCompleted) { completeTutorial(); persistSnapshot(); }
+      }
+      scheduleDeadlock(controller.snapshot());
       return level;
     });
 
@@ -229,17 +292,27 @@ export function createScene(canvas, rendererMode = 'auto') {
     selectStack,
     launchStack,
     toggleMenu,
-    update(dt) { elapsed += dt; if (controller.snapshot().phase === 'Animating') showPresentation(animation.update(dt).stacks); },
-    pause(value) { animation.pause(value); },
+    update(dt) {
+      elapsed += dt;
+      const snapshot = controller.snapshot();
+      if (snapshot.phase === 'Animating') showPresentation(animation.update(dt).stacks);
+      else if (snapshot.phase === 'Idle' && snapshot.level?.id === 'level-001' && !settings.tutorialCompleted) {
+        tutorialElapsed += dt;
+        if (tutorialElapsed >= 2) tutorialVisible = true;
+      }
+      if (hintRemaining > 0) { hintRemaining = Math.max(0, hintRemaining - dt); if (!hintRemaining) hintView = Object.freeze({ kind: 'idle' }); }
+    },
+    pause(value) { animation.pause(value); if (value) { hintService.cancel(); clearDeadlockTimer(); tutorialVisible = false; } },
     render() { renderer.render(); },
     resize(viewport) { renderer.resize(viewport); },
     reset() {
       elapsed = 0;
       towerDemo = false;
       animation.reset();
+      hintService.cancel(); tutorialElapsed = 0; tutorialVisible = false; clearDeadlockTimer();
       const current = controller.snapshot();
       if (current.phase === 'Animating') controller.finishAnimation(current.generationId);
-      if (level) { showSnapshot(controller.restart()); persistSnapshot(); }
+      if (level) { showSnapshot(controller.restart()); persistSnapshot(); scheduleDeadlock(controller.snapshot()); }
     },
     async setLevelById(id) { return setLevelById(id); },
     async selectLevel(id) { return selectLevel(id); },
@@ -250,10 +323,12 @@ export function createScene(canvas, rendererMode = 'auto') {
       const result = validateLevel(raw);
       if (!result.ok) throw new Error(`Invalid debug level: ${result.errors.map(issue => issue.message).join(' ')}`);
       level = result.value;
+      hintService.cancel(); clearDeadlockTimer(); tutorialElapsed = 0; tutorialVisible = false;
       towerDemo = false;
       animation.reset();
       const snapshot = controller.loadLevel(level);
       showSnapshot(snapshot);
+      scheduleDeadlock(snapshot);
       return snapshot;
     },
     setTowerDemo(height) {
@@ -273,7 +348,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     snapshot() {
       const snapshot = controller.snapshot();
       const levelIndex = catalog?.levels.findIndex(entry => entry.id === snapshot.level?.id) ?? -1;
-      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0, unlockedLevel, settings, persistence: { memoryOnly: store.memoryOnly(), recoveryNotice } };
+      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0, unlockedLevel, settings, tutorialVisible: tutorialVisible && snapshot.phase === 'Idle', hintView, persistence: { memoryOnly: store.memoryOnly(), recoveryNotice } };
     },
     presentationSnapshot() { return animation.snapshot(); },
     resourceCounts() { return renderer.resourceCounts(); },
@@ -284,21 +359,25 @@ export function createScene(canvas, rendererMode = 'auto') {
       return id && selectableStacks(snapshot).some(stack => stack.id === id) ? id : undefined;
     },
     debugLaunch(start) {
+      hintService.cancel(); clearDeadlockTimer();
       const snapshot = controller.launch(start);
       if (snapshot.phase === 'Animating') {
+        completeTutorial();
         persistSnapshot();
         animation.start({ stacks: snapshot.displayedState.stacks, steps: snapshot.animation.steps, events: snapshot.animation.events, generationId: snapshot.generationId, reducedMotion: settings.reducedMotion });
         showPresentation(animation.snapshot().stacks, snapshot);
       } else showSnapshot(snapshot);
       return snapshot;
     },
-    debugFinishAnimation(generationId) { animation.reset(); const snapshot = controller.finishAnimation(generationId); showSnapshot(snapshot); return snapshot; },
-    undo() { const snapshot = controller.undo(); showSnapshot(snapshot); persistSnapshot(); return snapshot; },
+    debugFinishAnimation(generationId) { animation.reset(); const snapshot = controller.finishAnimation(generationId); showSnapshot(snapshot); persistSnapshot(); scheduleDeadlock(snapshot); return snapshot; },
+    requestHint,
+    undo() { hintService.cancel(); clearDeadlockTimer(); const snapshot = controller.undo(); showSnapshot(snapshot); persistSnapshot(); scheduleDeadlock(snapshot); return snapshot; },
     persistenceInfo() { return Object.freeze({ mode: store.mode(), memoryOnly: store.memoryOnly(), reason: store.unavailableReason(), recoveryNotice }); },
     flushPersistence() { return store.flush(); },
     dispose() {
       if (disposed) return;
       disposed = true;
+      clearDeadlockTimer(); hintService.dispose(); solver.dispose();
       animation.dispose();
       controller.dispose();
       renderer.dispose();

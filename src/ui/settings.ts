@@ -4,9 +4,10 @@ import { t, type Language, type UserSettings } from './i18n.js';
 type SettingsView = Readonly<{
   settings: UserSettings; choices: readonly LevelChoice[]; unlockedLevel: number; completed: readonly string[];
   selectedLevelId: string; memoryOnly: boolean; recoveryNotice: string;
+  canHint: boolean;
 }>;
 export function createSettingsDialog(root: HTMLElement, actions: {
-  close(): void; update(settings: UserSettings): void; selectLevel(id: string): void; clearProgress(): void; retry(): void;
+  close(): void; update(settings: UserSettings): void; selectLevel(id: string): void; clearProgress(): void; retry(): void; hint(): void;
 }) {
   const panel = document.createElement('section'); panel.className = 'settings-panel'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-labelledby', 'settings-title'); panel.tabIndex = -1;
   const card = document.createElement('div'); card.className = 'settings-card';
@@ -26,6 +27,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const rendererSelect = document.createElement('select'); rendererSelect.setAttribute('aria-label', 'Graphics mode');
   rendererSelect.innerHTML = '<option value="auto"></option><option value="webgl"></option><option value="2d"></option>'; rendererLabel.append(rendererSelect);
   const levelButton = document.createElement('button'); levelButton.type = 'button'; levelButton.className = 'menu-secondary';
+  const hintButton = document.createElement('button'); hintButton.type = 'button'; hintButton.className = 'menu-secondary';
   const audioNote = document.createElement('p'); audioNote.className = 'settings-note';
   const clearButton = document.createElement('button'); clearButton.type = 'button'; clearButton.className = 'menu-danger';
   const closeButton = document.createElement('button'); closeButton.type = 'button'; closeButton.className = 'settings-close';
@@ -33,7 +35,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const confirmText = document.createElement('p'); const confirmButton = document.createElement('button'); confirmButton.type = 'button'; confirmButton.className = 'menu-danger';
   const cancelButton = document.createElement('button'); cancelButton.type = 'button'; cancelButton.className = 'menu-secondary';
   confirmPane.append(confirmText, confirmButton, cancelButton);
-  controls.append(languageLabel, motionLabel, rendererLabel, levelButton, audioNote, clearButton, closeButton);
+  controls.append(languageLabel, motionLabel, rendererLabel, levelButton, hintButton, audioNote, clearButton, closeButton);
   settingsPage.append(title, status, controls, confirmPane);
   const levelPage = document.createElement('div'); levelPage.className = 'level-select-page'; levelPage.hidden = true;
   card.append(settingsPage, levelPage); panel.append(card); root.append(panel);
@@ -63,6 +65,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
     languageSelect.setAttribute('aria-label', t(language, 'language'));
     rendererSelect.setAttribute('aria-label', t(language, 'renderer'));
     levelButton.textContent = `${t(language, 'levels')} · ${input.unlockedLevel}/${input.choices.length}`;
+    hintButton.textContent = t(language, 'hint'); hintButton.disabled = !input.canHint;
     clearButton.textContent = t(language, 'clearProgress'); closeButton.textContent = t(language, 'back');
     audioNote.textContent = t(language, 'audioLater');
     status.textContent = input.memoryOnly ? t(language, 'memory') : input.recoveryNotice;
@@ -84,6 +87,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   motionInput.addEventListener('change', () => changeSettings({ reducedMotion: motionInput.checked }));
   rendererSelect.addEventListener('change', () => changeSettings({ rendererMode: rendererSelect.value as UserSettings['rendererMode'] }));
   levelButton.addEventListener('click', () => { settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); });
+  hintButton.addEventListener('click', actions.hint);
   clearButton.addEventListener('click', () => { confirmText.textContent = t(view?.settings.language ?? 'en', 'clearQuestion'); confirmButton.textContent = t(view?.settings.language ?? 'en', 'confirmClear'); cancelButton.textContent = t(view?.settings.language ?? 'en', 'cancel'); confirmPane.hidden = false; clearButton.hidden = true; confirmButton.focus(); });
   cancelButton.addEventListener('click', () => { confirmPane.hidden = true; clearButton.hidden = false; clearButton.focus(); });
   confirmButton.addEventListener('click', () => { confirmPane.hidden = true; clearButton.hidden = false; actions.clearProgress(); });

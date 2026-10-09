@@ -3,7 +3,7 @@
 | Путь | Назначение |
 | --- | --- |
 | src/main.js | Canvas, RAF, resize, visibility, пауза/reset, HMR dispose |
-| src/ui/hud.ts, victory.ts, settings.ts, level-select.ts, i18n.ts | DOM HUD, двуязычные Settings/level select, счётчик, Undo/Restart, финал кампании и Next поверх canvas |
+| src/ui/hud.ts, victory.ts, settings.ts, level-select.ts, i18n.ts, hint.ts, tutorial.ts | DOM HUD, двуязычные Settings/level select, счётчик, Undo/Restart, финал кампании, подсказка и начальное обучение |
 | src/loop.js / createStepper | Шаг 1/60 с, максимум 8 шагов кадра, dropped time, alpha |
 | src/input.js / createInput | Удерживаемые event.code клавиши, blur/reset/dispose |
 | src/input/pointer.ts, game-actions.ts | Pointer цель и CSS-порог; keyboard selection и controller intents |
@@ -11,7 +11,7 @@
 | src/presentation/animation.ts, timings.ts | Кадрово-независимый маршрут движения, слияния, поворота и остановки; пауза/отмена, без изменения committed state |
 | index.html, src/style.css | Оболочка приложения и адаптивная сцена |
 | tsconfig.json | Строгая проверка TypeScript runtime, тестов и инструментов |
-| src/game/ | Правила, модель уровня, симулятор, поиск решения и контроллер |
+| src/game/ | Правила, модель уровня, симулятор, поиск решения, контроллер и сервис доказанных подсказок |
 | src/storage/store.ts, save-schema.ts | Устойчивое локальное сохранение: IndexedDB → localStorage → память; проверка версии и состояния |
 | src/render/webgl-renderer.ts | Основной Three.js WebGL renderer, процедурные плитки и владение GPU ресурсами |
 | src/render/canvas-renderer.ts | Совместимый 2D renderer с тем же view state, projection и hit-test |

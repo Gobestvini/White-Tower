@@ -13,6 +13,7 @@ export type GameSnapshot = Readonly<{
   attemptId: number;
   canUndo: boolean;
   completedLevelIds: readonly string[];
+  menuReturn?: 'Idle' | 'Won';
   error?: string;
 }>;
 
@@ -50,6 +51,7 @@ export function createGameController() {
       attemptId,
       canUndo: history.length > 0 && (phase === 'Idle' || phase === 'Won'),
       completedLevelIds: [...completed].sort(),
+      ...(phase === 'Menu' ? { menuReturn } : {}),
       ...(error ? { error } : {}),
     });
   }

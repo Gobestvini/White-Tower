@@ -313,6 +313,53 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       assert.deepEqual(errors, []);
       await page.close();
     }
+    const guidancePage = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    guidancePage.setDefaultTimeout(7000);
+    await guidancePage.goto(baseUrl);
+    await guidancePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    await guidancePage.locator('.tutorial-tip').waitFor({ state: 'visible', timeout: 3500 });
+    assert.match(await guidancePage.locator('.tutorial-tip').textContent(), /Tap the arrow/i, 'Lv.1 tutorial appears after idle');
+    await guidancePage.getByRole('button', { name: 'Settings' }).click();
+    const hintButton = guidancePage.locator('.settings-panel').getByRole('button', { name: 'Hint' });
+    assert.equal(await hintButton.isDisabled(), false, 'Hint is available during an active attempt');
+    await hintButton.click();
+    await guidancePage.locator('.hint-toast[data-kind="move"]').waitFor({ state: 'visible', timeout: 7000 });
+    assert.equal((await guidancePage.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 0, 'requesting Hint does not launch a move');
+    assert.equal(await guidancePage.evaluate(() => window.gameDebug.selectedStackId()), 'stack:0,0', 'Hint highlights the solver-proven first arrow');
+    assert.match(await guidancePage.locator('.hint-toast').textContent(), /highlighted arrow/i);
+    await guidancePage.evaluate(() => window.gameDebug.launch({ u: 0, v: 0 }));
+    await guidancePage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 7000 });
+    assert.equal((await guidancePage.evaluate(() => window.gameDebug.snapshot())).settings.tutorialCompleted, true, 'first move completes the tutorial');
+    await guidancePage.reload();
+    await guidancePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    await guidancePage.waitForTimeout(2200);
+    assert.equal(await guidancePage.locator('.tutorial-tip').isVisible(), false, 'completed tutorial stays hidden after reload');
+    await guidancePage.evaluate(() => window.gameDebug.setLevelById('level-002'));
+    await guidancePage.evaluate(() => window.gameDebug.launch({ u: 0, v: 2 }));
+    await guidancePage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Idle');
+    await guidancePage.getByRole('button', { name: 'Settings' }).click();
+    await guidancePage.locator('.settings-panel').getByRole('button', { name: 'Hint' }).click();
+    await guidancePage.locator('.hint-toast[data-kind="move"]').waitFor({ state: 'visible', timeout: 7000 });
+    assert.equal(await guidancePage.evaluate(() => window.gameDebug.selectedStackId()), 'stack:2,0', 'Hint finds a proven move from the changed level-2 state');
+    assert.equal((await guidancePage.evaluate(() => window.gameDebug.snapshot())).committedState.moveCount, 1, 'Hint leaves the existing move history unchanged');
+    await guidancePage.evaluate(() => {
+      window.gameDebug.setLevelById('level-002');
+      window.gameDebug.requestHint();
+      window.gameDebug.setLevelById('level-001');
+    });
+    await guidancePage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-001' && window.gameDebug.snapshot().phase === 'Idle');
+    await guidancePage.waitForTimeout(500);
+    assert.equal((await guidancePage.evaluate(() => window.gameDebug.snapshot())).hintView.kind, 'idle', 'changing levels cancels an in-flight hint and ignores its result');
+    await guidancePage.evaluate(() => window.gameDebug.loadLevel({
+      schemaVersion: 1, id: 'deadlock-test', title: 'Deadlock test',
+      cells: [{ u: 0, v: 0, kind: 'normal' }, { u: 1, v: 0, kind: 'normal' }],
+      stacks: [{ u: 0, v: 0, height: 1 }, { u: 1, v: 0, height: 1 }],
+      totalTiles: 2, cameraPreset: 'reference', tutorialKey: null, parMoves: 1, knownSolution: [{ u: 0, v: 0 }],
+    }));
+    await guidancePage.locator('.hint-toast[data-kind="deadlock"]').waitFor({ state: 'visible', timeout: 2500 });
+    assert.match(await guidancePage.locator('.hint-toast').textContent(), /Try undoing a move/i, 'automatic deadlock notice appears only after the stable delay');
+    await guidancePage.close();
+
     const savePage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
     await savePage.goto(baseUrl);
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
@@ -375,7 +422,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
-    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: '2d' }, 'locale, reduced motion and renderer preference survive reload');
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: '2d', tutorialCompleted: true }, 'locale, reduced motion, renderer preference and tutorial completion survive reload');
     assert.equal(await savePage.evaluate(() => window.gameDebug.rendererInfo().mode), '2d');
     await savePage.getByRole('button', { name: 'Настройки' }).click();
     preferences = savePage.locator('.settings-panel');
@@ -396,7 +443,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       request.onsuccess = () => {
         const tx = request.result.transaction('save', 'readwrite'); const store = tx.objectStore('save');
         const get = store.get('white-tower.save.v1');
-        get.onsuccess = () => store.put({ ...get.result, settings: { language: 'ru', reducedMotion: true, rendererMode: 'auto' } }, 'white-tower.save.v1');
+        get.onsuccess = () => store.put({ ...get.result, settings: { language: 'ru', reducedMotion: true, rendererMode: 'auto', tutorialCompleted: true } }, 'white-tower.save.v1');
         tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error);
       };
       request.onerror = () => reject(request.error);
@@ -404,7 +451,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
-    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: 'auto' }, 'settings values roundtrip with the save');
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: 'auto', tutorialCompleted: true }, 'settings values roundtrip with the save');
     await savePage.evaluate(() => new Promise((resolve, reject) => {
       const request = indexedDB.open('white-tower', 1);
       request.onsuccess = () => {

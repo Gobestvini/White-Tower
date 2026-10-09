@@ -51,6 +51,7 @@ const hud = createHud({
   onClearProgress: () => { void scene.clearProgress().then(() => { installPointerInput(); resize(); }); },
   onRetry: () => window.location.reload(),
   onChooseLevels: () => { scene.toggleMenu(); },
+  onHint: () => scene.requestHint(),
 });
 const gameActions = createGameActions({
   canvas: () => scene.canvas,
@@ -149,6 +150,7 @@ if (import.meta.env.DEV) {
     pointForStack: id => scene.pointForStack(id),
     selectedStackId: () => scene.selectedStackId(),
     pickStack: point => scene.pickStack(point),
+    requestHint: () => scene.requestHint(),
   };
 }
 if (import.meta.hot) import.meta.hot.dispose(dispose);

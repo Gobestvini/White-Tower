@@ -34,6 +34,9 @@ main.is-won canvas { pointer-events: none; }
 .menu-secondary, .menu-danger { min-height: 46px; padding: 9px 14px; border-radius: 12px; background: #286a91; color: #fff; font-weight: 800; }
 .menu-danger { background: #853d49 !important; }
 .settings-note { color: #e0f2fc; font-size: 14px; }
+.hint-toast { position: absolute; left: 50%; top: 81.5%; transform: translate(-50%, -50%); max-width: 88%; margin: 0; padding: 8px 14px; border-radius: 18px; background: #174a69dd; color: #fff; font-size: clamp(13px, 3.3vw, 20px); font-weight: 800; line-height: 1.2; text-align: center; text-wrap: balance; pointer-events: none; }
+.hint-toast[hidden], .tutorial-tip[hidden] { display: none; }
+.tutorial-tip { position: absolute; left: 50%; top: 18.5%; transform: translateX(-50%); max-width: 84%; margin: 0; padding: 8px 15px; border-radius: 18px; background: #3C7EA9; color: #fff; font-size: clamp(17px, 3.8vw, 24px); font-weight: 800; text-align: center; box-shadow: 0 3px 8px #1d5d8240; pointer-events: none; }
 .settings-status:not(:empty) { padding: 9px; border-radius: 10px; background: #174a69; }
 .settings-status.is-warning { background: #674d2d; }
 .storage-retry { width: 100%; }
