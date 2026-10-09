@@ -1,6 +1,6 @@
 import type { Level, Stack } from '../game/model.js';
 import { DIRECTION_VECTORS, type Direction } from '../game/directions.js';
-import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, pickVisibleStack, type Projection } from './projection.js';
+import { ARTBOARD, CAMERA_PITCH, FLOOR_RADIUS, TILE_RADIUS, TILE_SIDE_DEPTH, worldToScreen, createProjection, pickVisibleStack, unpitchScreenPoint, type Projection } from './projection.js';
 import { WHITE_TOWER_COLORS, type RenderStack, type RenderViewState } from './presets.js';
 import type { RenderViewport, WhiteTowerRenderer } from './webgl-renderer.js';
 
@@ -91,7 +91,7 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
       point.x += (stack.tilt ?? 0) * layer * 42;
       point.y -= (stack.tilt ?? 0) * layer * 22;
       const radius = TILE_RADIUS;
-      const side = 9;
+      const side = TILE_SIDE_DEPTH;
       const fraction = layer === Math.floor(stack.height) && stack.height % 1 > 0 ? Math.max(0.08, stack.height % 1) : 1;
       context!.save(); context!.translate(point.x, point.y); context!.scale(1, fraction); context!.translate(-point.x, -point.y);
       context!.beginPath(); context!.moveTo(point.x + radius, point.y); context!.lineTo(point.x, point.y + radius); context!.lineTo(point.x, point.y + radius + side); context!.lineTo(point.x + radius, point.y + side); context!.closePath(); context!.fillStyle = WHITE_TOWER_COLORS.tileSideDark; context!.fill();
@@ -141,13 +141,16 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     context.fillRect(0, 0, viewport.width, viewport.height);
     context.setTransform(viewport.pixelRatio * scale, 0, 0, viewport.pixelRatio * scale, viewport.pixelRatio * offsetX, viewport.pixelRatio * offsetY);
     if (!view) return;
+    context.translate(0, ARTBOARD.height / 2);
+    context.scale(1, CAMERA_PITCH);
+    context.translate(0, -ARTBOARD.height / 2);
     const activeProjection = projection ?? createProjection(view.level, view.level.totalTiles);
     const occupied = new Set(view.stacks.map(stack => key(stack.u, stack.v)));
     for (const cell of [...view.level.cells].sort((a, b) => a.u + a.v - b.u - b.v)) {
       if (cell.kind === 'blocked') continue;
       if (occupied.has(key(cell.u, cell.v))) continue;
       const point = worldToScreen(cell.u, cell.v, 0, activeProjection);
-      drawDiamond(point.x, point.y, 80, WHITE_TOWER_COLORS.floor, WHITE_TOWER_COLORS.floorSeam);
+      drawDiamond(point.x, point.y, FLOOR_RADIUS, WHITE_TOWER_COLORS.floor, WHITE_TOWER_COLORS.floorSeam);
       if (cell.kind === 'redirect' && cell.direction) drawChevron(point.x, point.y, cell.direction);
     }
     for (const stack of [...view.stacks].sort((a, b) => a.u + a.v - b.u - b.v)) drawStack(stack, activeProjection);
@@ -155,7 +158,7 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
 
   function pickStack(point: Readonly<{ x: number; y: number }>, activeView: RenderViewState): string | undefined {
     const selectedProjection = projection ?? createProjection(activeView.level, activeView.level.totalTiles);
-    return pickVisibleStack(point, activeView.stacks.map(stack => ({ id: stack.id, u: stack.u, v: stack.v, height: stack.height })), selectedProjection);
+    return pickVisibleStack(unpitchScreenPoint(point), activeView.stacks.map(stack => ({ id: stack.id, u: stack.u, v: stack.v, height: stack.height })), selectedProjection);
   }
 
   return Object.freeze({ setView, resize, render, pickStack, resourceCounts: () => Object.freeze({ geometries: 0, textures: 0, programs: 0, children: 0 }), dispose() { if (!disposed) { disposed = true; view = undefined; } } });

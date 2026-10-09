@@ -25,7 +25,7 @@ test('picking returns the frontmost top face and blocks a hidden rear tile behin
   const projection = { scale: 0.5, originX: 0, originY: 0, layerRise: 12.8 };
   const stacks = [{ id: 'rear', u: 0, v: 0, height: 1 }, { id: 'front', u: 1, v: 0, height: 1 }];
   assert.equal(pickVisibleStack({ x: -40, y: 0 }, stacks, projection), 'rear');
-  assert.equal(pickVisibleStack({ x: 0, y: 0 }, stacks, projection), undefined);
+  assert.equal(pickVisibleStack({ x: 36, y: 66 }, stacks, projection), undefined);
   assert.equal(pickVisibleStack(worldToScreen(1, 0, 0, projection), stacks, projection), 'front');
 });
 

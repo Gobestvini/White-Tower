@@ -12,7 +12,7 @@ import {
 import { DIRECTIONS, type Direction } from '../game/directions.js';
 import type { Level, Stack } from '../game/model.js';
 import { createBevelGeometry, createChevronGeometry, createDiamondGeometry, createDiamondOutlineGeometry, createArrowGeometry, createShadowGeometry, createSideGeometry } from './geometry.js';
-import { ARTBOARD, TILE_RADIUS, worldToScreen, createProjection, pickVisibleStack, type Projection } from './projection.js';
+import { ARTBOARD, CAMERA_PITCH, FLOOR_RADIUS, TILE_RADIUS, TILE_SIDE_DEPTH, worldToScreen, createProjection, pickVisibleStack, unpitchScreenPoint, type Projection } from './projection.js';
 import { WHITE_TOWER_COLORS, type RenderStack, type RenderViewState } from './presets.js';
 
 export type RenderViewport = Readonly<{ width: number; height: number; pixelRatio: number }>;
@@ -66,17 +66,18 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
 
   const materials = createMaterials();
   const geometry = {
-    floor: createDiamondGeometry(80),
-    floorOutline: createDiamondOutlineGeometry(78),
+    floor: createDiamondGeometry(FLOOR_RADIUS),
+    floorOutline: createDiamondOutlineGeometry(FLOOR_RADIUS - 2),
     tileTop: createDiamondGeometry(TILE_RADIUS - 4),
     tileBevel: createBevelGeometry(TILE_RADIUS, 4),
-    tileSide: createSideGeometry(TILE_RADIUS, 9),
+    tileSide: createSideGeometry(TILE_RADIUS, TILE_SIDE_DEPTH),
     selection: createDiamondOutlineGeometry(TILE_RADIUS + 7),
     shadow: createShadowGeometry(),
     arrows: Object.fromEntries(DIRECTIONS.map(direction => [direction, createArrowGeometry(direction)])) as Record<Direction, ReturnType<typeof createArrowGeometry>>,
     chevrons: Object.fromEntries(DIRECTIONS.map(direction => [direction, createChevronGeometry(direction)])) as Record<Direction, ReturnType<typeof createChevronGeometry>>,
   };
   const viewLayer = new Scene();
+  viewLayer.scale.y = CAMERA_PITCH;
   scene.add(viewLayer);
   let viewport: RenderViewport = { width: 1, height: 1, pixelRatio: 1 };
   let projection: Projection | undefined;
@@ -183,7 +184,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
 
   function pickStack(point: Readonly<{ x: number; y: number }>, activeView: RenderViewState): string | undefined {
     if (!projection) projection = createProjection(activeView.level, activeView.level.totalTiles);
-    return pickVisibleStack(point, activeView.stacks, projection);
+    return pickVisibleStack(unpitchScreenPoint(point), activeView.stacks, projection);
   }
 
   function resourceCounts(): RendererResourceCounts {

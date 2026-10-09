@@ -1,9 +1,15 @@
 import type { Level } from '../game/model.js';
 
 export const ARTBOARD = Object.freeze({ width: 720, height: 1280 });
-export const TILE_STEP = 80;
-export const TILE_RADIUS = TILE_STEP * 0.94;
-export const LAYER_RISE = 0.16 * TILE_STEP;
+export const TILE_STEP = 72;
+// The source video shows a shallow oblique view: compress the board vertically
+// while keeping the portrait framing and logical grid coordinates intact.
+export const CAMERA_PITCH = 0.82;
+export const TILE_RADIUS = 96;
+export const FLOOR_RADIUS = 90;
+export const TILE_SIDE_DEPTH = 14;
+export const LAYER_RISE = 0.22 * TILE_STEP;
+export const MAX_PROJECTION_SCALE = 1.33;
 
 export type ScreenPoint = Readonly<{ x: number; y: number }>;
 export type ClientRect = Readonly<{ left: number; top: number; width: number; height: number }>;
@@ -59,9 +65,9 @@ export function pickVisibleStack(point: ScreenPoint, stacks: readonly Readonly<{
       const bottom = { x: center.x, y: center.y + TILE_RADIUS };
       const right = { x: center.x + TILE_RADIUS, y: center.y };
       const left = { x: center.x - TILE_RADIUS, y: center.y };
-      const lowerBottom = { x: bottom.x, y: bottom.y + 9 };
-      const lowerRight = { x: right.x, y: right.y + 9 };
-      const lowerLeft = { x: left.x, y: left.y + 9 };
+      const lowerBottom = { x: bottom.x, y: bottom.y + TILE_SIDE_DEPTH };
+      const lowerRight = { x: right.x, y: right.y + TILE_SIDE_DEPTH };
+      const lowerLeft = { x: left.x, y: left.y + TILE_SIDE_DEPTH };
       if (pointInPolygon(point, [right, bottom, lowerBottom, lowerRight]) || pointInPolygon(point, [bottom, left, lowerLeft, lowerBottom])) return undefined;
     }
   }
@@ -86,7 +92,7 @@ export function createProjection(level: Level, maxHeight = level.totalTiles): Pr
   const bounds = rawBounds(level, maxHeight);
   const safeWidth = 600;
   const safeHeight = 690;
-  const scale = Math.min(1.25, safeWidth / bounds.width, safeHeight / bounds.height);
+  const scale = Math.min(MAX_PROJECTION_SCALE, safeWidth / bounds.width, safeHeight / (bounds.height * CAMERA_PITCH));
   const centerX = (bounds.minX + bounds.maxX) / 2;
   const centerY = (bounds.minY + bounds.maxY) / 2;
   return Object.freeze({
@@ -95,4 +101,13 @@ export function createProjection(level: Level, maxHeight = level.totalTiles): Pr
     originY: 760 - centerY * scale,
     layerRise: LAYER_RISE,
   });
+}
+
+/** Applies/removes the fixed orthographic camera pitch around the artboard center. */
+export function pitchScreenPoint(point: ScreenPoint): ScreenPoint {
+  return Object.freeze({ x: point.x, y: ARTBOARD.height / 2 + (point.y - ARTBOARD.height / 2) * CAMERA_PITCH });
+}
+
+export function unpitchScreenPoint(point: ScreenPoint): ScreenPoint {
+  return Object.freeze({ x: point.x, y: ARTBOARD.height / 2 + (point.y - ARTBOARD.height / 2) / CAMERA_PITCH });
 }

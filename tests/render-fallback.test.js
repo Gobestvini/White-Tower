@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRendererFactory } from '../src/render/renderer-factory.ts';
 import { createCanvasRenderer } from '../src/render/canvas-renderer.ts';
-import { createProjection, worldToScreen } from '../src/render/projection.ts';
+import { createProjection, pitchScreenPoint, worldToScreen } from '../src/render/projection.ts';
 
 function stubRenderer() {
   return { setView() {}, resize() {}, render() {}, pickStack() {}, resourceCounts: () => ({ geometries: 0, textures: 0, programs: 0, children: 0 }), dispose() {} };
@@ -52,7 +52,7 @@ test('forced Canvas mode shares projection, hit location and preserves disposabl
   const view = { revision: 0, level, stacks: [{ id: 'stack:0,0', u: 0, v: 0, height: 1, launchDirection: 'SE' }] };
   const projection = createProjection(level);
   const center = worldToScreen(0, 0, 0, projection);
-  assert.equal(renderer.pickStack(center, view), 'stack:0,0');
+  assert.equal(renderer.pickStack(pitchScreenPoint(center), view), 'stack:0,0');
   renderer.setView(view); renderer.resize({ width: 720, height: 1280, pixelRatio: 1 }); renderer.render();
   assert.ok(calls.some(([operation]) => operation === 'fill'));
   renderer.dispose(); renderer.dispose();

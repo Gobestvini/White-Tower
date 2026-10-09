@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { createProjection, getLevelBounds, screenToWorld, worldToScreen } from '../src/render/projection.ts';
+import { CAMERA_PITCH, FLOOR_RADIUS, LAYER_RISE, MAX_PROJECTION_SCALE, TILE_RADIUS, TILE_STEP, createProjection, getLevelBounds, pitchScreenPoint, screenToWorld, unpitchScreenPoint, worldToScreen } from '../src/render/projection.ts';
 import { createInitialState, validateLevel } from '../src/game/level-schema.js';
 import { DIRECTIONS } from '../src/game/directions.js';
 import { createArrowGeometry, createChevronGeometry, createDiamondGeometry, createSideGeometry } from '../src/render/geometry.ts';
@@ -18,31 +18,37 @@ const loadLevel = number => {
 test('logical coordinates project to the reference axes and invert at any layer height', () => {
   const projection = Object.freeze({ scale: 1.25, originX: 360, originY: 760, layerRise: 12.8 });
   const screen = worldToScreen(2, 1, 4, projection);
-  assert.deepEqual(screen, { x: 460, y: 396 });
+  assert.deepEqual(screen, { x: 450, y: 426 });
   const logical = screenToWorld(screen, 4, projection);
   assert.ok(Math.abs(logical.u - 2) < 1e-12);
   assert.ok(Math.abs(logical.v - 1) < 1e-12);
 });
 
-test('reference projection is uniform and reserves the maximum possible stack height', () => {
+test('reference projection reserves the maximum stack height within the pitched camera frame', () => {
   const level = loadLevel(6);
   const projection = createProjection(level);
   const bounds = getLevelBounds(level);
   const lowerBounds = getLevelBounds(level, 1);
-  assert.ok(projection.scale > 0 && projection.scale <= 1.25);
+  assert.ok(projection.scale > 0 && projection.scale <= MAX_PROJECTION_SCALE);
   assert.equal(bounds.width, bounds.maxX - bounds.minX);
   assert.ok(bounds.height > lowerBounds.height);
   const initial = worldToScreen(0, 0, 0, projection);
   const tall = worldToScreen(0, 0, level.totalTiles - 1, projection);
   assert.equal(initial.x, tall.x);
-  assert.ok(Math.abs(initial.y - tall.y - (level.totalTiles - 1) * 12.8 * projection.scale) < 1e-9);
+  assert.ok(Math.abs(initial.y - tall.y - (level.totalTiles - 1) * LAYER_RISE * projection.scale) < 1e-9);
+  const pitched = pitchScreenPoint(initial);
+  assert.ok(Math.abs(pitched.y - 640) < Math.abs(initial.y - 640));
+  assert.deepEqual(unpitchScreenPoint(pitched), initial);
 });
 
-test('projection fits sparse, ring and dense reference levels without changing aspect', () => {
+test('projection fits sparse, ring and dense reference levels with calibrated scale', () => {
   const levels = [loadLevel(1), loadLevel(6), loadLevel(7), loadLevel(9), loadLevel(11)];
   const scales = levels.map(level => createProjection(level).scale);
-  assert.ok(scales.every(scale => scale > 0 && scale <= 1.25));
+  assert.ok(scales.every(scale => scale > 0 && scale <= MAX_PROJECTION_SCALE));
   assert.ok(new Set(scales).size > 1);
+  assert.ok(CAMERA_PITCH < 1);
+  assert.ok(TILE_RADIUS > TILE_STEP, 'white tiles overlap the grid pitch to close visual gaps');
+  assert.ok(FLOOR_RADIUS > TILE_STEP, 'revealed floor diamonds meet across adjacent cells');
 });
 
 test('procedural tile and arrow geometry is reusable and non-empty in every direction', () => {
