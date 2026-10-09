@@ -1,6 +1,6 @@
 # TASK-0018: Добавить тихие звуковые эффекты с безопасным lifecycle
 
-- Статус: review
+- Статус: done
 - Приоритет: normal
 - Создана: 2026-10-08
 - Обновлена: 2026-10-09
@@ -75,10 +75,12 @@
 
 ## 10. Отчёт исполнителя
 
+Приёмка владельца, 2026-10-09: владелец принял задачу, ранее находившуюся на review, и разрешил продолжить работу. Восприятие звука через реальные динамики/наушники и мобильное устройство не проверялось; ограничение принято владельцем и не записывается как выполненная проверка.
+
 - Результат: добавлены семь тихих проектно-синтезированных звуков (UI, запуск, контакт слияния, оседание большой башни, поворот, Undo, победа). AudioContext создаётся только после доверенного действия, громкость ограничена, mute/volume сохраняются. Audio failure не влияет на ход.
 - Изменённые файлы и зачем: `src/audio/events.ts`, `audio.ts` — lossless source envelopes, Web Audio renderer и lifecycle; `src/presentation/animation.ts` — cues в момент контакта/поворота/оседания; `src/scene.js`, `src/main.js` — игровые события, gesture gate и hidden/dispose; `src/ui/settings.ts`, `i18n.ts`, `style.css` — mute и volume; `tests/game-audio.test.js`, `game-animation.test.js`, `tools/browser-check.cjs` — поведение и autoplay/reload; `docs/ASSETS.md`, `docs/PROJECT.md`, этот отчёт и `docs/tasks/INDEX.md` — происхождение и очередь.
 - Команды и фактические результаты: `pnpm typecheck` — passed; `pnpm test` — 97/97 passed; `PLAYWRIGHT_MODULE=playwright-core GAME_BASE_URL=http://127.0.0.1:5173 pnpm test:browser` — passed (gesture gate, mute/reload, desktop/mobile browser scenarios); `pnpm check:full` — passed; `pnpm build` — passed, app JS 595.43 kB / gzip 157.03 kB. Full verification logs сохраняются в `.telegram-check-logs/`.
 - Ручные проверки и evidence: браузерная автоматизация и ограничения записаны в `docs/reviews/audio.md`. Она проверила unlock, запрет autoplay, mute и сохранение; реальное звучание в наушниках/динамиках не измерялось.
 - Выполненные критерии: все автоматические критерии раздела 6. Проектная интерпретация asset: waveform envelope parameters являются lossless source, а code-generated Web Audio renderer — компактный runtime export; внешних аудиофайлов, лицензий и media fetch нет.
 - Непроверенное, блокеры и отклонения от плана: ручная громкость/восприятие на реальных desktop и mobile устройствах; headless Chromium не выдаётся за проверку динамиков. По ручному критерию раздела 7 статус `review`.
-- Итоговый статус и дата: review, 2026-10-09.
+- Итоговый статус и дата: done по явной приёмке владельца, 2026-10-09; физическое прослушивание не выполнялось.

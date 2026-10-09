@@ -95,7 +95,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       await page.evaluate(() => window.gameDebug.setPaused(false));
       await page.waitForFunction(() => window.gameDebug.snapshot().elapsed > 0);
       await page.evaluate(async () => {
-        const ids = Array.from({ length: 11 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
+        const ids = Array.from({ length: 12 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
         for (const id of ids) await window.gameDebug.setLevelById(id);
         await window.gameDebug.setLevelById('level-006');
         window.gameDebug.setTowerDemo(14);
@@ -103,7 +103,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       });
       const warmCounts = await page.evaluate(() => window.gameDebug.resourceCounts());
       await page.evaluate(async () => {
-        const ids = Array.from({ length: 11 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
+        const ids = Array.from({ length: 12 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
         for (let index = 0; index < 20; index++) await window.gameDebug.setLevelById(ids[index % ids.length]);
         await window.gameDebug.setLevelById('level-006');
         window.gameDebug.setTowerDemo(14);
@@ -570,10 +570,30 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     assert.equal(restored.levelId, 'level-001');
     await savePage.close();
 
+    for (const renderer of ['webgl', '2d']) {
     const campaignPage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
-    await campaignPage.goto(baseUrl);
+    const campaignUrl = new URL(baseUrl);
+    campaignUrl.searchParams.set('renderer', renderer);
+    await campaignPage.goto(campaignUrl.toString());
     await campaignPage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    // Complete the preceding levels so the final unlock follows real campaign progress.
+    for (let index = 1; index <= 10; index++) {
+      const id = `level-${String(index).padStart(3, '0')}`;
+      await campaignPage.evaluate(levelId => window.gameDebug.setLevelById(levelId), id);
+      const solution = await campaignPage.evaluate(() => window.gameDebug.snapshot().level.knownSolution);
+      for (const move of solution) {
+        const moving = await campaignPage.evaluate(start => window.gameDebug.launch(start), move);
+        await campaignPage.evaluate(generationId => window.gameDebug.finishAnimation(generationId), moving.generationId);
+      }
+    }
     await campaignPage.evaluate(() => window.gameDebug.setLevelById('level-011'));
+    const transitionMove = await campaignPage.evaluate(() => window.gameDebug.snapshot().level.knownSolution[0]);
+    await campaignPage.evaluate(move => window.gameDebug.launch(move), transitionMove);
+    await campaignPage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 8000 });
+    await campaignPage.getByRole('button', { name: 'NEXT' }).click();
+    await campaignPage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-012');
+    assert.equal(await campaignPage.locator('.hud-level').textContent(), 'Lv.12');
+    await campaignPage.screenshot({ path: `docs/reviews/vertical-slice-level12-${renderer}.png` });
     const finalMove = await campaignPage.evaluate(() => window.gameDebug.snapshot().level.knownSolution[0]);
     await campaignPage.evaluate(move => window.gameDebug.launch(move), finalMove);
     await campaignPage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 8000 });
@@ -581,8 +601,9 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     assert.equal(await campaignPage.locator('.next-button:not(.victory-choose):not([hidden])').count(), 0, 'the final campaign level offers level selection instead of a nonexistent Next');
     await campaignPage.getByRole('button', { name: 'CHOOSE LEVEL' }).click();
     await campaignPage.locator('.settings-panel[aria-labelledby="level-select-title"]').waitFor();
-    assert.equal(await campaignPage.locator('.level-select-page .level-card').first().isDisabled(), false);
+    assert.equal(await campaignPage.locator('.level-select-page .level-card').last().isDisabled(), false);
     await campaignPage.close();
+    }
 
     const deniedStorage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
     await deniedStorage.addInitScript(() => {

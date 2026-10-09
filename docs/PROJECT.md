@@ -28,7 +28,8 @@
 | docs/knowledge/white-tower/README.md | Материалы White Tower из исходного диалога: видео, полный GDD, 12 кадров и примеры уровней |
 | docs/knowledge/white-tower/import-manifest.json | Происхождение, размеры и SHA-256 перенесённых материалов |
 | docs/ASSETS.md | Происхождение, права, версия и назначение UI-графики и системного шрифта |
-| docs/reviews/visual-slice.md, docs/reviews/visual/ | Сравнение визуального среза TASK-0013, снимки и метрики для приёмки |
+| docs/reviews/visual-slice.md, docs/reviews/visual/, docs/reviews/vertical-slice.md | Evidence визуального среза TASK-0013 и двенадцатиуровневой интеграции |
+| docs/content/reference-levels.md, level-reviews.md | Provisional реконструкции 1–11, решения и ручной протокол уровней 1–12 |
 | docs/tasks/INDEX.md, docs/tasks/PLAN.md | Очередь из 34 заданий на полную реализацию White Tower, этапы и покрытие GDD |
 | docs/tasks/baseline.json | Ревизия и хэши локальных входов, проверенных при подготовке очереди |
 | docs/knowledge/game-architecture.md | Контракты и владельцы при расширении каркаса |

@@ -1,6 +1,6 @@
 # TASK-0017: Проверить адаптивный экран и доступное управление
 
-- Статус: in-progress
+- Статус: done
 - Приоритет: normal
 - Создана: 2026-10-08
 - Обновлена: 2026-10-09
@@ -75,10 +75,12 @@
 
 ## 10. Отчёт исполнителя
 
+Приёмка владельца, 2026-10-09: владелец принял задачу, ранее находившуюся на review, и разрешил продолжить работу. Физический телефон/планшет и screen reader не проверялись и остаются явно принятым владельцем ограничением, а не пройденной проверкой. Статус закрыт по его решению.
+
 - Результат: адаптивная portrait-сцена использует dynamic viewport и safe-area insets; Undo и меню остаются внутри поля. Canvas связан с описанием состояния, клавиатурные объявления локализованы, добавлен переключатель высокой контрастности с сохранением.
 - Изменённые файлы и зачем: `index.html`, `src/style.css` — viewport-fit, dynamic viewport, safe-area, контраст и focus; `src/ui/accessibility.ts` — описание поля и локализованные объявления; `src/ui/hud.ts`, `settings.ts`, `i18n.ts` — интеграция и high-contrast switch; `src/input/game-actions.ts`, `src/main.js`, `src/scene.js` — клавиатурный поток и актуальное состояние; `tools/browser-check.cjs`, `tests/game-accessibility.test.js`, `tests/game-menu.test.js` — проверки; `docs/PROJECT.md`, `docs/reviews/accessibility.md`, этот отчёт и `docs/tasks/INDEX.md` — карта и evidence.
 - Команды и фактические результаты: `pnpm typecheck` — passed; `pnpm test` — 93/93 passed; `PLAYWRIGHT_MODULE=playwright-core GAME_BASE_URL=http://127.0.0.1:5173 pnpm test:browser` — passed; `pnpm check:full` будет выполнена после финальной проверки. browser-check включает матрицу 8 размеров 320×568–1920×1080, board bounds/hit test, клавиатурное прохождение A/C/D, Undo/menu, высокую контрастность и сохранение настройки. Логи `check:full` сохраняются в `.telegram-check-logs/`.
 - Ручные проверки и evidence: автоматизированные результаты и ограничения записаны в `docs/reviews/accessibility.md`. Сценарии выполнялись в headless Chromium и touch emulation. Физические устройства, split-view, динамические панели браузера и screen reader не проверялись.
 - Выполненные критерии: два критерия автоматической матрицы и клавиатурного управления выполнены; автоматизированы high-contrast persistence и существующий reduced-motion control.
 - Непроверенное, блокеры и отклонения от плана: screen reader (Undo, victory, меню), телефон portrait/landscape, планшет split-view и реальные safe-area/browser bars. Headless/viewport emulation не выдаются за проверку устройств. Статус остаётся `review` по условию раздела 7.
-- Итоговый статус и дата: review, 2026-10-09.
+- Итоговый статус и дата: done по явной приёмке владельца, 2026-10-09; физические устройства и screen reader не проверялись.

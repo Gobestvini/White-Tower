@@ -56,6 +56,11 @@
       "id": "level-011",
       "path": "/content/levels/011.json",
       "sha256": "c50796e46032eb656b7d96e9b4c3dffa496eb176295b7655b745e0dc1fb4259d"
+    },
+    {
+      "id": "level-012",
+      "path": "/content/levels/012.json",
+      "sha256": "18e1302f75df0d08b4a2e9e1e166850e8e6b1d2a09f248586b3e13e355f26bb7"
     }
   ]
 }

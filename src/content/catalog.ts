@@ -14,7 +14,7 @@ export class ContentLoadError extends Error {
 function parseCatalog(raw: unknown): ContentCatalog {
   if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) throw new ContentLoadError('catalog', 'Catalog must be an object.');
   const candidate = raw as Record<string, unknown>;
-  if (candidate.schemaVersion !== 1 || typeof candidate.contentVersion !== 'string' || !Array.isArray(candidate.levels) || candidate.levels.length !== 11)
+  if (candidate.schemaVersion !== 1 || typeof candidate.contentVersion !== 'string' || !Array.isArray(candidate.levels) || candidate.levels.length !== 12)
     throw new ContentLoadError('catalog', 'Catalog version or level list is invalid.');
   const ids = new Set<string>();
   const levels: CatalogEntry[] = [];

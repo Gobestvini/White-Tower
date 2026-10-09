@@ -12,13 +12,13 @@ const fetcher = async url => {
   catch { return new Response('', { status: 404 }); }
 };
 
-test('catalog loads eleven ordered levels with verified checksums and solver-backed solutions', async () => {
+test('catalog loads twelve ordered levels with verified checksums and solver-backed solutions', async () => {
   const catalog = await loadCatalog('/content/catalog.json', fetcher);
   assert.equal(catalog.contentVersion, '1.0.0');
-  assert.deepEqual(catalog.levels.map(entry => entry.id), Array.from({ length: 11 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`));
-  assert.deepEqual(catalog.levels.map(entry => entry.sha256.length), Array(11).fill(64));
-  assert.deepEqual(catalog.levels.map(entry => entry.path), Array.from({ length: 11 }, (_, index) => `/content/levels/${String(index + 1).padStart(3, '0')}.json`));
-  const expectedCounts = [4, 5, 4, 7, 8, 14, 5, 5, 13, 9, 12];
+  assert.deepEqual(catalog.levels.map(entry => entry.id), Array.from({ length: 12 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`));
+  assert.deepEqual(catalog.levels.map(entry => entry.sha256.length), Array(12).fill(64));
+  assert.deepEqual(catalog.levels.map(entry => entry.path), Array.from({ length: 12 }, (_, index) => `/content/levels/${String(index + 1).padStart(3, '0')}.json`));
+  const expectedCounts = [4, 5, 4, 7, 8, 14, 5, 5, 13, 9, 12, 6];
   for (let index = 0; index < catalog.levels.length; index++) {
     const level = await loadLevelAt(catalog, index, fetcher);
     assert.equal(level.totalTiles, expectedCounts[index]);
@@ -31,7 +31,7 @@ test('catalog loads eleven ordered levels with verified checksums and solver-bac
 test('catalog and level fetch report missing content and checksum corruption', async () => {
   await assert.rejects(loadCatalog('/content/missing.json', fetcher), error => error instanceof ContentLoadError && error.code === 'network');
   const catalog = await loadCatalog('/content/catalog.json', fetcher);
-  await assert.rejects(loadLevelAt(catalog, 11, fetcher), error => error instanceof ContentLoadError && error.code === 'missing-level');
+  await assert.rejects(loadLevelAt(catalog, 12, fetcher), error => error instanceof ContentLoadError && error.code === 'missing-level');
   const altered = { ...catalog, levels: catalog.levels.map((entry, index) => index === 0 ? { ...entry, sha256: '0'.repeat(64) } : entry) };
   await assert.rejects(loadLevelById(altered, 'level-001', fetcher), error => error instanceof ContentLoadError && error.code === 'checksum');
 });

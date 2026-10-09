@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "level-012",
+  "title": "The Turning Path",
+  "cells": [
+    { "u": 0, "v": 0, "kind": "normal" },
+    { "u": 1, "v": 0, "kind": "normal" },
+    { "u": 2, "v": 0, "kind": "redirect", "direction": "SW" },
+    { "u": 2, "v": 1, "kind": "normal" },
+    { "u": 2, "v": 2, "kind": "normal" },
+    { "u": 2, "v": 3, "kind": "normal" }
+  ],
+  "stacks": [
+    { "u": 0, "v": 0, "height": 1, "launchDirection": "SE" },
+    { "u": 1, "v": 0, "height": 1 },
+    { "u": 2, "v": 0, "height": 1 },
+    { "u": 2, "v": 1, "height": 1 },
+    { "u": 2, "v": 2, "height": 1 },
+    { "u": 2, "v": 3, "height": 1 }
+  ],
+  "totalTiles": 6,
+  "cameraPreset": "long-board",
+  "tutorialKey": "tutorial.turning-path",
+  "parMoves": 1,
+  "knownSolution": [{ "u": 0, "v": 0 }]
+}
