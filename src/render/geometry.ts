@@ -127,7 +127,7 @@ export function createChevronGeometry(direction: Direction, size = 28, lineWidth
 export function createShadowGeometry(segments = 32): BufferGeometry {
   const vertices: number[] = [];
   const colors: number[] = [];
-  const inner = new Color('#3D83D2');
+  const inner = new Color('#54ACEB');
   const outer = new Color('#60C0FE');
   const rings = 5;
   for (let ring = 0; ring < rings; ring++) {
@@ -138,8 +138,14 @@ export function createShadowGeometry(segments = 32): BufferGeometry {
     for (let index = 0; index < segments; index++) {
       const start = (index / segments) * Math.PI * 2;
       const end = ((index + 1) / segments) * Math.PI * 2;
-      const a = [Math.cos(start), Math.sin(start), 0] as const;
-      const b = [Math.cos(end), Math.sin(end), 0] as const;
+      const diamondPoint = (angle: number) => {
+        const x = Math.cos(angle);
+        const y = Math.sin(angle);
+        const length = Math.abs(x) + Math.abs(y);
+        return [x / length, y / length, 0] as const;
+      };
+      const a = diamondPoint(start);
+      const b = diamondPoint(end);
       const outerA = [a[0] * radiusB, a[1] * radiusB, 0] as const;
       const outerB = [b[0] * radiusB, b[1] * radiusB, 0] as const;
       const innerA = [a[0] * radiusA, a[1] * radiusA, 0] as const;

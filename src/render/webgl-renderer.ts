@@ -96,8 +96,8 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
   function addStack(stack: RenderStack, level: Level, selectedProjection: Projection, baseOrder: number): number {
     const base = pixelPoint(stack.u, stack.v, 0, selectedProjection);
     const depth = (stack.u + stack.v + 1000) * 0.00001;
-    const shadow = addMesh(geometry.shadow, materials.shadow, { x: base.x - 25, y: base.y + 24, z: depth + 0.001 }, -1);
-    shadow.scale.set(48 + Math.min(stack.height, 14) * 1.2, 16 + Math.min(stack.height, 14) * 0.6, 1);
+    const shadow = addMesh(geometry.shadow, materials.shadow, { x: base.x - 4, y: base.y - 8, z: depth + 0.001 }, -1);
+    shadow.scale.setScalar(TILE_RADIUS + 6);
 
     let order = baseOrder + 1;
     for (let layer = 0; layer < Math.ceil(stack.height); layer++) {

@@ -77,13 +77,14 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
 
   function drawShadow(stack: RenderStack, selectedProjection: Projection): void {
     const base = worldToScreen(stack.u, stack.v, 0, selectedProjection);
-    const gradient = context!.createRadialGradient(base.x - 25, base.y + 24, 1, base.x - 25, base.y + 24, 48);
-    gradient.addColorStop(0, 'rgba(61,131,210,0.58)');
-    gradient.addColorStop(1, 'rgba(96,192,254,0)');
-    context!.fillStyle = gradient;
-    context!.beginPath();
-    context!.ellipse(base.x - 25, base.y + 24, 48, 16, 0, 0, Math.PI * 2);
-    context!.fill();
+    // A small diamond-shaped contact shadow follows the tile footprint.
+    // Separate elliptical blobs remain visible as spots beside contiguous rows.
+    for (let ring = 16; ring > 0; ring--) {
+      const radius = ring / 16;
+      const fade = radius * radius;
+      const color = `rgb(${84 + 12 * fade}, ${172 + 20 * fade}, ${235 + 19 * fade})`;
+      drawDiamond(base.x - 4, base.y + 8, (TILE_RADIUS + 6) * radius, color);
+    }
   }
 
   function drawStack(stack: RenderStack, selectedProjection: Projection): void {
