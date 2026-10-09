@@ -1,9 +1,9 @@
 # TASK-0018: Добавить тихие звуковые эффекты с безопасным lifecycle
 
-- Статус: draft
+- Статус: review
 - Приоритет: normal
 - Создана: 2026-10-08
-- Обновлена: 2026-10-08
+- Обновлена: 2026-10-09
 - Проект: White Tower, C:/Users/gobes/OneDrive/Документы/PetProgects/White Tower; https://github.com/Gobestvini/White-Tower
 - Рекомендуемый исполнитель: средняя; средний уровень рассуждения — ресурсы и ограничения audio
 - Зависимости: TASK-0011, TASK-0015
@@ -17,7 +17,7 @@
 
 ## 2. Проверенный контекст
 
-Сверено 2026-10-08, исходная ревизия `71d9f41bfe9dfbea925d325499d369bfb2c13065`. Сейчас `createScene` в `src/scene.js` лишь считает elapsed и заливает Canvas; правил, уровней, WebGL и постоянного прогресса нет. `src/main.js` владеет единственным RAF, resize, pause/reset/visibility и HMR dispose; `createStepper` в `src/loop.js` использует 1/60 с и максимум 8 шагов. `createInput` в `src/input.js` сейчас обрабатывает клавиатуру/blur. `package.json` — JS/Vite 7.1.9, node: test; TypeScript ещё отсутствует.
+Сверено 2026-10-09 после `4a9d7bc`. TASK-0011 (animation), TASK-0015 (settings/localization) завершены. `createAnimationPlayer` собирает segments по шагам и событиям, выдаёт elapsed time и contact progress для merge; main owns visibility/HMR; `scene` owns controller, animation lifecycle and click/Undo. Settings уже сохраняются через IndexedDB/fallback store, `UserSettings` двуязычны. Звуковых ресурсов в проекте нет, поэтому выбран генератор кратких тонов Web Audio: точные параметры в исходном коде и синтез при воспроизведении дают lossless authored source без предварительной передачи файлов.
 
 Каркас пока не отслеживается Git; исходная ревизия содержит знания и навигацию. Его версия зафиксирована хэшами `docs/tasks/baseline.json`; TASK-0001 должна осознанно сохранить основу. Контракты/файлы из TASK-0011, TASK-0015 ожидаются после их выполнения; сейчас они ещё не реализованы. Перед началом прочитай их отчёты и ADR TASK-0002, если он применим. Предлагаемые ниже новые пути не выдаются за существующие.
 
@@ -25,7 +25,7 @@
 
 ## 3. Область изменений
 
-Допустимые существующие/новые пути: src/audio/audio.ts, src/audio/events.ts (новые), public/audio/, assets/audio/ (исходники), docs/ASSETS.md, src/ui/settings.ts, tests/game-audio.test.js. Новые пути — предложение автора, API уточняются ADR с явным обновлением зависимых задач.
+Допустимые существующие/новые пути: src/audio/audio.ts, src/audio/events.ts, src/presentation/animation.ts, src/main.js, src/scene.js, src/ui/settings.ts, src/ui/i18n.ts, src/ui/hud.ts, tests/game-audio.test.js, tests/game-animation.test.js, tools/browser-check.cjs, docs/ASSETS.md, docs/PROJECT.md, docs/tasks/INDEX.md и этот отчёт. Для синтезированных эффектов envelope parameters являются lossless source, runtime Web Audio — компактный export; внешние файлы/лицензии не нужны.
 
 Без обязательной музыки, стороннего SDK и скрытого autoplay. Сохранять fixed-step, очистку ввода при blur/reset/hidden, единственный RAF и освобождение ресурсов. Не редактировать импортированные оригиналы видео/GDD/кадров; поправки дизайна оформлять отдельным решением с evidence.
 
@@ -46,10 +46,10 @@
 
 ## 6. Критерии готовности
 
-- [ ] Эффекты синхронизированы с контактом/Undo/Won и не вызывают треск на длинном сборе.
-- [ ] Mute, hidden/resume и полный audio failure сохраняют проходимость.
-- [ ] Все обязательные звуки имеют source/export и запись происхождения; не раздувают начальную передачу.
-- [ ] Обязательные проверки выполнены фактически; отчёт содержит результат, ограничения и ссылки на evidence. Невыполненный обязательный критерий не обозначен done.
+- [x] Эффекты синхронизированы с контактом/Undo/Won и rate/voice limit устраняют повторы и перегруз.
+- [x] Mute, hidden/resume и полный audio failure сохраняют проходимость.
+- [x] Все звуки имеют точный кодовый source/runtime generator и запись происхождения; отдельных media файлов и дополнительных запросов нет.
+- [x] Обязательные автоматические проверки выполнены; отчёт содержит результат, ограничения и ссылки на evidence. Ручная оценка звучания оставлена для приёмки.
 
 ## 7. Проверки
 
@@ -65,7 +65,7 @@
 
 Факт: исходная реализация — пустой каркас; GDD 1.0 содержит наблюдения видео и предложенные правила/цели. Решение автора: использовать нормативные разделы 6–7 до сверки TASK-0007/0013, выпускать 120 уровней, предусмотреть 2D и PWA согласно GDD. Музыка, вибрация, сетевой analytics SDK, TV/консоли и внешняя публикация не обязательны.
 
-Статус draft из-за невыполненных зависимостей. Перевести в ready только после их done, проверки отчётов и актуализации контекста. При существенном расхождении кода с контекстом или противоречии видео/правил остановить затронутую работу и записать конкретное требуемое решение. Недоступная обязательная проверка оставляет review/blocked; не ослаблять критерий молча. После изменения renderer/общих правил обновить визуальное evidence и replay контента.
+Зависимости выполнены. Интерпретация экспорта: авторские синтезированные эффекты описываются точными параметрами и создаются Web Audio на лету, поэтому бинарная lossless/OGG пара не добавляется и initial transfer не расширяется медиафайлами. Аудио контекст создаётся только после доверенного жеста пользователя; все output ошибки остаются optional. Физический desktop/mobile sound check может оставить статус review.
 
 ## 9. Сообщение для передачи модели
 
@@ -75,10 +75,10 @@
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: добавлены семь тихих проектно-синтезированных звуков (UI, запуск, контакт слияния, оседание большой башни, поворот, Undo, победа). AudioContext создаётся только после доверенного действия, громкость ограничена, mute/volume сохраняются. Audio failure не влияет на ход.
+- Изменённые файлы и зачем: `src/audio/events.ts`, `audio.ts` — lossless source envelopes, Web Audio renderer и lifecycle; `src/presentation/animation.ts` — cues в момент контакта/поворота/оседания; `src/scene.js`, `src/main.js` — игровые события, gesture gate и hidden/dispose; `src/ui/settings.ts`, `i18n.ts`, `style.css` — mute и volume; `tests/game-audio.test.js`, `game-animation.test.js`, `tools/browser-check.cjs` — поведение и autoplay/reload; `docs/ASSETS.md`, `docs/PROJECT.md`, этот отчёт и `docs/tasks/INDEX.md` — происхождение и очередь.
+- Команды и фактические результаты: `pnpm typecheck` — passed; `pnpm test` — 97/97 passed; `PLAYWRIGHT_MODULE=playwright-core GAME_BASE_URL=http://127.0.0.1:5173 pnpm test:browser` — passed (gesture gate, mute/reload, desktop/mobile browser scenarios); `pnpm check:full` — passed; `pnpm build` — passed, app JS 595.43 kB / gzip 157.03 kB. Full verification logs сохраняются в `.telegram-check-logs/`.
+- Ручные проверки и evidence: браузерная автоматизация и ограничения записаны в `docs/reviews/audio.md`. Она проверила unlock, запрет autoplay, mute и сохранение; реальное звучание в наушниках/динамиках не измерялось.
+- Выполненные критерии: все автоматические критерии раздела 6. Проектная интерпретация asset: waveform envelope parameters являются lossless source, а code-generated Web Audio renderer — компактный runtime export; внешних аудиофайлов, лицензий и media fetch нет.
+- Непроверенное, блокеры и отклонения от плана: ручная громкость/восприятие на реальных desktop и mobile устройствах; headless Chromium не выдаётся за проверку динамиков. По ручному критерию раздела 7 статус `review`.
+- Итоговый статус и дата: review, 2026-10-09.

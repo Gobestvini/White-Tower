@@ -6,14 +6,16 @@ import { createGameActions } from './input/game-actions.ts';
 import { createScene } from './scene.js';
 import { createHud } from './ui/hud.ts';
 import { keyboardAnnouncement } from './ui/accessibility.ts';
+import { createAudio } from './audio/audio.ts';
 
 let canvas = document.querySelector('canvas');
 const status = document.querySelector('#status');
 const input = createInput();
+const audio = createAudio();
 let scene;
 try {
   const initialRendererMode = import.meta.env.DEV ? new URLSearchParams(window.location.search).get('renderer') ?? 'auto' : 'auto';
-  scene = createScene(canvas, initialRendererMode);
+  scene = createScene(canvas, initialRendererMode, { audio });
   canvas = scene.canvas;
 } catch (error) {
   status.textContent = error instanceof Error ? `WebGL недоступен: ${error.message}` : 'WebGL недоступен.';
@@ -40,19 +42,20 @@ const hud = createHud({
   root: document.querySelector('#hud'),
   onReset: reset,
   onUndo: () => scene.undo(),
-  onNext: () => scene.nextLevel(),
+  onNext: () => { audio.play('ui'); return scene.nextLevel(); },
   onMenu: () => scene.toggleMenu(),
   getSettings: () => scene.snapshot().settings,
   onSettings: nextSettings => {
     const previousCanvas = scene.canvas;
     scene.updateSettings(nextSettings);
+    audio.configure(nextSettings);
     if (scene.canvas !== previousCanvas) { installPointerInput(); resize(); }
   },
-  onSelectLevel: id => { void scene.selectLevel(id); },
-  onClearProgress: () => { void scene.clearProgress().then(() => { installPointerInput(); resize(); }); },
+  onSelectLevel: id => { audio.play('ui'); void scene.selectLevel(id); },
+  onClearProgress: () => { audio.play('ui'); void scene.clearProgress().then(() => { installPointerInput(); resize(); }); },
   onRetry: () => window.location.reload(),
   onChooseLevels: () => { scene.toggleMenu(); },
-  onHint: () => scene.requestHint(),
+  onHint: () => { audio.play('ui'); scene.requestHint(); },
 });
 const gameActions = createGameActions({
   canvas: () => scene.canvas,
@@ -63,6 +66,9 @@ const gameActions = createGameActions({
 });
 
 function clearTiming() { previous = null; stepper.reset(); input.reset(); }
+function unlockAudio() { void audio.unlock(); }
+document.addEventListener('pointerdown', unlockAudio, { capture: true });
+document.addEventListener('keydown', unlockAudio, { capture: true });
 function resize() {
   canvas = scene.canvas;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -75,8 +81,8 @@ function setPaused(value) {
   clearTiming();
   status.textContent = paused ? 'Пауза' : 'Готово';
 }
-function reset() { scene.reset(); clearTiming(); scene.render(); }
-function visibility() { scene.pause(document.hidden || paused); clearTiming(); }
+function reset() { audio.play('ui'); scene.reset(); clearTiming(); scene.render(); }
+function visibility() { scene.pause(document.hidden || paused); void audio.setVisible(!document.hidden); clearTiming(); }
 function tick(now) {
   if (disposed) return;
   const delta = previous === null ? 0 : (now - previous) / 1000;
@@ -95,6 +101,8 @@ window.addEventListener('resize', resize);
 resize();
 frame = requestAnimationFrame(tick);
 scene.ready.then(async () => {
+  audio.configure(scene.snapshot().settings);
+  if (document.hidden) void audio.setVisible(false);
   installPointerInput(); resize();
   const params = new URLSearchParams(window.location.search);
   if (import.meta.env.DEV && params.has('resource-check')) {
@@ -127,6 +135,7 @@ function dispose() {
   disposed = true;
   cancelAnimationFrame(frame);
   input.dispose(); pointerInput?.dispose(); gameActions.dispose(); hud.dispose(); scene.dispose();
+  document.removeEventListener('pointerdown', unlockAudio, true); document.removeEventListener('keydown', unlockAudio, true); void audio.dispose();
   window.removeEventListener('resize', resize);
   document.removeEventListener('visibilitychange', visibility);
   if (import.meta.env.DEV) delete window.gameDebug;
@@ -152,6 +161,8 @@ if (import.meta.env.DEV) {
     selectedStackId: () => scene.selectedStackId(),
     pickStack: point => scene.pickStack(point),
     requestHint: () => scene.requestHint(),
+    audioState: () => audio.snapshot(),
+    playAudio: effect => audio.play(effect),
   };
 }
 if (import.meta.hot) import.meta.hot.dispose(dispose);

@@ -12,6 +12,7 @@
 | index.html, src/style.css | Оболочка приложения и адаптивная сцена |
 | tsconfig.json | Строгая проверка TypeScript runtime, тестов и инструментов |
 | src/game/ | Правила, модель уровня, симулятор, поиск решения, контроллер и сервис доказанных подсказок |
+| src/audio/audio.ts, events.ts | Gesture-gated Web Audio, тихие синтезированные эффекты, volume/voice limits, hidden/dispose lifecycle |
 | src/storage/store.ts, save-schema.ts | Устойчивое локальное сохранение: IndexedDB → localStorage → память; проверка версии и состояния |
 | src/render/webgl-renderer.ts | Основной Three.js WebGL renderer, процедурные плитки и владение GPU ресурсами |
 | src/render/canvas-renderer.ts | Совместимый 2D renderer с тем же view state, projection и hit-test |

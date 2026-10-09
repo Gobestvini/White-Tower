@@ -21,7 +21,7 @@
 | [TASK-0015 Добавить настройки, локализацию и выбор уровня](TASK-0015-settings-level-select-i18n.md) | done | normal | TASK-0009, TASK-0012, TASK-0014 | средняя |
 | [TASK-0016 Добавить обучение, подсказку и честное сообщение о тупике](TASK-0016-hints-tutorial-deadlock.md) | done | normal | TASK-0006, TASK-0015 | средняя |
 | [TASK-0017 Проверить адаптивный экран и доступное управление](TASK-0017-responsive-accessibility.md) | review | normal | TASK-0009, TASK-0010, TASK-0011, TASK-0015 | средняя |
-| [TASK-0018 Добавить тихие звуковые эффекты с безопасным lifecycle](TASK-0018-audio-feedback.md) | draft | normal | TASK-0011, TASK-0015 | средняя |
+| [TASK-0018 Добавить тихие звуковые эффекты с безопасным lifecycle](TASK-0018-audio-feedback.md) | review | normal | TASK-0011, TASK-0015 | средняя |
 | [TASK-0019 Собрать и проверить вертикальный срез из двенадцати уровней](TASK-0019-vertical-slice.md) | draft | high | TASK-0013, TASK-0014, TASK-0015, TASK-0016, TASK-0017, TASK-0018 | сильная |
 | [TASK-0020 Создать внутренний редактор и валидатор контента](TASK-0020-internal-level-editor.md) | draft | normal | TASK-0006, TASK-0019 | сильная |
 | [TASK-0021 Завершить первый блок кампании уровней 1–20](TASK-0021-campaign-basics.md) | draft | normal | TASK-0020 | средняя |

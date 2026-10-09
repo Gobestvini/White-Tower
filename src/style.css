@@ -32,6 +32,8 @@ main.is-won canvas { pointer-events: none; }
 .setting-row { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: 12px; background: #286a91; text-align: left; font-weight: 700; }
 .setting-row select { max-width: 54%; min-height: 38px; padding: 4px 8px; border: 0; border-radius: 8px; color: #163e56; background: #fff; font: inherit; }
 .setting-row input { width: 24px; height: 24px; accent-color: #52e000; }
+.volume-row input[type="range"] { width: auto; height: 32px; min-width: 72px; flex: 1; accent-color: #52e000; }
+.volume-value { min-width: 42px; text-align: right; font-variant-numeric: tabular-nums; }
 .menu-secondary, .menu-danger { min-height: 46px; padding: 9px 14px; border-radius: 12px; background: #286a91; color: #fff; font-weight: 800; }
 .menu-danger { background: #853d49 !important; }
 .settings-note { color: #e0f2fc; font-size: 14px; }

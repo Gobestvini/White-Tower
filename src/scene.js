@@ -11,15 +11,17 @@ import { parseSettings } from './ui/i18n.ts';
 import { createSolverClient } from './game/solver-client.ts';
 import { createHintService } from './game/hint-service.ts';
 
-export function createScene(canvas, rendererMode = 'auto') {
+export function createScene(canvas, rendererMode = 'auto', options = {}) {
+  const audio = options.audio;
   let activeCanvas = canvas;
   let selection = createRendererFactory(canvas, { mode: rendererMode });
   let renderer = selection.renderer;
   const controller = createGameController();
   const store = createStore();
   let pendingSave = Promise.resolve();
-  const animation = createAnimationPlayer({ onComplete: generationId => {
+  const animation = createAnimationPlayer({ onCue: cue => audio?.play(cue), onComplete: generationId => {
     const snapshot = controller.finishAnimation(generationId);
+    if (snapshot.phase === 'Won') audio?.play('victory');
     showSnapshot(snapshot); persistSnapshot(); scheduleDeadlock(snapshot);
   } });
   let catalog;
@@ -144,6 +146,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     clearDeadlockTimer();
     const started = controller.launch({ u: stack.u, v: stack.v });
     if (started.phase !== 'Animating') return false;
+    audio?.play('launch');
     hintService.cancel();
     completeTutorial();
     persistSnapshot();
@@ -156,8 +159,8 @@ export function createScene(canvas, rendererMode = 'auto') {
     const snapshot = controller.snapshot();
     hintService.cancel();
     tutorialVisible = false;
-    if (snapshot.phase === 'Menu') { showSnapshot(controller.closeMenu()); return true; }
-    if (snapshot.phase === 'Idle' || snapshot.phase === 'Won') { showSnapshot(controller.openMenu()); return true; }
+    if (snapshot.phase === 'Menu') { showSnapshot(controller.closeMenu()); audio?.play('ui'); return true; }
+    if (snapshot.phase === 'Idle' || snapshot.phase === 'Won') { showSnapshot(controller.openMenu()); audio?.play('ui'); return true; }
     return false;
   }
 
@@ -366,6 +369,7 @@ export function createScene(canvas, rendererMode = 'auto') {
       hintService.cancel(); clearDeadlockTimer();
       const snapshot = controller.launch(start);
       if (snapshot.phase === 'Animating') {
+        audio?.play('launch');
         completeTutorial();
         persistSnapshot();
         animation.start({ stacks: snapshot.displayedState.stacks, steps: snapshot.animation.steps, events: snapshot.animation.events, generationId: snapshot.generationId, reducedMotion: settings.reducedMotion });
@@ -375,7 +379,7 @@ export function createScene(canvas, rendererMode = 'auto') {
     },
     debugFinishAnimation(generationId) { animation.reset(); const snapshot = controller.finishAnimation(generationId); showSnapshot(snapshot); persistSnapshot(); scheduleDeadlock(snapshot); return snapshot; },
     requestHint,
-    undo() { hintService.cancel(); clearDeadlockTimer(); const snapshot = controller.undo(); showSnapshot(snapshot); persistSnapshot(); scheduleDeadlock(snapshot); return snapshot; },
+    undo() { const canUndo = controller.snapshot().canUndo; hintService.cancel(); clearDeadlockTimer(); const snapshot = controller.undo(); if (canUndo) audio?.play('undo'); showSnapshot(snapshot); persistSnapshot(); scheduleDeadlock(snapshot); return snapshot; },
     persistenceInfo() { return Object.freeze({ mode: store.mode(), memoryOnly: store.memoryOnly(), reason: store.unavailableReason(), recoveryNotice }); },
     flushPersistence() { return store.flush(); },
     dispose() {

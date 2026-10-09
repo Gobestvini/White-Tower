@@ -10,6 +10,8 @@ type Segment = Readonly<{
   heightFrom?: number; heightTo?: number; direction?: Direction; absorbedId?: string;
 }>;
 export type AnimationSnapshot = Readonly<{ active: boolean; elapsedMs: number; durationMs: number; stacks: readonly PresentedStack[]; event?: string }>;
+export type PresentationCue = 'merge' | 'settle' | 'turn';
+type ScheduledCue = Readonly<{ atMs: number; cue: PresentationCue }>;
 
 const ease = (value: number) => value * value * (3 - 2 * value);
 function screenAngle(direction: Direction | undefined): number {
@@ -18,7 +20,7 @@ function screenAngle(direction: Direction | undefined): number {
   return Math.atan2(-(vector.u + vector.v), vector.u - vector.v);
 }
 
-export function createAnimationPlayer(options: { onComplete?: (generationId: number) => void } = {}) {
+export function createAnimationPlayer(options: { onComplete?: (generationId: number) => void; onCue?: (cue: PresentationCue) => void } = {}) {
   let segments: Segment[] = [];
   let elapsedMs = 0;
   let durationMs = 0;
@@ -29,6 +31,7 @@ export function createAnimationPlayer(options: { onComplete?: (generationId: num
   let reducedMotion = false;
   let speed = 1;
   let baseStacks: readonly PresentedStack[] = [];
+  let cues: readonly ScheduledCue[] = [];
   let cached: AnimationSnapshot = Object.freeze({ active: false, elapsedMs: 0, durationMs: 0, stacks: [] });
 
   function makeSnapshot(): AnimationSnapshot {
@@ -80,6 +83,8 @@ export function createAnimationPlayer(options: { onComplete?: (generationId: num
     baseStacks = input.stacks.map(stack => ({ ...stack }));
     let working = baseStacks.map(stack => ({ ...stack }));
     const built: Segment[] = [];
+    const scheduled: ScheduledCue[] = [];
+    let timeline = 0;
     const add = (segment: Segment) => { built.push(segment); working = segment.to.map(stack => ({ ...stack })); };
     input.steps.forEach((step, index) => {
       const moving = working.find(stack => stack.u === step.from.u && stack.v === step.from.v);
@@ -92,16 +97,23 @@ export function createAnimationPlayer(options: { onComplete?: (generationId: num
       const duration = (reducedMotion ? MOVE_TIMINGS.reducedStepMs : MOVE_TIMINGS.stepMs) / speed;
       add({ kind: 'move', duration, from: before, to: after, stackId: moving.id, start: step.from, end: step.to,
         heightFrom: step.movingHeightBefore, heightTo: step.movingHeightAfter, ...(target ? { absorbedId: target.id } : {}) });
+      if (step.absorbed) scheduled.push(Object.freeze({ atMs: timeline + duration * MOVE_TIMINGS.absorptionStart, cue: 'merge' }));
+      timeline += duration;
       const turn = input.events.find(event => event.type === 'turn' && event.stepIndex === index);
       if (turn?.type === 'turn') {
+        scheduled.push(Object.freeze({ atMs: timeline, cue: 'turn' }));
         const turned = working.map(stack => stack.id === moving.id ? { ...stack, launchDirection: turn.direction } : stack);
-        add({ kind: 'turn', duration: (reducedMotion ? MOVE_TIMINGS.reducedTurnMs : MOVE_TIMINGS.turnMs) / speed, from: working, to: turned, stackId: moving.id, direction: turn.direction });
+        const turnDuration = (reducedMotion ? MOVE_TIMINGS.reducedTurnMs : MOVE_TIMINGS.turnMs) / speed;
+        add({ kind: 'turn', duration: turnDuration, from: working, to: turned, stackId: moving.id, direction: turn.direction });
+        timeline += turnDuration;
       }
     });
     const stopDuration = (reducedMotion ? MOVE_TIMINGS.reducedStopMs : MOVE_TIMINGS.stopMs) / speed;
     const lastMovedId = input.steps.length ? baseStacks.find(stack => stack.u === input.steps[0]?.from.u && stack.v === input.steps[0]?.from.v)?.id : undefined;
     const moverId = working.find(stack => stack.id === lastMovedId)?.id ?? lastMovedId;
+    if (Math.max(0, ...working.map(stack => stack.height)) >= 3) scheduled.push(Object.freeze({ atMs: timeline + stopDuration, cue: 'settle' }));
     built.push({ kind: 'stop', duration: stopDuration, from: working, to: working, ...(moverId ? { stackId: moverId } : {}) });
+    cues = Object.freeze(scheduled.sort((a, b) => a.atMs - b.atMs));
     segments = built;
     elapsedMs = 0;
     durationMs = built.reduce((sum, segment) => sum + segment.duration, 0);
@@ -121,13 +133,17 @@ export function createAnimationPlayer(options: { onComplete?: (generationId: num
 
   function update(dt: number): AnimationSnapshot {
     if (disposed || !active || paused || !Number.isFinite(dt) || dt <= 0) return cached;
+    const previousMs = elapsedMs;
     elapsedMs = Math.min(durationMs, elapsedMs + dt * 1000);
+    for (const cue of cues) if (cue.atMs > previousMs && cue.atMs <= elapsedMs) {
+      try { options.onCue?.(cue.cue); } catch { /* presentation must remain independent of optional audio */ }
+    }
     cached = makeSnapshot();
     if (elapsedMs >= durationMs) finish();
     return cached;
   }
   function reset(): void {
-    active = false; paused = false; segments = []; elapsedMs = 0; durationMs = 0; baseStacks = [];
+    active = false; paused = false; segments = []; elapsedMs = 0; durationMs = 0; baseStacks = []; cues = [];
     cached = Object.freeze({ active: false, elapsedMs: 0, durationMs: 0, stacks: [] });
   }
   return Object.freeze({

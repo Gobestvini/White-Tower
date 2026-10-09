@@ -49,6 +49,24 @@ test('A and D routes animate every cell, turn and merge before stop without muta
   }
 });
 
+test('merge, turn and large-stack settling cues align with presentation time', () => {
+  const cues = [];
+  const level = getLevel('D_ring');
+  const initial = createInitialState(level);
+  const move = simulateMove(level, initial, { u: 0, v: 0 });
+  assert.equal(move.accepted, true);
+  const player = createAnimationPlayer({ onCue: cue => cues.push({ cue, time: player.snapshot().elapsedMs }) });
+  player.start({ stacks: initial.stacks, steps: move.steps, events: move.events, generationId: 31 });
+  assert.deepEqual(cues, [], 'no cue fires from the committed move before presentation advances');
+  player.update(0.06);
+  assert.equal(cues[0]?.cue, 'merge', 'merge sound is scheduled at the visual contact point');
+  let guard = 0;
+  while (player.snapshot().active && guard++ < 300) player.update(0.016);
+  assert.ok(cues.some(item => item.cue === 'turn'));
+  assert.ok(cues.some(item => item.cue === 'settle'));
+  assert.ok(cues.every(item => item.time >= 0));
+});
+
 test('30/60/120/144 Hz and a long frame stall produce the same final pose and one completion', () => {
   const level = getLevel('D_ring');
   const baseline = play(level, { u: 0, v: 0 }, 1000);

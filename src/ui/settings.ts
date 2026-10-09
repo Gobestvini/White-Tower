@@ -25,6 +25,13 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const contrastLabel = document.createElement('label'); contrastLabel.className = 'setting-row';
   const contrastName = document.createElement('span'); contrastLabel.append(contrastName);
   const contrastInput = document.createElement('input'); contrastInput.type = 'checkbox'; contrastInput.setAttribute('aria-label', 'High contrast'); contrastLabel.append(contrastInput);
+  const soundLabel = document.createElement('label'); soundLabel.className = 'setting-row';
+  const soundName = document.createElement('span'); soundLabel.append(soundName);
+  const soundInput = document.createElement('input'); soundInput.type = 'checkbox'; soundLabel.append(soundInput);
+  const volumeLabel = document.createElement('label'); volumeLabel.className = 'setting-row volume-row';
+  const volumeName = document.createElement('span'); volumeLabel.append(volumeName);
+  const volumeInput = document.createElement('input'); volumeInput.type = 'range'; volumeInput.min = '0'; volumeInput.max = '1'; volumeInput.step = '0.05'; volumeLabel.append(volumeInput);
+  const volumeValue = document.createElement('output'); volumeValue.className = 'volume-value'; volumeLabel.append(volumeValue);
   const rendererLabel = document.createElement('label'); rendererLabel.className = 'setting-row';
   const rendererName = document.createElement('span'); rendererLabel.append(rendererName);
   const rendererSelect = document.createElement('select'); rendererSelect.setAttribute('aria-label', 'Graphics mode');
@@ -38,7 +45,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const confirmText = document.createElement('p'); const confirmButton = document.createElement('button'); confirmButton.type = 'button'; confirmButton.className = 'menu-danger';
   const cancelButton = document.createElement('button'); cancelButton.type = 'button'; cancelButton.className = 'menu-secondary';
   confirmPane.append(confirmText, confirmButton, cancelButton);
-  controls.append(languageLabel, motionLabel, contrastLabel, rendererLabel, levelButton, hintButton, audioNote, clearButton, closeButton);
+  controls.append(languageLabel, motionLabel, contrastLabel, soundLabel, volumeLabel, rendererLabel, levelButton, hintButton, audioNote, clearButton, closeButton);
   settingsPage.append(title, status, controls, confirmPane);
   const levelPage = document.createElement('div'); levelPage.className = 'level-select-page'; levelPage.hidden = true;
   card.append(settingsPage, levelPage); panel.append(card); root.append(panel);
@@ -64,9 +71,12 @@ export function createSettingsDialog(root: HTMLElement, actions: {
     panel.lang = language; panel.dir = 'ltr'; title.textContent = t(language, 'settings'); languageName.textContent = t(language, 'language');
     motionName.textContent = t(language, 'reducedMotion'); contrastName.textContent = t(language, 'highContrast'); rendererName.textContent = t(language, 'renderer');
     rendererSelect.options[0]!.textContent = t(language, 'auto'); rendererSelect.options[1]!.textContent = t(language, 'webgl'); rendererSelect.options[2]!.textContent = t(language, 'canvas');
-    languageSelect.value = settings.language; motionInput.checked = settings.reducedMotion; contrastInput.checked = settings.highContrast; rendererSelect.value = settings.rendererMode;
+    languageSelect.value = settings.language; motionInput.checked = settings.reducedMotion; contrastInput.checked = settings.highContrast;
+    soundInput.checked = settings.soundEnabled; volumeInput.value = String(settings.soundVolume); volumeValue.value = `${Math.round(settings.soundVolume * 100)}%`; rendererSelect.value = settings.rendererMode;
     languageSelect.setAttribute('aria-label', t(language, 'language'));
     contrastInput.setAttribute('aria-label', t(language, 'highContrast'));
+    soundName.textContent = t(language, 'sound'); soundInput.setAttribute('aria-label', t(language, 'sound'));
+    volumeName.textContent = t(language, 'volume'); volumeInput.setAttribute('aria-label', t(language, 'volume'));
     rendererSelect.setAttribute('aria-label', t(language, 'renderer'));
     levelButton.textContent = `${t(language, 'levels')} · ${input.unlockedLevel}/${input.choices.length}`;
     hintButton.textContent = t(language, 'hint'); hintButton.disabled = !input.canHint;
@@ -90,6 +100,9 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   languageSelect.addEventListener('change', () => changeSettings({ language: languageSelect.value === 'ru' ? 'ru' : 'en' }));
   motionInput.addEventListener('change', () => changeSettings({ reducedMotion: motionInput.checked }));
   contrastInput.addEventListener('change', () => changeSettings({ highContrast: contrastInput.checked }));
+  soundInput.addEventListener('change', () => changeSettings({ soundEnabled: soundInput.checked }));
+  volumeInput.addEventListener('input', () => { volumeValue.value = `${Math.round(Number(volumeInput.value) * 100)}%`; });
+  volumeInput.addEventListener('change', () => changeSettings({ soundVolume: Number(volumeInput.value) }));
   rendererSelect.addEventListener('change', () => changeSettings({ rendererMode: rendererSelect.value as UserSettings['rendererMode'] }));
   levelButton.addEventListener('click', () => { settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); });
   hintButton.addEventListener('click', actions.hint);

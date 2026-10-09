@@ -226,7 +226,10 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
           }
           assert.equal(found, target, `${level.id} keyboard navigation can select the next solution arrow`);
           await page.keyboard.press('Enter');
-          await page.waitForFunction(() => ['Idle', 'Won'].includes(window.gameDebug.snapshot().phase), null, { timeout: 6000 });
+          await page.waitForFunction(() => ['Idle', 'Won'].includes(window.gameDebug.snapshot().phase), null, { timeout: 6000 }).catch(async error => {
+            const stuck = await page.evaluate(() => ({ phase: window.gameDebug.snapshot().phase, animation: window.gameDebug.presentationSnapshot(), paused: window.gameDebug.snapshot().paused }));
+            throw new Error(`${level.id} keyboard move ${JSON.stringify(move)} did not settle: ${JSON.stringify(stuck)}; ${error.message}`);
+          });
         }
         assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Won', `${level.id} is solvable with arrow keys and Enter`);
         await page.keyboard.press('Control+z');
@@ -381,6 +384,23 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     assert.match(await guidancePage.locator('.hint-toast').textContent(), /Try undoing a move/i, 'automatic deadlock notice appears only after the stable delay');
     await guidancePage.close();
 
+    const audioPage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
+    await audioPage.goto(baseUrl);
+    await audioPage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    assert.equal((await audioPage.evaluate(() => window.gameDebug.audioState())).unlocked, false, 'audio stays locked until a user gesture');
+    assert.equal(await audioPage.evaluate(() => window.gameDebug.playAudio('launch')), false, 'autoplay cannot play before a gesture');
+    await audioPage.getByRole('button', { name: 'Settings' }).click();
+    await audioPage.waitForFunction(() => window.gameDebug.audioState().unlocked);
+    assert.equal(await audioPage.evaluate(() => window.gameDebug.playAudio('merge')), true, 'audio plays after a trusted user gesture');
+    await audioPage.locator('.settings-panel').getByLabel('Sound effects').uncheck();
+    assert.equal(await audioPage.evaluate(() => window.gameDebug.playAudio('launch')), false, 'mute stops effects without affecting gameplay');
+    await audioPage.evaluate(() => window.gameDebug.flushPersistence());
+    await audioPage.reload();
+    await audioPage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    assert.equal((await audioPage.evaluate(() => window.gameDebug.audioState())).unlocked, false, 'reload does not restore playback without a new gesture');
+    assert.equal((await audioPage.evaluate(() => window.gameDebug.snapshot())).settings.soundEnabled, false, 'mute survives reload');
+    await audioPage.close();
+
     const matrixPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
     matrixPage.setDefaultTimeout(7000);
     await matrixPage.goto(baseUrl);
@@ -470,13 +490,15 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await preferences.getByLabel('Уменьшить движение').check();
     await preferences.getByLabel('Высокая контрастность').check();
     await savePage.waitForFunction(() => document.querySelector('main').classList.contains('high-contrast'));
+    assert.equal(await preferences.getByLabel('Звуковые эффекты').isChecked(), true, 'sound effects default to enabled but remain gesture-gated');
+    await savePage.evaluate(() => { const input = document.querySelector('input[aria-label="Громкость"]'); input.value = '0.65'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); });
     await preferences.getByLabel('Режим графики').selectOption('2d');
     await savePage.waitForFunction(() => window.gameDebug.rendererInfo().mode === '2d');
     await savePage.evaluate(() => window.gameDebug.flushPersistence());
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
-    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, highContrast: true, rendererMode: '2d', tutorialCompleted: true }, 'locale, accessibility, renderer preference and tutorial completion survive reload');
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, highContrast: true, soundEnabled: true, soundVolume: 0.65, rendererMode: '2d', tutorialCompleted: true }, 'locale, accessibility, sound, renderer preference and tutorial completion survive reload');
     assert.equal(await savePage.evaluate(() => window.gameDebug.rendererInfo().mode), '2d');
     await savePage.getByRole('button', { name: 'Настройки' }).click();
     preferences = savePage.locator('.settings-panel');
@@ -497,7 +519,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       request.onsuccess = () => {
         const tx = request.result.transaction('save', 'readwrite'); const store = tx.objectStore('save');
         const get = store.get('white-tower.save.v1');
-        get.onsuccess = () => store.put({ ...get.result, settings: { language: 'ru', reducedMotion: true, highContrast: true, rendererMode: 'auto', tutorialCompleted: true } }, 'white-tower.save.v1');
+        get.onsuccess = () => store.put({ ...get.result, settings: { language: 'ru', reducedMotion: true, highContrast: true, soundEnabled: false, soundVolume: 0.65, rendererMode: 'auto', tutorialCompleted: true } }, 'white-tower.save.v1');
         tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error);
       };
       request.onerror = () => reject(request.error);
@@ -505,7 +527,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
-    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, highContrast: true, rendererMode: 'auto', tutorialCompleted: true }, 'settings values roundtrip with the save');
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, highContrast: true, soundEnabled: false, soundVolume: 0.65, rendererMode: 'auto', tutorialCompleted: true }, 'settings values roundtrip with the save');
     await savePage.evaluate(() => new Promise((resolve, reject) => {
       const request = indexedDB.open('white-tower', 1);
       request.onsuccess = () => {
