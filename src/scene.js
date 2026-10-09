@@ -6,7 +6,7 @@ import { createRendererFactory } from './render/renderer-factory.ts';
 import { createProjection, worldToScreen } from './render/projection.ts';
 import { createAnimationPlayer } from './presentation/animation.ts';
 import { createStore } from './storage/store.ts';
-import { validateGameSave, createGameSave } from './storage/save-schema.ts';
+import { validateGameSave, createGameSave, migrateGameSave } from './storage/save-schema.ts';
 import { parseSettings } from './ui/i18n.ts';
 import { createSolverClient } from './game/solver-client.ts';
 import { createHintService } from './game/hint-service.ts';
@@ -34,6 +34,8 @@ export function createScene(canvas, rendererMode = 'auto', options = {}) {
   let nextPending = false;
   let recoveryNotice = '';
   let levelRequestId = 0;
+  let levelAbortController;
+  let contextLossCount = 0;
   let unlockedLevel = 1;
   const defaultSettings = parseSettings({ reducedMotion: typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches });
   let settings = defaultSettings;
@@ -179,19 +181,39 @@ export function createScene(canvas, rendererMode = 'auto', options = {}) {
     selection = next;
     renderer = next.renderer;
     activeCanvas = next.canvas;
+    attachContextLifecycle();
     previous?.dispose();
     showSnapshot(snapshot);
     return true;
   }
 
+  function attachContextLifecycle() {
+    renderer?.setContextCallbacks?.({
+      lost() {
+        contextLossCount++;
+        recoveryNotice = 'Graphics context lost. Attempting to restore the current board.';
+        persistSnapshot();
+        if (contextLossCount > 1) queueMicrotask(() => { if (!disposed) { recoveryNotice = 'Repeated graphics failure; switched to Canvas 2D.'; setRendererMode('2d'); } });
+      },
+      restored() {
+        if (disposed) return;
+        recoveryNotice = '';
+        showSnapshot(controller.snapshot());
+      },
+    });
+  }
+
   async function setLevelById(id) {
     if (!catalog || disposed) throw new Error('Каталог ещё загружается.');
     const requestId = ++levelRequestId;
+    levelAbortController?.abort();
+    levelAbortController = new AbortController();
+    const requestController = levelAbortController;
     animation.reset();
     hintService.cancel(); tutorialElapsed = 0; tutorialVisible = false; clearDeadlockTimer();
     const current = controller.snapshot();
     if (current.phase === 'Animating') showSnapshot(controller.finishAnimation(current.generationId));
-    const nextLevel = await loadLevelById(catalog, id);
+    const nextLevel = await loadLevelById(catalog, id, fetch, requestController.signal);
     if (disposed || requestId !== levelRequestId) return;
     level = nextLevel;
     towerDemo = false;
@@ -241,12 +263,14 @@ export function createScene(canvas, rendererMode = 'auto', options = {}) {
     } finally { nextPending = false; }
   }
 
+  attachContextLifecycle();
   const ready = loadCatalog()
     .then(async loadedCatalog => {
       if (disposed) return;
       catalog = loadedCatalog;
       await store.ready;
-      const rawSave = await store.read();
+      const storedSave = await store.read();
+      const rawSave = migrateGameSave(storedSave, catalog);
       const savedLevelId = rawSave && typeof rawSave === 'object' && 'selectedLevelId' in rawSave && typeof rawSave.selectedLevelId === 'string'
         ? rawSave.selectedLevelId : catalog.levels[0]?.id;
       const selectedEntry = catalog.levels.some(item => item.id === savedLevelId) ? catalog.levels.find(item => item.id === savedLevelId) : catalog.levels[0];
@@ -275,7 +299,7 @@ export function createScene(canvas, rendererMode = 'auto', options = {}) {
         }
       }
       showSnapshot(controller.snapshot());
-      if (rawSave === undefined) persistSnapshot();
+      if (rawSave === undefined || rawSave !== storedSave) persistSnapshot();
       if (settings.tutorialCompleted || controller.snapshot().committedState?.moveCount) {
         tutorialVisible = false;
         if (!settings.tutorialCompleted) { completeTutorial(); persistSnapshot(); }
@@ -321,6 +345,21 @@ export function createScene(canvas, rendererMode = 'auto', options = {}) {
     async selectLevel(id) { return selectLevel(id); },
     updateSettings,
     async clearProgress() { return clearProgress(); },
+    async exportProgress() { await pendingSave; const save = await store.read(); if (!save) throw new Error('No saved progress to export.'); return JSON.stringify(save, null, 2); },
+    async importProgress(raw) {
+      if (disposed || !catalog || controller.snapshot().phase === 'Animating') return false;
+      const migrated = migrateGameSave(raw, catalog);
+      if (!migrated || typeof migrated !== 'object' || typeof migrated.selectedLevelId !== 'string') return false;
+      const target = await loadLevelById(catalog, migrated.selectedLevelId);
+      const checked = validateGameSave(migrated, catalog, new Map([[target.id, target]]));
+      if (!checked.ok || disposed) return false;
+      levelRequestId++; levelAbortController?.abort(); animation.reset(); hintService.cancel(); clearDeadlockTimer();
+      level = target; unlockedLevel = checked.value.unlockedLevel; settings = parseSettings(checked.value.settings);
+      controller.loadLevel(target); controller.restoreCompleted(checked.value.completedLevelIds); controller.restoreAttempt(checked.value.committedState, checked.value.history);
+      if (selection.mode !== settings.rendererMode) setRendererMode(settings.rendererMode);
+      audio?.configure(settings);
+      showSnapshot(controller.snapshot()); pendingSave = store.write(checked.value); return true;
+    },
     async nextLevel() { return nextLevel(); },
     debugLoadLevel(raw) {
       const result = validateLevel(raw);
@@ -385,6 +424,7 @@ export function createScene(canvas, rendererMode = 'auto', options = {}) {
     dispose() {
       if (disposed) return;
       disposed = true;
+      levelRequestId++; levelAbortController?.abort();
       clearDeadlockTimer(); hintService.dispose(); solver.dispose();
       animation.dispose();
       controller.dispose();

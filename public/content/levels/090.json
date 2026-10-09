@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "level-090",
+  "title": "Assembly Order -10",
+  "cells": [
+    {
+      "u": 2,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 3,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 2,
+      "v": 2,
+      "height": 6
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "height": 6,
+      "launchDirection": "NW"
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "height": 5,
+      "launchDirection": "NE"
+    },
+    {
+      "u": 2,
+      "v": 3,
+      "height": 5
+    }
+  ],
+  "totalTiles": 22,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 3,
+      "v": 2
+    },
+    {
+      "u": 2,
+      "v": 4
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import { validateLevel, type Level } from '../game/level-schema.js';
 export type CatalogEntry = Readonly<{ id: string; path: string; sha256: string }>;
 export type ContentCatalog = Readonly<{ schemaVersion: 1; contentVersion: string; levels: readonly CatalogEntry[] }>;
 export type ContentErrorCode = 'network' | 'catalog' | 'missing-level' | 'checksum' | 'json' | 'schema' | 'identity';
+const verifiedLevels = new Map<string, Level>();
 
 export class ContentLoadError extends Error {
   constructor(readonly code: ContentErrorCode, message: string) {
@@ -14,8 +15,8 @@ export class ContentLoadError extends Error {
 function parseCatalog(raw: unknown): ContentCatalog {
   if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) throw new ContentLoadError('catalog', 'Catalog must be an object.');
   const candidate = raw as Record<string, unknown>;
-  if (candidate.schemaVersion !== 1 || typeof candidate.contentVersion !== 'string' || !Array.isArray(candidate.levels) || candidate.levels.length !== 12)
-    throw new ContentLoadError('catalog', 'Catalog version or level list is invalid.');
+  if (candidate.schemaVersion !== 1 || typeof candidate.contentVersion !== 'string' || !Array.isArray(candidate.levels) || candidate.levels.length < 1 || candidate.levels.length > 120)
+    throw new ContentLoadError('catalog', 'Catalog version or level list is invalid (expected 1–120 entries).');
   const ids = new Set<string>();
   const levels: CatalogEntry[] = [];
   candidate.levels.forEach((item: unknown, index: number) => {
@@ -43,16 +44,21 @@ export async function loadCatalog(url = '/content/catalog.json', fetcher: typeof
   return parseCatalog(raw);
 }
 
-export async function loadLevelById(catalog: ContentCatalog, id: string, fetcher: typeof fetch = fetch): Promise<Level> {
+export async function loadLevelById(catalog: ContentCatalog, id: string, fetcher: typeof fetch = fetch, signal?: AbortSignal): Promise<Level> {
   const entry = catalog.levels.find(item => item.id === id);
   if (!entry) throw new ContentLoadError('missing-level', `Level ${id} is not in the catalog.`);
+  const cacheKey = `${catalog.contentVersion}:${entry.sha256}`;
+  const cached = verifiedLevels.get(cacheKey);
+  if (cached) return cached;
   let response: Response;
-  try { response = await fetcher(entry.path); }
+  try { response = await fetcher(entry.path, signal ? { signal } : undefined); }
   catch (error) { throw new ContentLoadError('network', error instanceof Error ? error.message : String(error)); }
   if (!response.ok) throw new ContentLoadError('network', `Level request failed (${response.status}).`);
-  const bytes = new Uint8Array(await response.arrayBuffer());
+  let bytes: Uint8Array;
+  try { bytes = new Uint8Array(await response.arrayBuffer()); }
+  catch (error) { throw new ContentLoadError('network', error instanceof Error ? error.message : `Could not read ${id}.`); }
   let digest: ArrayBuffer;
-  try { digest = await crypto.subtle.digest('SHA-256', bytes); }
+  try { digest = await crypto.subtle.digest('SHA-256', bytes as BufferSource); }
   catch (error) { throw new ContentLoadError('checksum', error instanceof Error ? error.message : 'SHA-256 is unavailable.'); }
   const hash = [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('');
   if (hash !== entry.sha256) throw new ContentLoadError('checksum', `Checksum mismatch for ${id}.`);
@@ -62,6 +68,7 @@ export async function loadLevelById(catalog: ContentCatalog, id: string, fetcher
   const result = validateLevel(raw);
   if (!result.ok) throw new ContentLoadError('schema', result.errors.map(item => `${item.path}: ${item.message}`).join('; '));
   if (result.value.id !== entry.id) throw new ContentLoadError('identity', `Catalog ID does not match level ${id}.`);
+  verifiedLevels.set(cacheKey, result.value);
   return result.value;
 }
 

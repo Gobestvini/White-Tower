@@ -1,0 +1,47 @@
+const CACHE_PREFIX = 'white-tower-';
+const CACHE_NAME = `${CACHE_PREFIX}1.1.0`;
+
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const response = await fetch('/content/catalog.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Campaign catalog could not be fetched.');
+    const catalog = await response.json();
+    if (!Array.isArray(catalog.levels) || catalog.levels.length !== 120) throw new Error('Campaign catalog is incomplete.');
+    const shell = await (await fetch('/')).text();
+    const assets = [...shell.matchAll(/(?:src|href)="(\/assets\/[^\"]+)"/g)].map(match => match[1]);
+    const cache = await caches.open(CACHE_NAME);
+    try {
+      await cache.addAll(['/','/index.html','/manifest.webmanifest','/white-tower.svg','/content/catalog.json',...assets,...catalog.levels.map(level=>level.path)]);
+    } catch (error) {
+      await caches.delete(CACHE_NAME);
+      throw error;
+    }
+  })());
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(names.filter(name => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME).map(name => caches.delete(name)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
+  event.respondWith((async () => {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    try {
+      const response = await fetch(request);
+      if (response.ok && new URL(request.url).pathname.startsWith('/assets/')) {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(request, response.clone());
+      }
+      return response;
+    } catch {
+      return new Response('This White Tower content is not available offline yet.', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+    }
+  })());
+});

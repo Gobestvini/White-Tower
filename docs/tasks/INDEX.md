@@ -25,20 +25,20 @@
 | [TASK-0017 Проверить адаптивный экран и доступное управление](TASK-0017-responsive-accessibility.md) | done | normal | TASK-0009, TASK-0010, TASK-0011, TASK-0015 | средняя |
 | [TASK-0018 Добавить тихие звуковые эффекты с безопасным lifecycle](TASK-0018-audio-feedback.md) | done | normal | TASK-0011, TASK-0015 | средняя |
 | [TASK-0019 Собрать и проверить вертикальный срез из двенадцати уровней](TASK-0019-vertical-slice.md) | done | high | TASK-0013, TASK-0014, TASK-0015, TASK-0016, TASK-0017, TASK-0018 | сильная |
-| [TASK-0020 Создать внутренний редактор и валидатор контента](TASK-0020-internal-level-editor.md) | in-progress | normal | TASK-0006, TASK-0019 | сильная |
-| [TASK-0021 Завершить первый блок кампании уровней 1–20](TASK-0021-campaign-basics.md) | draft | normal | TASK-0020 | средняя |
-| [TASK-0022 Создать блок Повороты уровней 21–40](TASK-0022-campaign-turns.md) | draft | normal | TASK-0021 | средняя |
-| [TASK-0023 Создать блок Пересечения уровней 41–60](TASK-0023-campaign-crossings.md) | draft | normal | TASK-0022 | средняя |
-| [TASK-0024 Создать блок Пустые пути уровней 61–80](TASK-0024-campaign-empty-paths.md) | draft | normal | TASK-0023 | средняя |
-| [TASK-0025 Создать блок Порядок сборки уровней 81–100](TASK-0025-campaign-assembly-order.md) | draft | normal | TASK-0024 | средняя |
-| [TASK-0026 Завершить кампанию блоком Комбинации уровней 101–120](TASK-0026-campaign-combinations.md) | draft | normal | TASK-0025 | средняя |
-| [TASK-0027 Загружать блоки контента с ошибками и повтором](TASK-0027-content-loading-errors.md) | draft | normal | TASK-0026, TASK-0015 | сильная |
-| [TASK-0028 Добавить перенос прогресса и безопасное обновление сохранений](TASK-0028-save-import-migrations-tabs.md) | draft | normal | TASK-0014, TASK-0015, TASK-0027 | сильная |
-| [TASK-0029 Добавить офлайн кэш и безопасное обновление PWA](TASK-0029-pwa-offline-updates.md) | draft | normal | TASK-0027, TASK-0028 | сильная |
-| [TASK-0030 Проверить восстановление renderer и очистку ресурсов](TASK-0030-lifecycle-context-recovery.md) | draft | normal | TASK-0009, TASK-0011, TASK-0018, TASK-0029 | сильная |
-| [TASK-0031 Измерить и выполнить бюджеты загрузки и производительности](TASK-0031-performance-budgets.md) | draft | normal | TASK-0026, TASK-0027, TASK-0029, TASK-0030 | сильная |
-| [TASK-0032 Пройти обязательную матрицу браузеров и устройств](TASK-0032-platform-compatibility.md) | draft | normal | TASK-0017, TASK-0018, TASK-0028, TASK-0029, TASK-0030, TASK-0031 | средняя |
-| [TASK-0033 Проверить понятность обучения и трудности с игроками](TASK-0033-player-usability.md) | draft | normal | TASK-0019, TASK-0026, TASK-0032 | средняя |
-| [TASK-0034 Собрать и принять полную релизную версию без публикации](TASK-0034-release-candidate.md) | draft | high | TASK-0013, TASK-0026, TASK-0028, TASK-0029, TASK-0030, TASK-0031, TASK-0032, TASK-0033 | сильная |
+| [TASK-0020 Создать внутренний редактор и валидатор контента](TASK-0020-internal-level-editor.md) | done | normal | TASK-0006, TASK-0019 | сильная |
+| [TASK-0021 Завершить первый блок кампании уровней 1–20](TASK-0021-campaign-basics.md) | review | normal | TASK-0020 | средняя |
+| [TASK-0022 Создать блок Повороты уровней 21–40](TASK-0022-campaign-turns.md) | review | normal | TASK-0021 | средняя |
+| [TASK-0023 Создать блок Пересечения уровней 41–60](TASK-0023-campaign-crossings.md) | review | normal | TASK-0022 | средняя |
+| [TASK-0024 Создать блок Пустые пути уровней 61–80](TASK-0024-campaign-empty-paths.md) | review | normal | TASK-0023 | средняя |
+| [TASK-0025 Создать блок Порядок сборки уровней 81–100](TASK-0025-campaign-assembly-order.md) | review | normal | TASK-0024 | средняя |
+| [TASK-0026 Завершить кампанию блоком Комбинации уровней 101–120](TASK-0026-campaign-combinations.md) | review | normal | TASK-0025 | средняя |
+| [TASK-0027 Загружать блоки контента с ошибками и повтором](TASK-0027-content-loading-errors.md) | review | normal | TASK-0026, TASK-0015 | сильная |
+| [TASK-0028 Добавить перенос прогресса и безопасное обновление сохранений](TASK-0028-save-import-migrations-tabs.md) | review | normal | TASK-0014, TASK-0015, TASK-0027 | сильная |
+| [TASK-0029 Добавить офлайн кэш и безопасное обновление PWA](TASK-0029-pwa-offline-updates.md) | review | normal | TASK-0027, TASK-0028 | сильная |
+| [TASK-0030 Проверить восстановление renderer и очистку ресурсов](TASK-0030-lifecycle-context-recovery.md) | review | normal | TASK-0009, TASK-0011, TASK-0018, TASK-0029 | сильная |
+| [TASK-0031 Измерить и выполнить бюджеты загрузки и производительности](TASK-0031-performance-budgets.md) | review | normal | TASK-0026, TASK-0027, TASK-0029, TASK-0030 | сильная |
+| [TASK-0032 Пройти обязательную матрицу браузеров и устройств](TASK-0032-platform-compatibility.md) | review | normal | TASK-0017, TASK-0018, TASK-0028, TASK-0029, TASK-0030, TASK-0031 | средняя |
+| [TASK-0033 Проверить понятность обучения и трудности с игроками](TASK-0033-player-usability.md) | review | normal | TASK-0019, TASK-0026, TASK-0032 | средняя |
+| [TASK-0034 Собрать и принять полную релизную версию без публикации](TASK-0034-release-candidate.md) | review | high | TASK-0013, TASK-0026, TASK-0028, TASK-0029, TASK-0030, TASK-0031, TASK-0032, TASK-0033 | сильная |
 
-Зависимую задачу переводить в ready после завершения и проверки всех зависимостей и актуализации контекста. TASK-0013 требует принятия визуального среза владельцем, TASK-0032 — фактической обязательной матрицы. Совместно затрагиваемые main/scene/UI/package файлы нельзя менять одновременно без согласования.
+Зависимую задачу переводить в ready после завершения и проверки всех зависимостей и актуализации контекста. Владелец разрешил завершить очередь без промежуточных gate-review; фактические проверки человека и устройств перечислены в итоговом перечне, а не маскируются automated results. Совместно затрагиваемые main/scene/UI/package файлы нельзя менять одновременно без согласования.

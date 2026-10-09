@@ -6,7 +6,7 @@ import { createInitialState } from '../src/game/model.ts';
 import { validateLevel } from '../src/game/level-schema.js';
 import { createGameController } from '../src/game/controller.ts';
 import { createStore } from '../src/storage/store.ts';
-import { createGameSave, validateGameSave } from '../src/storage/save-schema.ts';
+import { createGameSave, migrateGameSave, validateGameSave } from '../src/storage/save-schema.ts';
 
 const examples = JSON.parse(readFileSync(fileURLToPath(new URL('../docs/knowledge/white-tower/levels_examples.json', import.meta.url)), 'utf8')).levels;
 const levelResult = validateLevel(examples[0]);
@@ -25,6 +25,16 @@ test('save validation accepts a stable game and rejects changed content, bad arr
   badArrow.committedState.stacks[0].launchDirection = 'sideways';
   assert.equal(validateGameSave(badArrow, catalog, levels).ok, false);
   assert.equal(validateGameSave({ ...save, history: Array.from({ length: 51 }, () => save.committedState) }, catalog, levels).ok, false);
+});
+
+test('save migration keeps an unchanged reference-level attempt across the 1.0 campaign extension', () => {
+  const oldCatalog = { schemaVersion: 1, contentVersion: '1.0.0', levels: [{ id: level.id, path: '/level.json', sha256: 'a'.repeat(64) }] };
+  const newCatalog = { ...oldCatalog, contentVersion: '1.1.0' };
+  const oldSave = createGameSave({ contentVersion: oldCatalog.contentVersion, levelChecksum: oldCatalog.levels[0].sha256, selectedLevelId: level.id, unlockedLevel: 1, completedLevelIds: [], settings: {}, committedState: createInitialState(level), history: [] });
+  const migrated = migrateGameSave(oldSave, newCatalog);
+  assert.equal(migrated.contentVersion, '1.1.0');
+  assert.equal(validateGameSave(migrated, newCatalog, new Map([[level.id, level]])).ok, true);
+  assert.equal(migrateGameSave({ ...oldSave, levelChecksum: 'b'.repeat(64) }, newCatalog).contentVersion, '1.0.0');
 });
 
 test('store falls through denied adapters and keeps gameplay writes available in memory', async () => {

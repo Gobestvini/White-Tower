@@ -1,6 +1,6 @@
 # TASK-0034: Собрать и принять полную релизную версию без публикации
 
-- Статус: draft
+- Статус: review
 - Приоритет: high
 - Создана: 2026-10-08
 - Обновлена: 2026-10-08
@@ -75,10 +75,10 @@ Production preview: first session, saved late state, full ending, forced fallbac
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: A local production candidate builds with the full catalog, service worker, save transfer and fallback behavior; no publication was performed.
+- Изменённые файлы и зачем: README.md, docs/content/campaign.md, эта задача и итоговый index — команды, фактические ограничения и проверочная запись.
+- Команды и фактические результаты: pnpm check:full, pnpm validate:levels, pnpm test:campaign, pnpm test:content-loading, pnpm test:transfer, pnpm test:lifecycle, pnpm test:pwa and pnpm test:performance passed across local/preview sessions; pnpm test:browser — passed; production bundle excludes editor.
+- Ручные проверки и evidence: результаты browser automation и показатели byte sizes сохранены в docs/content/campaign.md; настоящие устройства/пользователи не заявлены.
+- Выполненные критерии: доступные локальные и автоматические сценарии выполнены согласно указанной среде.
+- Непроверенное, блокеры и отклонения от плана: Human acceptance of all provisional levels and real platform/device matrix are still open. No external release or publication was performed.
+- Итоговый статус и дата: review — локальная реализация завершена без промежуточного ревью по поручению владельца; осталось выполнить перечисленную внешнюю/ручную приёмку, 2026-10-09.

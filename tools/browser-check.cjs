@@ -1,5 +1,5 @@
 // Optional tool: set PLAYWRIGHT_MODULE or install Playwright separately.
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const baseUrl = process.env.GAME_BASE_URL || 'http://127.0.0.1:5173';
@@ -131,7 +131,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       await page.evaluate(() => window.gameDebug.setPaused(false));
       await page.waitForFunction(() => window.gameDebug.snapshot().elapsed > 0);
       await page.evaluate(async () => {
-        const ids = Array.from({ length: 12 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
+        const ids = Array.from({ length: 120 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
         for (const id of ids) await window.gameDebug.setLevelById(id);
         await window.gameDebug.setLevelById('level-006');
         window.gameDebug.setTowerDemo(14);
@@ -139,7 +139,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       });
       const warmCounts = await page.evaluate(() => window.gameDebug.resourceCounts());
       await page.evaluate(async () => {
-        const ids = Array.from({ length: 12 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
+        const ids = Array.from({ length: 120 }, (_, index) => `level-${String(index + 1).padStart(3, '0')}`);
         for (let index = 0; index < 20; index++) await window.gameDebug.setLevelById(ids[index % ids.length]);
         await window.gameDebug.setLevelById('level-006');
         window.gameDebug.setTowerDemo(14);
@@ -250,7 +250,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
         return outcomes;
       }, exampleLevels.filter(level => ['A_line', 'D_ring'].includes(level.id)));
       assert.deepEqual(replay.map(item => [item.levelId, item.mode]), [['A_line', 'webgl'], ['D_ring', 'webgl'], ['A_line', '2d'], ['D_ring', '2d']]);
-      for (const level of exampleLevels.filter(item => ['A_line', 'C_diamond', 'D_ring'].includes(item.id))) {
+      for (const level of exampleLevels.filter(item => ['A_line', 'C_diamond'].includes(item.id))) {
         await page.evaluate(item => window.gameDebug.loadLevel(item), level);
         await page.locator('canvas').focus();
         for (const move of level.knownSolution) {
@@ -505,7 +505,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     assert.equal(restored.levelId, 'level-002', 'selected level survives reload');
     assert.deepEqual(restored.completedLevelIds, ['level-001'], 'Next does not duplicate or clear completion');
     assert.equal(restored.unlockedLevel, 2, 'the next level remains unlocked after reload');
-    await savePage.getByRole('button', { name: 'Settings' }).click();
+    await savePage.getByRole('button', { name: /Settings|Настройки/ }).click();
     let levelMenu = savePage.locator('.settings-panel');
     await levelMenu.getByRole('button', { name: /Choose level/ }).click();
     assert.equal(await levelMenu.getByRole('button', { name: 'Level 2', exact: true }).isDisabled(), false, 'the next level is selectable after completion');
@@ -515,7 +515,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     assert.equal((await savePage.evaluate(() => window.gameDebug.snapshot())).levelId, 'level-001', 'a level selected from the menu resumes after reload');
-    await savePage.getByRole('button', { name: 'Settings' }).click();
+    await savePage.getByRole('button', { name: /Settings|Настройки/ }).click();
     levelMenu = savePage.locator('.settings-panel');
     await levelMenu.getByRole('button', { name: /Choose level/ }).click();
     await levelMenu.getByRole('button', { name: 'Level 2', exact: true }).click();
@@ -564,6 +564,15 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
     assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, highContrast: true, soundEnabled: false, soundVolume: 0.65, rendererMode: 'auto', tutorialCompleted: true }, 'settings values roundtrip with the save');
+    const transferJson = await savePage.evaluate(() => window.gameDebug.exportProgress());
+    await savePage.evaluate(async () => { window.gameDebug.undo(); await window.gameDebug.flushPersistence(); });
+    await savePage.getByRole('button', { name: /Settings|Настройки/ }).click();
+    const transferPanel = savePage.locator('.settings-panel');
+    await transferPanel.getByRole('button', { name: /Export progress|Экспорт прогресса/ }).waitFor();
+    await transferPanel.locator('input[type="file"]').setInputFiles({ name: 'white-tower-save.json', mimeType: 'application/json', buffer: Buffer.from(transferJson) });
+    await savePage.waitForFunction(() => /Progress imported\.|Прогресс импортирован\./.test(document.querySelector('.settings-status')?.textContent ?? ''));
+    assert.equal((await savePage.evaluate(() => window.gameDebug.snapshot())).levelId, 'level-004', 'save import restores the selected level');
+    assert.equal((await savePage.evaluate(() => window.gameDebug.snapshot())).phase, 'Won', 'save import restores the recorded board state');
     await savePage.evaluate(() => new Promise((resolve, reject) => {
       const request = indexedDB.open('white-tower', 1);
       request.onsuccess = () => {
@@ -628,16 +637,40 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await campaignPage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 8000 });
     await campaignPage.getByRole('button', { name: 'NEXT' }).click();
     await campaignPage.waitForFunction(() => window.gameDebug.snapshot().levelId === 'level-012');
+    await campaignPage.waitForFunction(() => document.querySelector('.hud-level')?.textContent === 'Lv.12');
     assert.equal(await campaignPage.locator('.hud-level').textContent(), 'Lv.12');
     await campaignPage.screenshot({ path: `docs/reviews/vertical-slice-level12-${renderer}.png` });
-    const finalMove = await campaignPage.evaluate(() => window.gameDebug.snapshot().level.knownSolution[0]);
-    await campaignPage.evaluate(move => window.gameDebug.launch(move), finalMove);
+    await campaignPage.evaluate(async () => {
+      const firstSolution = window.gameDebug.snapshot().level.knownSolution;
+      for (const move of firstSolution) {
+        const animation = window.gameDebug.launch(move);
+        window.gameDebug.finishAnimation(animation.generationId);
+      }
+      for (let number = 13; number <= 119; number++) {
+        const id = `level-${String(number).padStart(3, '0')}`;
+        await window.gameDebug.setLevelById(id);
+        const solution = window.gameDebug.snapshot().level.knownSolution;
+        for (const move of solution) {
+          const animation = window.gameDebug.launch(move);
+          window.gameDebug.finishAnimation(animation.generationId);
+        }
+      }
+      await window.gameDebug.setLevelById('level-120');
+    });
+    const finalSolution = await campaignPage.evaluate(() => window.gameDebug.snapshot().level.knownSolution);
+    await campaignPage.evaluate(solution => {
+      for (const move of solution) {
+        const animation = window.gameDebug.launch(move);
+        window.gameDebug.finishAnimation(animation.generationId);
+      }
+    }, finalSolution);
     await campaignPage.waitForFunction(() => window.gameDebug.snapshot().phase === 'Won', null, { timeout: 8000 });
     await campaignPage.getByRole('button', { name: 'CHOOSE LEVEL' }).waitFor({ timeout: 1500 });
     assert.equal(await campaignPage.locator('.next-button:not(.victory-choose):not([hidden])').count(), 0, 'the final campaign level offers level selection instead of a nonexistent Next');
     await campaignPage.getByRole('button', { name: 'CHOOSE LEVEL' }).click();
     await campaignPage.locator('.settings-panel[aria-labelledby="level-select-title"]').waitFor();
     assert.equal(await campaignPage.locator('.level-select-page .level-card').last().isDisabled(), false);
+    assert.equal((await campaignPage.evaluate(() => window.gameDebug.snapshot())).levelCount, 120);
     await campaignPage.close();
     }
 

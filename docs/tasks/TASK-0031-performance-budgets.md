@@ -1,6 +1,6 @@
 # TASK-0031: Измерить и выполнить бюджеты загрузки и производительности
 
-- Статус: draft
+- Статус: review
 - Приоритет: normal
 - Создана: 2026-10-08
 - Обновлена: 2026-10-08
@@ -75,10 +75,10 @@
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: Production assets were measured and one desktop network simulation recorded.
+- Изменённые файлы и зачем: README.md, docs/content/campaign.md, tools/performance-check.cjs, эта задача и итоговый index — команды, фактические ограничения и проверочная запись.
+- Команды и фактические результаты: pnpm test:performance — three production preview loads under CDP 10 Mbps down/100 ms RTT measured 415–434 ms and 161,741 resource bytes; Hint response 26 ms. Campaign JSON 124,560 bytes; catalog 19,632 bytes.
+- Ручные проверки и evidence: результаты browser automation и показатели byte sizes сохранены в docs/content/campaign.md; настоящие устройства/пользователи не заявлены.
+- Выполненные критерии: доступные локальные и автоматические сценарии выполнены согласно указанной среде.
+- Непроверенное, блокеры и отклонения от плана: No mobile/physical FPS, memory, heat/battery, 15-minute runtime, or 100 ms first-visible measure. The JS bundle is 599,656 raw bytes and Vite reports the >500 KB chunk warning; current simulated transfer remains under budget.
+- Итоговый статус и дата: review — локальная реализация завершена без промежуточного ревью по поручению владельца; осталось выполнить перечисленную внешнюю/ручную приёмку, 2026-10-09.

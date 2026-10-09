@@ -31,7 +31,11 @@
 | docs/reviews/visual-slice.md, docs/reviews/visual/, docs/reviews/vertical-slice.md | Evidence визуального среза TASK-0013 и двенадцатиуровневой интеграции |
 | docs/content/reference-levels.md, level-reviews.md | Provisional реконструкции 1–11, решения и ручной протокол уровней 1–12 |
 | docs/content/authoring.md, tools/level-editor/ | Локальный отдельный редактор контента и четыре стадии его ручного допуска |
+| docs/content/campaign.md, public/content/catalog.json, public/content/levels/ | 120 уровней кампании; новые дизайны помечены provisional и снабжены таблицей решений/статуса проверки |
 | tools/validate-levels.mjs | CLI-проверка каталога, hashes, schema, решения и циклических запусков |
+| public/sw.js, public/manifest.webmanifest | Production offline cache для shell/assets/120 уровней; обновления по SW lifecycle |
+| tools/pwa-check.cjs, tools/content-loading-check.cjs | Production offline reload и сохранение стабильного уровня при сетевом отказе Next |
+| tools/campaign-check.cjs, tools/lifecycle-check.cjs, tools/performance-check.cjs | Сквозной browser прогон кампании, WebGL restore/fallback и сетевые измерения preview |
 | docs/tasks/INDEX.md, docs/tasks/PLAN.md | Очередь из 34 заданий на полную реализацию White Tower, этапы и покрытие GDD |
 | docs/tasks/baseline.json | Ревизия и хэши локальных входов, проверенных при подготовке очереди |
 | docs/knowledge/game-architecture.md | Контракты и владельцы при расширении каркаса |

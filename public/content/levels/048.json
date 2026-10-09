@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "level-048",
+  "title": "Crossings -12",
+  "cells": [
+    {
+      "u": 2,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 5,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 2,
+      "v": 3,
+      "height": 4
+    },
+    {
+      "u": 3,
+      "v": 3,
+      "height": 4,
+      "launchDirection": "NW"
+    },
+    {
+      "u": 2,
+      "v": 5,
+      "height": 4,
+      "launchDirection": "NE"
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "height": 3
+    }
+  ],
+  "totalTiles": 15,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 3,
+      "v": 3
+    },
+    {
+      "u": 2,
+      "v": 5
+    }
+  ]
+}

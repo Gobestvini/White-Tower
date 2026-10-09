@@ -22,6 +22,8 @@ type HudOptions = {
   onRetry(): void;
   onChooseLevels(): void;
   onHint(): void;
+  onExportProgress(): Promise<string>;
+  onImportProgress(raw: unknown): Promise<boolean>;
 };
 type HudSnapshot = GameSnapshot & Readonly<{ levelNumber?: number; levelCount?: number; unlockedLevel?: number; settings?: UserSettings; persistence?: { memoryOnly: boolean; recoveryNotice: string }; tutorialVisible?: boolean; hintView?: HintView; selectedStackId?: string; activeStacks?: readonly { stack: Stack; direction: string }[] }>;
 
@@ -59,6 +61,8 @@ export function createHud(options: HudOptions) {
     clearProgress: options.onClearProgress,
     retry: options.onRetry,
     hint: options.onHint,
+    exportProgress: options.onExportProgress,
+    importProgress: options.onImportProgress,
   });
   let pendingLevelChooser = false;
   const victory = createVictoryOverlay(root, {

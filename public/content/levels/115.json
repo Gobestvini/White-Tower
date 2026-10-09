@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "level-115",
+  "title": "Combinations -5",
+  "cells": [
+    {
+      "u": 3,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 6,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 5,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 3,
+      "v": 4,
+      "height": 5
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "height": 5,
+      "launchDirection": "SE"
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "height": 5,
+      "launchDirection": "SW"
+    },
+    {
+      "u": 3,
+      "v": 3,
+      "height": 5
+    },
+    {
+      "u": 3,
+      "v": 6,
+      "height": 5,
+      "launchDirection": "NE"
+    },
+    {
+      "u": 3,
+      "v": 5,
+      "height": 4
+    }
+  ],
+  "totalTiles": 29,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 2,
+      "v": 4
+    },
+    {
+      "u": 3,
+      "v": 2
+    }
+  ]
+}

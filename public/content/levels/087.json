@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "id": "level-087",
+  "title": "Assembly Order -13",
+  "cells": [
+    {
+      "u": 2,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 1,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 7,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 6,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 5,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 2,
+      "v": 4,
+      "height": 3
+    },
+    {
+      "u": 1,
+      "v": 4,
+      "height": 3,
+      "launchDirection": "SE"
+    },
+    {
+      "u": 2,
+      "v": 2,
+      "height": 3,
+      "launchDirection": "SW"
+    },
+    {
+      "u": 2,
+      "v": 3,
+      "height": 2
+    },
+    {
+      "u": 2,
+      "v": 7,
+      "height": 2,
+      "launchDirection": "NE"
+    },
+    {
+      "u": 2,
+      "v": 6,
+      "height": 2
+    },
+    {
+      "u": 2,
+      "v": 5,
+      "height": 2
+    }
+  ],
+  "totalTiles": 17,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 1,
+      "v": 4
+    },
+    {
+      "u": 2,
+      "v": 2
+    }
+  ]
+}

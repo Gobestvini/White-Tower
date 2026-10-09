@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "level-066",
+  "title": "Empty Paths -14",
+  "cells": [
+    {
+      "u": 2,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 1,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 1,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 6,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 5,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 0,
+      "v": 3,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 2,
+      "v": 3,
+      "height": 3
+    },
+    {
+      "u": 2,
+      "v": 1,
+      "height": 3,
+      "launchDirection": "SW"
+    },
+    {
+      "u": 2,
+      "v": 2,
+      "height": 2
+    },
+    {
+      "u": 2,
+      "v": 6,
+      "height": 3,
+      "launchDirection": "NE"
+    },
+    {
+      "u": 2,
+      "v": 5,
+      "height": 2
+    },
+    {
+      "u": 2,
+      "v": 4,
+      "height": 2
+    },
+    {
+      "u": 0,
+      "v": 3,
+      "height": 3,
+      "launchDirection": "SE"
+    }
+  ],
+  "totalTiles": 18,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 0,
+      "v": 3
+    },
+    {
+      "u": 2,
+      "v": 1
+    }
+  ]
+}

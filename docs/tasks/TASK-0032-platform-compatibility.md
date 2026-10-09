@@ -1,6 +1,6 @@
 # TASK-0032: Пройти обязательную матрицу браузеров и устройств
 
-- Статус: draft
+- Статус: review
 - Приоритет: normal
 - Создана: 2026-10-08
 - Обновлена: 2026-10-08
@@ -75,10 +75,10 @@ TV/консоли и невыбранные встроенные контейн�
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: The existing browser suite exercises renderer/input flows over 320×568 through desktop viewport sizes; dedicated lifecycle and PWA checks pass in Chromium.
+- Изменённые файлы и зачем: README.md, docs/content/campaign.md, эта задача и итоговый index — команды, фактические ограничения и проверочная запись.
+- Команды и фактические результаты: pnpm test:campaign and pnpm test:lifecycle passed; pnpm test:browser is being stabilized around save-transfer selectors.
+- Ручные проверки и evidence: результаты browser automation и показатели byte sizes сохранены в docs/content/campaign.md; настоящие устройства/пользователи не заявлены.
+- Выполненные критерии: доступные локальные и автоматические сценарии выполнены согласно указанной среде.
+- Непроверенное, блокеры и отклонения от плана: No actual browser/device matrix (Android, iPhone, iPad, Windows hardware) is available in this environment. Emulated viewports are not reported as device tests.
+- Итоговый статус и дата: review — локальная реализация завершена без промежуточного ревью по поручению владельца; осталось выполнить перечисленную внешнюю/ручную приёмку, 2026-10-09.

@@ -1,5 +1,7 @@
 # Vertical slice: levels 1–12
 
+Campaign levels 13–120 and their solver evidence are listed in [campaign.md](campaign.md). New campaign layouts are provisional and await human play/readability review; the table keeps manual status separate from automated solution replay.
+
 Recorded 2026-10-09 for TASK-0019. Levels 1–11 are the reference reconstructions documented in [reference-levels.md](reference-levels.md); level 12 is original content approved after the owner's acceptance of TASK-0013.
 
 ## Level 12: The Turning Path

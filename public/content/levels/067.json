@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "level-067",
+  "title": "Empty Paths -13",
+  "cells": [
+    {
+      "u": 3,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 4,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 1,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 5,
+      "v": 3,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 3,
+      "v": 3,
+      "height": 5
+    },
+    {
+      "u": 3,
+      "v": 0,
+      "height": 5,
+      "launchDirection": "SW"
+    },
+    {
+      "u": 3,
+      "v": 1,
+      "height": 5
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "height": 5
+    },
+    {
+      "u": 5,
+      "v": 3,
+      "height": 5,
+      "launchDirection": "NW"
+    }
+  ],
+  "totalTiles": 25,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 3,
+      "v": 0
+    },
+    {
+      "u": 5,
+      "v": 3
+    }
+  ]
+}

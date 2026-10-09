@@ -8,6 +8,14 @@ import { createHud } from './ui/hud.ts';
 import { keyboardAnnouncement } from './ui/accessibility.ts';
 import { createAudio } from './audio/audio.ts';
 
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Online play remains available when the browser blocks offline storage.
+    });
+  }, { once: true });
+}
+
 let canvas = document.querySelector('canvas');
 const status = document.querySelector('#status');
 const input = createInput();
@@ -51,11 +59,13 @@ const hud = createHud({
     audio.configure(nextSettings);
     if (scene.canvas !== previousCanvas) { installPointerInput(); resize(); }
   },
-  onSelectLevel: id => { audio.play('ui'); void scene.selectLevel(id); },
+  onSelectLevel: id => { audio.play('ui'); void scene.selectLevel(id).catch(() => { status.textContent = 'Could not load that level. Select it again to retry.'; }); },
   onClearProgress: () => { audio.play('ui'); void scene.clearProgress().then(() => { installPointerInput(); resize(); }); },
   onRetry: () => window.location.reload(),
   onChooseLevels: () => { scene.toggleMenu(); },
   onHint: () => { audio.play('ui'); scene.requestHint(); },
+  onExportProgress: () => scene.exportProgress(),
+  onImportProgress: raw => scene.importProgress(raw),
 });
 const gameActions = createGameActions({
   canvas: () => scene.canvas,
@@ -130,6 +140,7 @@ scene.ready.then(async () => {
   status.textContent = scene.rendererInfo().message ?? (scene.rendererInfo().mode === '2d' ? 'Упрощённый графический режим.' : 'Готово');
 }).catch(error => {
   status.textContent = error instanceof Error ? `Ошибка уровня: ${error.message}` : 'Не удалось загрузить уровень.';
+  document.querySelector('#load-error').hidden = false;
 });
 function dispose() {
   disposed = true;
@@ -156,6 +167,8 @@ if (import.meta.env.DEV) {
     undo: () => scene.undo(),
     persistenceInfo: () => scene.persistenceInfo(),
     flushPersistence: () => scene.flushPersistence(),
+    exportProgress: () => scene.exportProgress(),
+    importProgress: raw => scene.importProgress(raw),
     loadLevel: level => scene.debugLoadLevel(level),
     pointForStack: id => scene.pointForStack(id),
     selectedStackId: () => scene.selectedStackId(),

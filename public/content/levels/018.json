@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "level-018",
+  "title": "First Merges -2",
+  "cells": [
+    {
+      "u": 2,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 0,
+      "kind": "normal"
+    },
+    {
+      "u": 2,
+      "v": 1,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 2,
+      "v": 2,
+      "height": 2
+    },
+    {
+      "u": 3,
+      "v": 2,
+      "height": 2,
+      "launchDirection": "NW"
+    },
+    {
+      "u": 2,
+      "v": 0,
+      "height": 2,
+      "launchDirection": "SW"
+    },
+    {
+      "u": 2,
+      "v": 1,
+      "height": 1
+    }
+  ],
+  "totalTiles": 7,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 3,
+      "v": 2
+    },
+    {
+      "u": 2,
+      "v": 0
+    }
+  ]
+}

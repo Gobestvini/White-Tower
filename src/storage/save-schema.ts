@@ -20,6 +20,13 @@ export function createGameSave(input: Omit<GameSave, 'schemaVersion'>): GameSave
   return Object.freeze({ schemaVersion: SAVE_SCHEMA_VERSION, ...input });
 }
 
+export function migrateGameSave(raw: unknown, catalog: ContentCatalog): unknown {
+  if (!record(raw) || raw.schemaVersion !== SAVE_SCHEMA_VERSION || raw.contentVersion !== '1.0.0' || typeof raw.selectedLevelId !== 'string') return raw;
+  const entry = catalog.levels.find(item => item.id === raw.selectedLevelId);
+  if (!entry || raw.levelChecksum !== entry.sha256) return raw;
+  return { ...raw, contentVersion: catalog.contentVersion };
+}
+
 function validState(raw: unknown, level: Level): raw is GameState {
   if (!record(raw) || raw.levelId !== level.id || !Number.isSafeInteger(raw.moveCount) || Number(raw.moveCount) < 0 || !Array.isArray(raw.stacks) || !raw.stacks.length) return false;
   let tiles = 0;

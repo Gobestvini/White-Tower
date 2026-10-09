@@ -1,6 +1,6 @@
 # TASK-0033: Проверить понятность обучения и трудности с игроками
 
-- Статус: draft
+- Статус: review
 - Приоритет: normal
 - Создана: 2026-10-08
 - Обновлена: 2026-10-08
@@ -75,10 +75,10 @@
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: The campaign has solver paths and a review protocol, but player usability requires external participants.
+- Изменённые файлы и зачем: README.md, docs/content/campaign.md, эта задача и итоговый index — команды, фактические ограничения и проверочная запись.
+- Команды и фактические результаты: pnpm validate:levels and campaign browser scenario passed; documentation distinguishes automated evidence from player acceptance.
+- Ручные проверки и evidence: результаты browser automation и показатели byte sizes сохранены в docs/content/campaign.md; настоящие устройства/пользователи не заявлены.
+- Выполненные критерии: доступные локальные и автоматические сценарии выполнены согласно указанной среде.
+- Непроверенное, блокеры и отклонения от плана: No external players completed the tutorial or difficulty sessions. Collect 5+ players, completion time, wrong branches, Hint use, and comprehension before closing this review.
+- Итоговый статус и дата: review — локальная реализация завершена без промежуточного ревью по поручению владельца; осталось выполнить перечисленную внешнюю/ручную приёмку, 2026-10-09.

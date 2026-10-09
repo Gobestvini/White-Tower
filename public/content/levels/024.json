@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "level-024",
+  "title": "Turning Paths -16",
+  "cells": [
+    {
+      "u": 2,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 0,
+      "v": 3,
+      "kind": "normal"
+    },
+    {
+      "u": 1,
+      "v": 3,
+      "kind": "redirect",
+      "direction": "SW"
+    },
+    {
+      "u": 1,
+      "v": 4,
+      "kind": "redirect",
+      "direction": "SE"
+    },
+    {
+      "u": 5,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 4,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 4,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 2,
+      "v": 4,
+      "height": 5
+    },
+    {
+      "u": 0,
+      "v": 3,
+      "height": 4,
+      "launchDirection": "SE"
+    },
+    {
+      "u": 1,
+      "v": 3,
+      "height": 1
+    },
+    {
+      "u": 1,
+      "v": 4,
+      "height": 1
+    },
+    {
+      "u": 5,
+      "v": 4,
+      "height": 4,
+      "launchDirection": "NW"
+    },
+    {
+      "u": 4,
+      "v": 4,
+      "height": 1
+    },
+    {
+      "u": 3,
+      "v": 4,
+      "height": 1
+    }
+  ],
+  "totalTiles": 17,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 1,
+  "knownSolution": [
+    {
+      "u": 0,
+      "v": 3
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "level-055",
+  "title": "Crossings -5",
+  "cells": [
+    {
+      "u": 3,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 4,
+      "v": 2,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 4,
+      "kind": "normal"
+    },
+    {
+      "u": 3,
+      "v": 3,
+      "kind": "normal"
+    }
+  ],
+  "stacks": [
+    {
+      "u": 3,
+      "v": 2,
+      "height": 6
+    },
+    {
+      "u": 4,
+      "v": 2,
+      "height": 5,
+      "launchDirection": "NW"
+    },
+    {
+      "u": 3,
+      "v": 4,
+      "height": 5,
+      "launchDirection": "NE"
+    },
+    {
+      "u": 3,
+      "v": 3,
+      "height": 5
+    }
+  ],
+  "totalTiles": 21,
+  "cameraPreset": "campaign-crossing",
+  "tutorialKey": null,
+  "parMoves": 2,
+  "knownSolution": [
+    {
+      "u": 4,
+      "v": 2
+    },
+    {
+      "u": 3,
+      "v": 4
+    }
+  ]
+}

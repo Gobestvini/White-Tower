@@ -24,6 +24,7 @@ export interface WhiteTowerRenderer {
   render(): void;
   pickStack(point: Readonly<{ x: number; y: number }>, view: RenderViewState): string | undefined;
   resourceCounts(): RendererResourceCounts;
+  setContextCallbacks?(callbacks: { lost(): void; restored(): void }): void;
   dispose(): void;
 }
 
@@ -83,6 +84,11 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
   let projection: Projection | undefined;
   let view: RenderViewState | undefined;
   let disposed = false;
+  let contextCallbacks = { lost() {}, restored() {} };
+  const handleContextLost = (event: Event) => { event.preventDefault(); contextCallbacks.lost(); };
+  const handleContextRestored = () => { if (view) setView(view); contextCallbacks.restored(); };
+  canvas.addEventListener('webglcontextlost', handleContextLost);
+  canvas.addEventListener('webglcontextrestored', handleContextRestored);
 
   function addMesh(geo: typeof geometry.floor, material: MeshBasicMaterial | MeshBasicMaterial[], position: { x: number; y: number; z: number }, order: number, scaleX = 1, scaleY = 1) {
     const mesh = new Mesh(geo, material);
@@ -197,6 +203,8 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
   function dispose(): void {
     if (disposed) return;
     disposed = true;
+    canvas.removeEventListener('webglcontextlost', handleContextLost);
+    canvas.removeEventListener('webglcontextrestored', handleContextRestored);
     viewLayer.clear();
     geometry.floor.dispose();
     geometry.floorOutline.dispose();
@@ -211,5 +219,5 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     renderer.dispose();
   }
 
-  return Object.freeze({ setView, resize, render, pickStack, resourceCounts, dispose });
+  return Object.freeze({ setView, resize, render, pickStack, resourceCounts, setContextCallbacks(callbacks: { lost(): void; restored(): void }) { contextCallbacks = callbacks; }, dispose });
 }

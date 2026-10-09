@@ -18,6 +18,12 @@
     "check:full": "node tools/telegram/verify.js --full",
     "context": "node tools/telegram/knowledge.js",
     "test:browser": "node tools/browser-check.cjs",
+    "test:campaign": "node tools/campaign-check.cjs",
+    "test:lifecycle": "node tools/lifecycle-check.cjs",
+    "test:content-loading": "node tools/content-loading-check.cjs",
+    "test:performance": "node tools/performance-check.cjs",
+    "test:transfer": "node tools/transfer-check.cjs",
+    "test:pwa": "node tools/pwa-check.cjs",
     "telegram": "node tools/telegram/bot.js",
     "telegram:check": "node tools/telegram/bot.js --check"
   },

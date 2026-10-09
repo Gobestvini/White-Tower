@@ -8,6 +8,7 @@ type SettingsView = Readonly<{
 }>;
 export function createSettingsDialog(root: HTMLElement, actions: {
   close(): void; update(settings: UserSettings): void; selectLevel(id: string): void; clearProgress(): void; retry(): void; hint(): void;
+  exportProgress(): Promise<string>; importProgress(raw: unknown): Promise<boolean>;
 }) {
   const panel = document.createElement('section'); panel.className = 'settings-panel'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-labelledby', 'settings-title'); panel.tabIndex = -1;
   const card = document.createElement('div'); card.className = 'settings-card';
@@ -38,6 +39,10 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   rendererSelect.innerHTML = '<option value="auto"></option><option value="webgl"></option><option value="2d"></option>'; rendererLabel.append(rendererSelect);
   const levelButton = document.createElement('button'); levelButton.type = 'button'; levelButton.className = 'menu-secondary';
   const hintButton = document.createElement('button'); hintButton.type = 'button'; hintButton.className = 'menu-secondary';
+  const exportButton = document.createElement('button'); exportButton.type = 'button'; exportButton.className = 'menu-secondary';
+  const importButton = document.createElement('button'); importButton.type = 'button'; importButton.className = 'menu-secondary';
+  const importInput = document.createElement('input'); importInput.type = 'file'; importInput.accept = 'application/json,.json'; importInput.hidden = true; importInput.setAttribute('aria-label', 'Import saved progress');
+  let transferNotice = '';
   const audioNote = document.createElement('p'); audioNote.className = 'settings-note';
   const clearButton = document.createElement('button'); clearButton.type = 'button'; clearButton.className = 'menu-danger';
   const closeButton = document.createElement('button'); closeButton.type = 'button'; closeButton.className = 'settings-close';
@@ -45,7 +50,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const confirmText = document.createElement('p'); const confirmButton = document.createElement('button'); confirmButton.type = 'button'; confirmButton.className = 'menu-danger';
   const cancelButton = document.createElement('button'); cancelButton.type = 'button'; cancelButton.className = 'menu-secondary';
   confirmPane.append(confirmText, confirmButton, cancelButton);
-  controls.append(languageLabel, motionLabel, contrastLabel, soundLabel, volumeLabel, rendererLabel, levelButton, hintButton, audioNote, clearButton, closeButton);
+  controls.append(languageLabel, motionLabel, contrastLabel, soundLabel, volumeLabel, rendererLabel, levelButton, hintButton, exportButton, importButton, importInput, audioNote, clearButton, closeButton);
   settingsPage.append(title, status, controls, confirmPane);
   const levelPage = document.createElement('div'); levelPage.className = 'level-select-page'; levelPage.hidden = true;
   card.append(settingsPage, levelPage); panel.append(card); root.append(panel);
@@ -80,9 +85,11 @@ export function createSettingsDialog(root: HTMLElement, actions: {
     rendererSelect.setAttribute('aria-label', t(language, 'renderer'));
     levelButton.textContent = `${t(language, 'levels')} · ${input.unlockedLevel}/${input.choices.length}`;
     hintButton.textContent = t(language, 'hint'); hintButton.disabled = !input.canHint;
+    exportButton.textContent = language === 'ru' ? 'Экспорт прогресса' : 'Export progress';
+    importButton.textContent = language === 'ru' ? 'Импорт прогресса' : 'Import progress';
     clearButton.textContent = t(language, 'clearProgress'); closeButton.textContent = t(language, 'back');
     audioNote.textContent = t(language, 'audioLater');
-    status.textContent = input.memoryOnly ? t(language, 'memory') : input.recoveryNotice;
+    status.textContent = transferNotice || (input.memoryOnly ? t(language, 'memory') : input.recoveryNotice);
     status.classList.toggle('is-warning', input.memoryOnly || !!input.recoveryNotice);
     let retryButton: HTMLButtonElement | null = status.nextElementSibling instanceof HTMLButtonElement && status.nextElementSibling.classList.contains('storage-retry')
       ? status.nextElementSibling : null;
@@ -106,6 +113,21 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   rendererSelect.addEventListener('change', () => changeSettings({ rendererMode: rendererSelect.value as UserSettings['rendererMode'] }));
   levelButton.addEventListener('click', () => { settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); });
   hintButton.addEventListener('click', actions.hint);
+  exportButton.addEventListener('click', async () => {
+    try {
+      const blob = new Blob([await actions.exportProgress()], { type: 'application/json' });
+      const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'white-tower-save.json'; anchor.click(); URL.revokeObjectURL(url);
+      transferNotice = view?.settings.language === 'ru' ? 'Файл прогресса сохранён.' : 'Progress file downloaded.';
+    } catch { transferNotice = view?.settings.language === 'ru' ? 'Нет сохранённого прогресса для экспорта.' : 'There is no saved progress to export.'; }
+  });
+  importButton.addEventListener('click', () => importInput.click());
+  importInput.addEventListener('change', async () => {
+    const file = importInput.files?.[0]; importInput.value = ''; if (!file) return;
+    try {
+      const accepted = await actions.importProgress(JSON.parse(await file.text()));
+      transferNotice = accepted ? (view?.settings.language === 'ru' ? 'Прогресс импортирован.' : 'Progress imported.') : (view?.settings.language === 'ru' ? 'Файл не подходит или его версия не поддерживается.' : 'This save is invalid or uses an unsupported version.');
+    } catch { transferNotice = view?.settings.language === 'ru' ? 'Не удалось прочитать файл прогресса.' : 'Could not read the progress file.'; }
+  });
   clearButton.addEventListener('click', () => { confirmText.textContent = t(view?.settings.language ?? 'en', 'clearQuestion'); confirmButton.textContent = t(view?.settings.language ?? 'en', 'confirmClear'); cancelButton.textContent = t(view?.settings.language ?? 'en', 'cancel'); confirmPane.hidden = false; clearButton.hidden = true; confirmButton.focus(); });
   cancelButton.addEventListener('click', () => { confirmPane.hidden = true; clearButton.hidden = false; clearButton.focus(); });
   confirmButton.addEventListener('click', () => { confirmPane.hidden = true; clearButton.hidden = false; actions.clearProgress(); });
