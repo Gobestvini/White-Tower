@@ -12,7 +12,7 @@ import {
 import { DIRECTIONS, type Direction } from '../game/directions.js';
 import type { Level, Stack } from '../game/model.js';
 import { createBevelGeometry, createChevronGeometry, createDiamondGeometry, createDiamondOutlineGeometry, createArrowGeometry, createShadowGeometry, createSideGeometry } from './geometry.js';
-import { ARTBOARD, CAMERA_PITCH, FLOOR_RADIUS, TILE_RADIUS, TILE_SIDE_DEPTH, worldToScreen, createProjection, pickVisibleStack, unpitchScreenPoint, type Projection } from './projection.js';
+import { ARTBOARD, CAMERA_PITCH, FLOOR_RADIUS, TILE_RADIUS, TILE_SIDE_DEPTH, worldToScreen, createProjection, pickVisibleStack, compareBackToFront, unpitchScreenPoint, type Projection } from './projection.js';
 import { WHITE_TOWER_COLORS, type RenderStack, type RenderViewState } from './presets.js';
 
 export type RenderViewport = Readonly<{ width: number; height: number; pixelRatio: number }>;
@@ -127,7 +127,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     view = nextView;
     projection = createProjection(nextView.level, nextView.level.totalTiles);
     const occupied = new Set(nextView.stacks.map(stack => pointKey(stack.u, stack.v)));
-    const sortedCells = [...nextView.level.cells].sort((a, b) => a.u + a.v - (b.u + b.v) || a.u - b.u || a.v - b.v);
+    const sortedCells = [...nextView.level.cells].sort(compareBackToFront);
     let order = 1;
     for (const cell of sortedCells) {
       if (cell.kind === 'blocked') continue;
@@ -143,7 +143,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
         addMesh(geometry.chevrons[cell.direction], materials.chevron, { x: point.x, y: point.y, z: depth + 0.002 }, order++);
       }
     }
-    const sortedStacks = [...nextView.stacks].sort((a, b) => a.u + a.v - (b.u + b.v) || a.u - b.u || a.v - b.v);
+    const sortedStacks = [...nextView.stacks].sort(compareBackToFront);
     for (const stack of sortedStacks) {
       order = addStack(stack, nextView.level, projection, order + 2);
       if (stack.id === nextView.selectedStackId) {

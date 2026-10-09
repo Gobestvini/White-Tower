@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { gameIntentForKey } from '../src/input/game-actions.ts';
 import { createPointerInput } from '../src/input/pointer.ts';
-import { clientToArtboard, pickVisibleStack, worldToScreen } from '../src/render/projection.ts';
+import { clientToArtboard, compareBackToFront, pickVisibleStack, TILE_RADIUS, TILE_SIDE_DEPTH } from '../src/render/projection.ts';
 
 test('keyboard intents require game focus and leave browser/editor keys alone', () => {
   assert.equal(gameIntentForKey({ key: 'ArrowRight', code: 'ArrowRight' }, false), undefined);
@@ -21,12 +21,13 @@ test('CSS client coordinates map through letterbox and ignore bars at any viewpo
   assert.equal(clientToArtboard(0, 0, { left: 0, top: 0, width: 0, height: 0 }), undefined);
 });
 
-test('picking returns the frontmost top face and blocks a hidden rear tile behind its side', () => {
+test('picking follows visible front-to-back order and ignores side faces', () => {
   const projection = { scale: 0.5, originX: 0, originY: 0, layerRise: 12.8 };
-  const stacks = [{ id: 'rear', u: 0, v: 0, height: 1 }, { id: 'front', u: 1, v: 0, height: 1 }];
-  assert.equal(pickVisibleStack({ x: -40, y: 0 }, stacks, projection), 'rear');
-  assert.equal(pickVisibleStack({ x: 36, y: 66 }, stacks, projection), undefined);
-  assert.equal(pickVisibleStack(worldToScreen(1, 0, 0, projection), stacks, projection), 'front');
+  const stacks = [{ id: 'front', u: 0, v: 0, height: 2 }, { id: 'rear', u: 1, v: 0, height: 1 }];
+  assert.deepEqual([...stacks].sort(compareBackToFront).map(stack => stack.id), ['rear', 'front']);
+  assert.equal(pickVisibleStack({ x: 18, y: -18 }, stacks, projection), 'front', 'the visible front stack owns the overlapping region');
+  assert.equal(pickVisibleStack({ x: 0, y: TILE_RADIUS + TILE_SIDE_DEPTH / 2 }, stacks, projection), undefined, 'a side face blocks picking through it');
+  assert.equal(pickVisibleStack({ x: 110, y: -36 }, stacks, projection), 'rear', 'the exposed part of the rear tile remains clickable');
 });
 
 class PointerEventStub extends Event {

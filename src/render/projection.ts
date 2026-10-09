@@ -21,6 +21,11 @@ export type Projection = Readonly<{
 }>;
 export type Bounds = Readonly<{ minX: number; minY: number; maxX: number; maxY: number; width: number; height: number }>;
 
+/** Painter order: larger u + v is farther up the screen, so draw it first. */
+export function compareBackToFront(a: Readonly<{ u: number; v: number }>, b: Readonly<{ u: number; v: number }>): number {
+  return b.u + b.v - a.u - a.v || a.u - b.u || a.v - b.v;
+}
+
 export function worldToScreen(u: number, v: number, height: number, projection: Projection): ScreenPoint {
   return Object.freeze({
     x: projection.originX + (u - v) * TILE_STEP * projection.scale,
@@ -56,7 +61,7 @@ function pointInPolygon(point: ScreenPoint, polygon: readonly ScreenPoint[]): bo
 }
 
 export function pickVisibleStack(point: ScreenPoint, stacks: readonly Readonly<{ id: string; u: number; v: number; height: number }>[], projection: Projection): string | undefined {
-  const ordered = [...stacks].sort((a, b) => b.u + b.v - a.u - a.v || b.u - a.u || b.v - a.v);
+  const ordered = [...stacks].sort((a, b) => compareBackToFront(b, a));
   for (const stack of ordered) {
     for (let layer = stack.height - 1; layer >= 0; layer--) {
       const center = worldToScreen(stack.u, stack.v, layer, projection);

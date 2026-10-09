@@ -1,6 +1,6 @@
 import type { Level, Stack } from '../game/model.js';
 import { DIRECTION_VECTORS, type Direction } from '../game/directions.js';
-import { ARTBOARD, CAMERA_PITCH, FLOOR_RADIUS, TILE_RADIUS, TILE_SIDE_DEPTH, worldToScreen, createProjection, pickVisibleStack, unpitchScreenPoint, type Projection } from './projection.js';
+import { ARTBOARD, CAMERA_PITCH, FLOOR_RADIUS, TILE_RADIUS, TILE_SIDE_DEPTH, worldToScreen, createProjection, pickVisibleStack, compareBackToFront, unpitchScreenPoint, type Projection } from './projection.js';
 import { WHITE_TOWER_COLORS, type RenderStack, type RenderViewState } from './presets.js';
 import type { RenderViewport, WhiteTowerRenderer } from './webgl-renderer.js';
 
@@ -146,14 +146,14 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     context.translate(0, -ARTBOARD.height / 2);
     const activeProjection = projection ?? createProjection(view.level, view.level.totalTiles);
     const occupied = new Set(view.stacks.map(stack => key(stack.u, stack.v)));
-    for (const cell of [...view.level.cells].sort((a, b) => a.u + a.v - b.u - b.v)) {
+    for (const cell of [...view.level.cells].sort(compareBackToFront)) {
       if (cell.kind === 'blocked') continue;
       if (occupied.has(key(cell.u, cell.v))) continue;
       const point = worldToScreen(cell.u, cell.v, 0, activeProjection);
       drawDiamond(point.x, point.y, FLOOR_RADIUS, WHITE_TOWER_COLORS.floor, WHITE_TOWER_COLORS.floorSeam);
       if (cell.kind === 'redirect' && cell.direction) drawChevron(point.x, point.y, cell.direction);
     }
-    for (const stack of [...view.stacks].sort((a, b) => a.u + a.v - b.u - b.v)) drawStack(stack, activeProjection);
+    for (const stack of [...view.stacks].sort(compareBackToFront)) drawStack(stack, activeProjection);
   }
 
   function pickStack(point: Readonly<{ x: number; y: number }>, activeView: RenderViewState): string | undefined {

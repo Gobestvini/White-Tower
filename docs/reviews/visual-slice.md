@@ -41,6 +41,8 @@
 
 ## Проверки
 
+Дополнение 2026-10-09: исправлен обратный порядок перекрытия соседних стопок. Оба renderer используют общий порядок от задних клеток к передним, hit-test обходит его в обратном направлении. Воспроизведено состояние Lv.3 после первого хода (2/4): [Canvas 2D](visual/layers-level3-2d.png), [WebGL](visual/layers-level3-webgl.png). Передняя двухслойная стопка теперь закрывает задние грани, её верхняя поверхность остаётся видна. `pnpm check:full` и браузерный сценарий прошли.
+
 - `PLAYWRIGHT_MODULE=playwright-core GAME_BASE_URL=http://127.0.0.1:5175 pnpm test:browser` — успешно.
 - `pnpm check:full` — успешно: 78 тестов, typecheck и production build.
 - `git diff --check` — успешно.
