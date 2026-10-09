@@ -49,16 +49,16 @@ test('checks receipt avoids identical checks but invalidates code, test and depe
   const cwd = await fixture(t); let runs = 0;
   const run = async () => { runs++; return { code: 0 }; };
   assert.equal((await verify(cwd, { run })).ok, true);
-  assert.equal(runs, 3);
+  assert.equal(runs, 5);
   await writeFile(join(cwd, 'docs/tasks/report.md'), 'updated done report');
   assert.equal((await verify(cwd, { run })).reused, true);
-  assert.equal(runs, 3);
+  assert.equal(runs, 5);
   for (const file of ['src/traffic.js', 'tests/example.test.js', 'package.json', 'src/new.js']) {
     await writeFile(join(cwd, file), 'changed ' + file);
     assert.equal(await matchingReceipt(cwd), null);
     assert.equal((await verify(cwd, { run })).ok, true);
   }
-  assert.equal(runs, 15);
+  assert.equal(runs, 25);
 });
 
 test('failed or changing checks cannot produce a reusable success receipt', async t => {

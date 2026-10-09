@@ -11,6 +11,42 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
   const browser = await chromium.launch(options);
   try {
     fs.mkdirSync('artifacts/screenshots', { recursive: true });
+    const editorPage = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const editorUrl = new URL('/tools/level-editor/', baseUrl);
+    await editorPage.goto(editorUrl.toString());
+    await editorPage.locator('#json').waitFor();
+    assert.equal(await editorPage.locator('script[type="module"][src^="./main.ts"]').count(), 1, 'the development editor stays a separate page entry');
+    await editorPage.locator('[data-tool="redirect"]').click();
+    await editorPage.locator('#direction').selectOption('SW');
+    await editorPage.locator('#coord-u').fill('2');
+    await editorPage.locator('#coord-v').fill('0');
+    await editorPage.getByRole('button', { name: 'Apply tool at coordinate' }).click();
+    const modifiedLevel = JSON.parse(await editorPage.locator('#json').inputValue());
+    assert.deepEqual(modifiedLevel.cells[2], { u: 2, v: 0, kind: 'redirect', direction: 'SW' });
+    await editorPage.getByRole('button', { name: 'Test / solve' }).click();
+    await editorPage.waitForFunction(() => document.querySelector('#status')?.textContent.startsWith('Playable.'));
+    const downloadPromise = editorPage.waitForEvent('download');
+    await editorPage.getByRole('button', { name: 'Download JSON' }).click();
+    const exported = await downloadPromise;
+    assert.equal(exported.suggestedFilename(), 'editor-draft.json');
+    const boardImagePromise = editorPage.waitForEvent('download');
+    await editorPage.getByRole('button', { name: 'Save board image' }).click();
+    const boardImage = await boardImagePromise;
+    assert.equal(boardImage.suggestedFilename(), 'editor-draft.png');
+    await boardImage.saveAs('docs/reviews/editor-roundtrip.png');
+    await editorPage.getByRole('button', { name: 'Undo editor' }).click();
+    assert.equal(JSON.parse(await editorPage.locator('#json').inputValue()).cells[2].kind, 'normal', 'editor Undo is separate from game Undo');
+    await editorPage.locator('#json').fill(JSON.stringify(modifiedLevel, null, 2));
+    await editorPage.getByRole('button', { name: 'Import and validate' }).click();
+    assert.match(await editorPage.locator('#status').textContent(), /Imported level validated/);
+    await editorPage.locator('#json').fill('{');
+    await editorPage.getByRole('button', { name: 'Import and validate' }).click();
+    assert.match(await editorPage.locator('#status').textContent(), /JSON parse error/);
+    await editorPage.getByRole('button', { name: 'Refresh JSON' }).click();
+    assert.equal(JSON.parse(await editorPage.locator('#json').inputValue()).id, 'editor-draft', 'invalid import preserves the current project');
+    await editorPage.getByRole('button', { name: 'Undo editor' }).click();
+    assert.equal(JSON.parse(await editorPage.locator('#json').inputValue()).cells[2].kind, 'normal', 'editor Undo restores the separate previous draft');
+    await editorPage.close();
     for (const [name, viewport, touch] of [
       ['desktop', { width: 1280, height: 900 }, false],
       ['mobile', { width: 390, height: 844 }, true],

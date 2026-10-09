@@ -8,7 +8,7 @@ import { git, protectedPath } from './publish.js';
 export async function fingerprint(cwd) {
   const files = [...new Set((await git(cwd, ['ls-files', '--cached', '--others', '--exclude-standard', '-z', '--', '.'])).split('\0'))]
     .filter(p => p && !protectedPath(p) && !p.startsWith('docs/') && !p.endsWith('.md')).sort();
-  const hash = createHash('sha256').update(`checks-v2:${process.version}:${process.platform}:${process.arch}:${process.env.NODE_OPTIONS ?? ''}:${process.env.CI ?? ''}:${process.env.NODE_ENV ?? ''}\0`);
+  const hash = createHash('sha256').update(`checks-v3:${process.version}:${process.platform}:${process.arch}:${process.env.NODE_OPTIONS ?? ''}:${process.env.CI ?? ''}:${process.env.NODE_ENV ?? ''}\0`);
   for (const file of files) {
     hash.update(file + '\0');
     try { hash.update(await readFile(join(cwd, file))); }
@@ -26,8 +26,8 @@ export async function fingerprint(cwd) {
 export async function matchingReceipt(cwd) {
   try {
     const receipt = JSON.parse(await readFile(join(cwd, '.telegram-checks.json'), 'utf8'));
-    return receipt.version === 2 && receipt.ok === true && receipt.node === process.version &&
-      receipt.tests === 0 && receipt.typecheck === 0 && receipt.build === 0 && receipt.fingerprint === await fingerprint(cwd) ? receipt : null;
+    return receipt.version === 3 && receipt.ok === true && receipt.node === process.version &&
+      receipt.levels === 0 && receipt.tests === 0 && receipt.typecheck === 0 && receipt.build === 0 && receipt.bundle === 0 && receipt.fingerprint === await fingerprint(cwd) ? receipt : null;
   } catch { return null; }
 }
 
@@ -52,14 +52,16 @@ export async function verify(cwd, { reuse = true, run = command } = {}) {
   const before = await fingerprint(cwd);
   const logs = join(cwd, '.telegram-check-logs'); await mkdir(logs, { recursive: true });
   const tests = (await readdir(join(cwd, 'tests'))).filter(p => p.endsWith('.test.js')).sort().map(p => join(cwd, 'tests', p));
-  const test = await run(cwd, ['--import', 'tsx', '--test', '--test-reporter=tap', ...tests], join(logs, 'tests.log'));
+  const levels = await run(cwd, ['--import', 'tsx', join(cwd, 'tools/validate-levels.mjs')], join(logs, 'levels.log'));
+  const test = levels.code === 0 ? await run(cwd, ['--import', 'tsx', '--test', '--test-reporter=tap', ...tests], join(logs, 'tests.log')) : { code: null, detail: levels.detail };
   const typecheck = test.code === 0 ? await run(cwd, ['node_modules/typescript/bin/tsc', '--noEmit'], join(logs, 'typecheck.log')) : { code: null };
   const build = typecheck.code === 0 ? await run(cwd, ['node_modules/vite/bin/vite.js', 'build'], join(logs, 'build.log')) : { code: null };
+  const bundle = build.code === 0 ? await run(cwd, ['--import', 'tsx', join(cwd, 'tools/check-release-bundle.mjs')], join(logs, 'bundle.log')) : { code: null };
   const after = await fingerprint(cwd);
-  const ok = test.code === 0 && typecheck.code === 0 && build.code === 0 && before === after;
-  await writeFile(join(cwd, '.telegram-checks.json'), JSON.stringify({ version: 2, node: process.version,
-    ok, fingerprint: after, tests: test.code, typecheck: typecheck.code, build: build.code, at: new Date().toISOString() }, null, 2));
-  const detail = test.code !== 0 ? test.detail : typecheck.code !== 0 ? typecheck.detail : build.detail;
+  const ok = levels.code === 0 && test.code === 0 && typecheck.code === 0 && build.code === 0 && bundle.code === 0 && before === after;
+  await writeFile(join(cwd, '.telegram-checks.json'), JSON.stringify({ version: 3, node: process.version,
+    ok, fingerprint: after, levels: levels.code, tests: test.code, typecheck: typecheck.code, build: build.code, bundle: bundle.code, at: new Date().toISOString() }, null, 2));
+  const detail = levels.code !== 0 ? levels.detail : test.code !== 0 ? test.detail : typecheck.code !== 0 ? typecheck.detail : build.code !== 0 ? build.detail : bundle.detail;
   return { ok, reused: false, detail: ok ? undefined : before !== after ? 'Код изменился во время проверок.' : detail };
 }
 

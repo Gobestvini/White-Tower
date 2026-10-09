@@ -13,6 +13,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.js",
+    "validate:levels": "node --import tsx tools/validate-levels.mjs",
     "check": "node tools/telegram/verify.js",
     "check:full": "node tools/telegram/verify.js --full",
     "context": "node tools/telegram/knowledge.js",

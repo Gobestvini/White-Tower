@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>White Tower Level Editor</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <header><div><p class="eyebrow">INTERNAL TOOL</p><h1>Level editor</h1></div><label>Camera <select id="camera"><option>reference</option><option>long-board</option><option>wide</option></select></label></header>
+      <nav class="tools" aria-label="Editor tools">
+        <button data-tool="cell" aria-pressed="true">Cell</button><button data-tool="redirect">Redirect</button><button data-tool="stack">Tile / stack</button><button data-tool="arrow">Launch arrow</button><button data-tool="erase">Erase</button>
+        <label>Direction <select id="direction"><option>SE</option><option>SW</option><option>NW</option><option>NE</option><option>E</option><option>W</option><option>N</option><option>S</option></select></label>
+        <button id="rotate">Rotate selected</button><button id="undo">Undo editor</button>
+        <label>u <input id="coord-u" type="number" value="0" min="-16" max="16" /></label><label>v <input id="coord-v" type="number" value="0" min="-16" max="16" /></label><button id="apply-tool">Apply tool at coordinate</button>
+      </nav>
+      <section class="workspace">
+        <div class="board-panel"><p class="help">Click the board to place cells, redirects and tiles. Select the starting tile to set its launch direction.</p><div class="board-frame"><canvas id="board" width="720" height="1280" aria-label="Level board editor"></canvas></div>
+          <div class="actions"><button id="test" class="primary">Test / solve</button><button id="screenshot">Save board image</button><button id="export">Download JSON</button></div>
+          <output id="status" aria-live="polite">Ready</output>
+        </div>
+        <aside><label class="field">Level ID<input id="id" value="editor-draft" maxlength="80" /></label><label class="field">Title<input id="title" value="Turning Path" maxlength="160" /></label><label class="field">parMoves estimate<input id="par" type="number" min="0" value="1" /></label>
+          <p class="count">Tiles in play <strong id="count">3</strong></p><p class="note">A par estimate is kept separate from the shortest path found by the solver.</p>
+          <label for="json">Import or review level JSON</label><textarea id="json" spellcheck="false"></textarea><div class="actions"><button id="import">Import and validate</button><button id="refresh">Refresh JSON</button></div>
+        </aside>
+      </section>
+      <footer>Drafts stay local to this tool. Release content is included through the checked catalog only.</footer>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
