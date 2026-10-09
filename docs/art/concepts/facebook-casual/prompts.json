@@ -1,0 +1,47 @@
+{
+  "tool": "built-in image_gen",
+  "use_case": "ui-mockup",
+  "base": "Use case: ui-mockup. Create a polished full-screen portrait 9:16 game screen concept for WHITE TOWER, a browser casual spatial puzzle. Art direction: premium Facebook casual puzzle game craftsmanship, original design, inviting tactile beveled UI, beautifully rendered stylized 3D, soft studio lighting, sky-blue background #60C0FE with subtle depth, rounded ivory cards, rich blue borders, warm gold accents, saturated green primary buttons, crisp friendly rounded sans-serif. Consistent restrained visual identity, not cluttered. Core game: isometric thin rounded WHITE SQUARE TILE stacks, visibly separated layers, YELLOW square tiled paths revealed below collected stacks, ORANGE directional arrow on top of movable stacks, white turn chevrons on yellow path. No castles, characters, coins, lives, energy, shop, star ratings, social notifications, device frame or watermark. Strong hierarchy and generous touch targets. All labels in Russian except WHITE TOWER branding. Output one finished screen only, edge-to-edge portrait image, not a collage. ",
+  "screens": [
+    {
+      "name": "01-gameplay",
+      "prompt": "Main active gameplay. Top left gear, top center counter '8 / 24', top right restart arrow. Small 'Уровень 12'. Center large isometric puzzle of intersecting yellow tile paths, some low white tiles, two layered white stacks with orange arrows, tallest stack has 8 thin layers. Keep board fully visible. Bottom large blue 'НАЗАД' button and smaller lightbulb 'Подсказка'. Bright, calm, highly readable."
+    },
+    {
+      "name": "02-tutorial",
+      "prompt": "First level tutorial overlay on active gameplay. Top counter '0 / 4', label 'Уровень 1', gear and restart. Board is exactly FOUR thin white square tiles in a straight isometric diagonal, first tile has orange arrow pointing along the row. Soft glowing ring and small hand pointer at first arrow. A rounded small white teaching card above board reads 'Нажмите на стрелку', subtext 'Соберите плитки в одну башню'. Bottom 'НАЗАД'. Teaching focus clear, no extra board tiles."
+    },
+    {
+      "name": "03-hint",
+      "prompt": "In-game hint state. Top counter '8 / 24', label 'Уровень 12', gear and restart. Center isometric yellow puzzle with white tile stacks and orange arrows. Highlight ONLY one launch arrow with a turquoise halo and short subtle dotted route on actual yellow board squares. White hint toast 'Нажмите на выделенную стрелку'. Bottom 'НАЗАД', lightbulb button. No victory overlay."
+    },
+    {
+      "name": "04-levels",
+      "prompt": "Level selection full-screen card. Top title 'Выбор уровня', subtext '12 из 120 пройдено'. Elegant ivory inset panel with 5 columns of large rounded numbered level buttons, levels 1-12 blue with small checkmarks, level 13 selected gold rim, levels 14-30 muted blue-gray with lock symbols. Consecutive numbers clean and aligned. Small footer '1–30 / 120' with page arrows as proposed visual navigation. Bottom blue 'К НАСТРОЙКАМ'. Tiny white tile stack emblem near heading; board absent."
+    },
+    {
+      "name": "05-settings",
+      "prompt": "Settings / pause screen over blurred darkened game board. Large centered ivory card titled 'Настройки'. Carefully spaced settings rows: 'Язык' dropdown 'Русский'; 'Звук' toggle; 'Громкость' slider '40%'; 'Меньше анимации' toggle; 'Высокая контрастность' toggle; 'Графика' dropdown 'Авто'. Then two medium buttons 'Выбор уровня' and 'Подсказка'; two understated smaller 'Экспорт' and 'Импорт'; text button 'Сбросить прогресс'; bottom prominent green 'ВЕРНУТЬСЯ В ИГРУ'. Fit all comfortably, no clipped content."
+    },
+    {
+      "name": "06-victory",
+      "prompt": "Level victory overlay. Dimmed sky-blue gameplay background and yellow board, a completed tall stack of 16 distinct thin white square tiles topped with orange arrow as central hero. Bright green curved ribbon 'УРОВЕНЬ ПРОЙДЕН!' in upper middle, restrained golden confetti. Small 'Уровень 12'. Large green 'ДАЛЕЕ' button at bottom, smaller blue 'НАЗАД'. No stars, rewards or currencies."
+    },
+    {
+      "name": "07-campaign-complete",
+      "prompt": "Entire campaign completion screen. Hero tall white thin-layer tile tower on a small yellow tiled island, warm radiant glow, restrained celebratory confetti. Above hero 'Кампания пройдена!', below 'Все 120 уровней завершены'. Original WHITE TOWER small logo top. Bottom primary green 'ВЫБРАТЬ УРОВЕНЬ', secondary blue 'НАЗАД'. Reward is the completed tower itself, no crowns, gems, currency or stars."
+    },
+    {
+      "name": "08-reset-confirmation",
+      "prompt": "Progress reset confirmation modal over dimmed settings screen. Original rounded ivory dialog with blue frame, small orange curved-arrow warning emblem, title 'Сбросить прогресс?', body 'Удалить пройденные уровни и сохранённые попытки?'. Clearly dominant blue safe button 'ОТМЕНА', secondary coral-red 'СБРОСИТЬ'. Plenty of negative space and very clear readable Russian typography."
+    },
+    {
+      "name": "09-storage-recovery",
+      "prompt": "Settings screen showing storage failure recovery notice. Dimmed puzzle behind centered ivory settings card titled 'Настройки'. At top inside card warm amber inline warning with small cloud slash icon: 'Прогресс временный', smaller 'Хранилище браузера недоступно'. Immediately beneath blue 'Повторить загрузку'. Remaining simplified settings: 'Язык — Русский', 'Звук' toggle, 'Громкость' slider, 'Выбор уровня', 'Экспорт', 'Импорт'. Bottom green 'ВЕРНУТЬСЯ В ИГРУ'. Calm helpful design, not alarming."
+    },
+    {
+      "name": "10-service-states",
+      "prompt": "OVERRIDE one-screen constraint: make a polished art direction concept sheet of FOUR equal portrait screens in a clean 2x2 grid, each fully legible with same consistent style, small external captions. Upper left loading with WHITE TOWER logo, white layered tile stack, progress indicator, text 'Загрузка уровня…'. Upper right failed next level loading over victory screen, ivory notice 'Не удалось загрузить уровень', buttons 'Повторить' and 'Выбор уровня'. Lower left unsupported graphics centered ivory message 'Не удалось запустить игру', subtext 'Попробуйте другой браузер', blue 'Повторить'. Lower right in-game stuck / hint timeout with intact white-stack yellow-board puzzle, white toast 'Попробуйте отменить ход', blue 'НАЗАД', smaller 'Перезапуск'. No claim of impossible level or mandatory failure. Each panel distinct; preserve all four complete screens."
+    }
+  ]
+}
