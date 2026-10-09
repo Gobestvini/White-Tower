@@ -4,6 +4,8 @@
 
 [Галерея всех изображений](index.html). Полный набор использованных промптов: [prompts.json](prompts.json). Для каждого изображения промпт составляется как `base + screens[i].prompt`.
 
+[Документ Figma с отдельными изображениями элементов](https://www.figma.com/design/3qmmWSoZLpWIZjPDIZHSsZ?node-id=5-2). Описание структуры, ограничений и повторного импорта: [FIGMA.md](FIGMA.md).
+
 | Файл | Экран |
 | --- | --- |
 | [01-gameplay.png](01-gameplay.png) | Игровое поле |
