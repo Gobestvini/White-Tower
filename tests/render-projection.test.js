@@ -48,7 +48,7 @@ test('projection fits sparse, ring and dense reference levels with calibrated sc
   assert.ok(new Set(scales).size > 1);
   assert.ok(CAMERA_PITCH < 1);
   assert.ok(TILE_RADIUS > TILE_STEP, 'white tiles overlap the grid pitch to close visual gaps');
-  assert.ok(FLOOR_RADIUS > TILE_STEP, 'revealed floor diamonds meet across adjacent cells');
+  assert.equal(FLOOR_RADIUS, TILE_RADIUS, 'revealed floor matches the white tile footprint');
 });
 
 test('procedural tile and arrow geometry is reusable and non-empty in every direction', () => {

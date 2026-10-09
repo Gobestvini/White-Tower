@@ -6,7 +6,7 @@ export const TILE_STEP = 72;
 // while keeping the portrait framing and logical grid coordinates intact.
 export const CAMERA_PITCH = 0.82;
 export const TILE_RADIUS = 96;
-export const FLOOR_RADIUS = 90;
+export const FLOOR_RADIUS = TILE_RADIUS;
 export const TILE_SIDE_DEPTH = 14;
 export const LAYER_RISE = 0.22 * TILE_STEP;
 export const MAX_PROJECTION_SCALE = 1.33;
