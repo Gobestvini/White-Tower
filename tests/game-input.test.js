@@ -26,8 +26,8 @@ test('picking follows visible front-to-back order and ignores side faces', () =>
   const stacks = [{ id: 'front', u: 0, v: 0, height: 2 }, { id: 'rear', u: 1, v: 0, height: 1 }];
   assert.deepEqual([...stacks].sort(compareBackToFront).map(stack => stack.id), ['rear', 'front']);
   assert.equal(pickVisibleStack({ x: 18, y: -18 }, stacks, projection), 'front', 'the visible front stack owns the overlapping region');
-  assert.equal(pickVisibleStack({ x: 0, y: TILE_RADIUS + TILE_SIDE_DEPTH / 2 }, stacks, projection), undefined, 'a side face blocks picking through it');
-  assert.equal(pickVisibleStack({ x: 110, y: -36 }, stacks, projection), 'rear', 'the exposed part of the rear tile remains clickable');
+  assert.equal(pickVisibleStack({ x: 0, y: (TILE_RADIUS + TILE_SIDE_DEPTH / 2) * projection.scale }, stacks, projection), undefined, 'a side face blocks picking through it');
+  assert.equal(pickVisibleStack({ x: 64, y: -36 }, stacks, projection), 'rear', 'the exposed part of the rear tile remains clickable');
 });
 
 class PointerEventStub extends Event {

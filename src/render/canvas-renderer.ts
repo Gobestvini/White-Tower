@@ -75,7 +75,7 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     }
   }
 
-  function drawStack(stack: RenderStack, selectedProjection: Projection): void {
+  function drawShadow(stack: RenderStack, selectedProjection: Projection): void {
     const base = worldToScreen(stack.u, stack.v, 0, selectedProjection);
     const gradient = context!.createRadialGradient(base.x - 25, base.y + 24, 1, base.x - 25, base.y + 24, 48);
     gradient.addColorStop(0, 'rgba(61,131,210,0.58)');
@@ -84,7 +84,9 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     context!.beginPath();
     context!.ellipse(base.x - 25, base.y + 24, 48, 16, 0, 0, Math.PI * 2);
     context!.fill();
+  }
 
+  function drawStack(stack: RenderStack, selectedProjection: Projection): void {
     for (let layer = 0; layer < Math.ceil(stack.height); layer++) {
       const projected = worldToScreen(stack.u, stack.v, layer + (layer === Math.floor(stack.height) ? (stack.lift ?? 0) : 0), selectedProjection);
       const point = { x: projected.x, y: projected.y };
@@ -144,7 +146,10 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     context.translate(0, ARTBOARD.height / 2);
     context.scale(1, CAMERA_PITCH);
     context.translate(0, -ARTBOARD.height / 2);
-    const activeProjection = projection ?? createProjection(view.level, view.level.totalTiles);
+    const layout = projection ?? createProjection(view.level, view.level.totalTiles);
+    context.translate(layout.originX, layout.originY);
+    context.scale(layout.scale, layout.scale);
+    const activeProjection = { ...layout, originX: 0, originY: 0, scale: 1 };
     const occupied = new Set(view.stacks.map(stack => key(stack.u, stack.v)));
     for (const cell of [...view.level.cells].sort(compareBackToFront)) {
       if (cell.kind === 'blocked') continue;
@@ -153,7 +158,9 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
       drawDiamond(point.x, point.y, FLOOR_RADIUS, WHITE_TOWER_COLORS.floor, WHITE_TOWER_COLORS.floorSeam);
       if (cell.kind === 'redirect' && cell.direction) drawChevron(point.x, point.y, cell.direction);
     }
-    for (const stack of [...view.stacks].sort(compareBackToFront)) drawStack(stack, activeProjection);
+    const stacks = [...view.stacks].sort(compareBackToFront);
+    for (const stack of stacks) drawShadow(stack, activeProjection);
+    for (const stack of stacks) drawStack(stack, activeProjection);
   }
 
   function pickStack(point: Readonly<{ x: number; y: number }>, activeView: RenderViewState): string | undefined {

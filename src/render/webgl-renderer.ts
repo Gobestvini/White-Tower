@@ -96,7 +96,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
   function addStack(stack: RenderStack, level: Level, selectedProjection: Projection, baseOrder: number): number {
     const base = pixelPoint(stack.u, stack.v, 0, selectedProjection);
     const depth = (stack.u + stack.v + 1000) * 0.00001;
-    const shadow = addMesh(geometry.shadow, materials.shadow, { x: base.x - 25, y: base.y + 24, z: depth + 0.001 }, baseOrder);
+    const shadow = addMesh(geometry.shadow, materials.shadow, { x: base.x - 25, y: base.y + 24, z: depth + 0.001 }, -1);
     shadow.scale.set(48 + Math.min(stack.height, 14) * 1.2, 16 + Math.min(stack.height, 14) * 0.6, 1);
 
     let order = baseOrder + 1;
@@ -126,13 +126,16 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     viewLayer.clear();
     view = nextView;
     projection = createProjection(nextView.level, nextView.level.totalTiles);
+    viewLayer.position.set(projection.originX - ARTBOARD.width / 2, (ARTBOARD.height / 2 - projection.originY) * CAMERA_PITCH, 0);
+    viewLayer.scale.set(projection.scale, projection.scale * CAMERA_PITCH, 1);
+    const drawingProjection = { ...projection, originX: ARTBOARD.width / 2, originY: ARTBOARD.height / 2, scale: 1 };
     const occupied = new Set(nextView.stacks.map(stack => pointKey(stack.u, stack.v)));
     const sortedCells = [...nextView.level.cells].sort(compareBackToFront);
     let order = 1;
     for (const cell of sortedCells) {
       if (cell.kind === 'blocked') continue;
       if (occupied.has(pointKey(cell.u, cell.v))) continue;
-      const point = pixelPoint(cell.u, cell.v, 0, projection);
+      const point = pixelPoint(cell.u, cell.v, 0, drawingProjection);
       const depth = (cell.u + cell.v + 1000) * 0.00001;
       addMesh(geometry.floor, materials.floor, { x: point.x, y: point.y, z: depth }, order++);
       const outline = new LineSegments(geometry.floorOutline, materials.seam);
@@ -145,9 +148,9 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRender
     }
     const sortedStacks = [...nextView.stacks].sort(compareBackToFront);
     for (const stack of sortedStacks) {
-      order = addStack(stack, nextView.level, projection, order + 2);
+      order = addStack(stack, nextView.level, drawingProjection, order + 2);
       if (stack.id === nextView.selectedStackId) {
-        const top = pixelPoint(stack.u, stack.v, stack.height - 1 + (stack.lift ?? 0), projection);
+        const top = pixelPoint(stack.u, stack.v, stack.height - 1 + (stack.lift ?? 0), drawingProjection);
         const outline = new LineSegments(geometry.selection, materials.selection);
         outline.position.set(top.x, top.y, 0.08 + (stack.u + stack.v) * 0.00001);
         outline.renderOrder = order++;

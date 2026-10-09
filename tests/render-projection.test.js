@@ -47,8 +47,21 @@ test('projection fits sparse, ring and dense reference levels with calibrated sc
   assert.ok(scales.every(scale => scale > 0 && scale <= MAX_PROJECTION_SCALE));
   assert.ok(new Set(scales).size > 1);
   assert.ok(CAMERA_PITCH < 1);
-  assert.ok(TILE_RADIUS > TILE_STEP, 'white tiles overlap the grid pitch to close visual gaps');
+  assert.equal(TILE_RADIUS, TILE_STEP, 'white tiles share the grid footprint');
   assert.equal(FLOOR_RADIUS, TILE_RADIUS, 'revealed floor matches the white tile footprint');
+});
+
+test('adjacent tile edges coincide with the floor grid at every camera scale', () => {
+  for (const scale of [0.5, 0.85, 1, 1.33]) {
+    const projection = { scale, originX: 360, originY: 760, layerRise: LAYER_RISE };
+    const a = worldToScreen(0, 0, 0, projection);
+    const b = worldToScreen(1, 0, 0, projection);
+    const radius = TILE_RADIUS * scale;
+    assert.ok(Math.abs(a.x + radius - b.x) < 1e-9);
+    assert.ok(Math.abs(a.y - (b.y + radius)) < 1e-9);
+    assert.ok(Math.abs(a.x - (b.x - radius)) < 1e-9);
+    assert.ok(Math.abs(a.y - radius - b.y) < 1e-9);
+  }
 });
 
 test('procedural tile and arrow geometry is reusable and non-empty in every direction', () => {

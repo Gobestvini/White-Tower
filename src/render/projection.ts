@@ -5,7 +5,7 @@ export const TILE_STEP = 72;
 // The source video shows a shallow oblique view: compress the board vertically
 // while keeping the portrait framing and logical grid coordinates intact.
 export const CAMERA_PITCH = 0.82;
-export const TILE_RADIUS = 96;
+export const TILE_RADIUS = TILE_STEP;
 export const FLOOR_RADIUS = TILE_RADIUS;
 export const TILE_SIDE_DEPTH = 14;
 export const LAYER_RISE = 0.22 * TILE_STEP;
@@ -62,17 +62,19 @@ function pointInPolygon(point: ScreenPoint, polygon: readonly ScreenPoint[]): bo
 
 export function pickVisibleStack(point: ScreenPoint, stacks: readonly Readonly<{ id: string; u: number; v: number; height: number }>[], projection: Projection): string | undefined {
   const ordered = [...stacks].sort((a, b) => compareBackToFront(b, a));
+  const radius = TILE_RADIUS * projection.scale;
+  const sideDepth = TILE_SIDE_DEPTH * projection.scale;
   for (const stack of ordered) {
     for (let layer = stack.height - 1; layer >= 0; layer--) {
       const center = worldToScreen(stack.u, stack.v, layer, projection);
       const dx = Math.abs(point.x - center.x); const dy = Math.abs(point.y - center.y);
-      if (dx + dy <= TILE_RADIUS) return stack.id;
-      const bottom = { x: center.x, y: center.y + TILE_RADIUS };
-      const right = { x: center.x + TILE_RADIUS, y: center.y };
-      const left = { x: center.x - TILE_RADIUS, y: center.y };
-      const lowerBottom = { x: bottom.x, y: bottom.y + TILE_SIDE_DEPTH };
-      const lowerRight = { x: right.x, y: right.y + TILE_SIDE_DEPTH };
-      const lowerLeft = { x: left.x, y: left.y + TILE_SIDE_DEPTH };
+      if (dx + dy <= radius) return stack.id;
+      const bottom = { x: center.x, y: center.y + radius };
+      const right = { x: center.x + radius, y: center.y };
+      const left = { x: center.x - radius, y: center.y };
+      const lowerBottom = { x: bottom.x, y: bottom.y + sideDepth };
+      const lowerRight = { x: right.x, y: right.y + sideDepth };
+      const lowerLeft = { x: left.x, y: left.y + sideDepth };
       if (pointInPolygon(point, [right, bottom, lowerBottom, lowerRight]) || pointInPolygon(point, [bottom, left, lowerLeft, lowerBottom])) return undefined;
     }
   }
