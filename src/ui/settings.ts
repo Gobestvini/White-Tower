@@ -22,6 +22,9 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const motionLabel = document.createElement('label'); motionLabel.className = 'setting-row';
   const motionName = document.createElement('span'); motionLabel.append(motionName);
   const motionInput = document.createElement('input'); motionInput.type = 'checkbox'; motionLabel.append(motionInput);
+  const contrastLabel = document.createElement('label'); contrastLabel.className = 'setting-row';
+  const contrastName = document.createElement('span'); contrastLabel.append(contrastName);
+  const contrastInput = document.createElement('input'); contrastInput.type = 'checkbox'; contrastInput.setAttribute('aria-label', 'High contrast'); contrastLabel.append(contrastInput);
   const rendererLabel = document.createElement('label'); rendererLabel.className = 'setting-row';
   const rendererName = document.createElement('span'); rendererLabel.append(rendererName);
   const rendererSelect = document.createElement('select'); rendererSelect.setAttribute('aria-label', 'Graphics mode');
@@ -35,7 +38,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const confirmText = document.createElement('p'); const confirmButton = document.createElement('button'); confirmButton.type = 'button'; confirmButton.className = 'menu-danger';
   const cancelButton = document.createElement('button'); cancelButton.type = 'button'; cancelButton.className = 'menu-secondary';
   confirmPane.append(confirmText, confirmButton, cancelButton);
-  controls.append(languageLabel, motionLabel, rendererLabel, levelButton, hintButton, audioNote, clearButton, closeButton);
+  controls.append(languageLabel, motionLabel, contrastLabel, rendererLabel, levelButton, hintButton, audioNote, clearButton, closeButton);
   settingsPage.append(title, status, controls, confirmPane);
   const levelPage = document.createElement('div'); levelPage.className = 'level-select-page'; levelPage.hidden = true;
   card.append(settingsPage, levelPage); panel.append(card); root.append(panel);
@@ -59,10 +62,11 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   function update(input: SettingsView): void {
     view = input; const { settings } = input; const language = settings.language;
     panel.lang = language; panel.dir = 'ltr'; title.textContent = t(language, 'settings'); languageName.textContent = t(language, 'language');
-    motionName.textContent = t(language, 'reducedMotion'); rendererName.textContent = t(language, 'renderer');
+    motionName.textContent = t(language, 'reducedMotion'); contrastName.textContent = t(language, 'highContrast'); rendererName.textContent = t(language, 'renderer');
     rendererSelect.options[0]!.textContent = t(language, 'auto'); rendererSelect.options[1]!.textContent = t(language, 'webgl'); rendererSelect.options[2]!.textContent = t(language, 'canvas');
-    languageSelect.value = settings.language; motionInput.checked = settings.reducedMotion; rendererSelect.value = settings.rendererMode;
+    languageSelect.value = settings.language; motionInput.checked = settings.reducedMotion; contrastInput.checked = settings.highContrast; rendererSelect.value = settings.rendererMode;
     languageSelect.setAttribute('aria-label', t(language, 'language'));
+    contrastInput.setAttribute('aria-label', t(language, 'highContrast'));
     rendererSelect.setAttribute('aria-label', t(language, 'renderer'));
     levelButton.textContent = `${t(language, 'levels')} · ${input.unlockedLevel}/${input.choices.length}`;
     hintButton.textContent = t(language, 'hint'); hintButton.disabled = !input.canHint;
@@ -85,6 +89,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   }
   languageSelect.addEventListener('change', () => changeSettings({ language: languageSelect.value === 'ru' ? 'ru' : 'en' }));
   motionInput.addEventListener('change', () => changeSettings({ reducedMotion: motionInput.checked }));
+  contrastInput.addEventListener('change', () => changeSettings({ highContrast: contrastInput.checked }));
   rendererSelect.addEventListener('change', () => changeSettings({ rendererMode: rendererSelect.value as UserSettings['rendererMode'] }));
   levelButton.addEventListener('click', () => { settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); });
   hintButton.addEventListener('click', actions.hint);

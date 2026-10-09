@@ -214,6 +214,27 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
         return outcomes;
       }, exampleLevels.filter(level => ['A_line', 'D_ring'].includes(level.id)));
       assert.deepEqual(replay.map(item => [item.levelId, item.mode]), [['A_line', 'webgl'], ['D_ring', 'webgl'], ['A_line', '2d'], ['D_ring', '2d']]);
+      for (const level of exampleLevels.filter(item => ['A_line', 'C_diamond', 'D_ring'].includes(item.id))) {
+        await page.evaluate(item => window.gameDebug.loadLevel(item), level);
+        await page.locator('canvas').focus();
+        for (const move of level.knownSolution) {
+          const target = `stack:${move.u},${move.v}`;
+          let found = await page.evaluate(() => window.gameDebug.selectedStackId());
+          for (let attempt = 0; found !== target && attempt < 16; attempt++) {
+            await page.keyboard.press('ArrowRight');
+            found = await page.evaluate(() => window.gameDebug.selectedStackId());
+          }
+          assert.equal(found, target, `${level.id} keyboard navigation can select the next solution arrow`);
+          await page.keyboard.press('Enter');
+          await page.waitForFunction(() => ['Idle', 'Won'].includes(window.gameDebug.snapshot().phase), null, { timeout: 6000 });
+        }
+        assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Won', `${level.id} is solvable with arrow keys and Enter`);
+        await page.keyboard.press('Control+z');
+        await page.waitForFunction(() => window.gameDebug.snapshot().phase === 'Idle');
+        await page.keyboard.press('Escape');
+        assert.equal((await page.evaluate(() => window.gameDebug.snapshot())).phase, 'Menu', 'keyboard can open Settings from an active level');
+        await page.keyboard.press('Escape');
+      }
       await page.evaluate(() => window.gameDebug.setLevelById('level-001'));
       await page.locator('canvas').focus();
       await page.keyboard.press('ArrowRight');
@@ -360,6 +381,37 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     assert.match(await guidancePage.locator('.hint-toast').textContent(), /Try undoing a move/i, 'automatic deadlock notice appears only after the stable delay');
     await guidancePage.close();
 
+    const matrixPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    matrixPage.setDefaultTimeout(7000);
+    await matrixPage.goto(baseUrl);
+    await matrixPage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
+    for (const viewport of [
+      { width: 320, height: 568 }, { width: 360, height: 640 }, { width: 390, height: 844 }, { width: 412, height: 915 },
+      { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1366, height: 768 }, { width: 1920, height: 1080 },
+    ]) {
+      await matrixPage.setViewportSize(viewport);
+      const layout = await matrixPage.evaluate(() => {
+        const main = document.querySelector('main').getBoundingClientRect();
+        const undo = document.querySelector('.hud-undo').getBoundingClientRect();
+        const point = window.gameDebug.pointForStack(window.gameDebug.selectedStackId());
+        return { main: { x: main.x, y: main.y, right: main.right, bottom: main.bottom }, undo: { x: undo.x, y: undo.y, right: undo.right, bottom: undo.bottom, width: undo.width, height: undo.height }, viewport: { width: innerWidth, height: innerHeight }, horizontalOverflow: document.documentElement.scrollWidth > innerWidth, hit: window.gameDebug.pickStack(point) };
+      });
+      assert.equal(layout.horizontalOverflow, false, `no horizontal overflow at ${viewport.width}x${viewport.height}`);
+      assert.ok(layout.main.x >= -1 && layout.main.y >= -1 && layout.main.right <= viewport.width + 1 && layout.main.bottom <= viewport.height + 1, `portrait game frame fits ${viewport.width}x${viewport.height}`);
+      assert.ok(layout.undo.width >= 44 && layout.undo.height >= 44 && layout.undo.x >= layout.main.x && layout.undo.right <= layout.main.right && layout.undo.bottom <= layout.main.bottom, `Undo remains reachable at ${viewport.width}x${viewport.height}`);
+      assert.equal(layout.hit, await matrixPage.evaluate(() => window.gameDebug.selectedStackId()), `selected keyboard target remains pickable at ${viewport.width}x${viewport.height}`);
+      await matrixPage.getByRole('button', { name: 'Settings' }).click();
+      await matrixPage.locator('.settings-panel').waitFor({ state: 'visible' });
+      const card = await matrixPage.locator('.settings-card').boundingBox();
+      assert.ok(card, `settings card has a hit area at ${viewport.width}x${viewport.height}`);
+      assert.ok(card.x >= layout.main.x && card.y >= layout.main.y && card.x + card.width <= layout.main.right && card.y + card.height <= layout.main.bottom, `settings fit at ${viewport.width}x${viewport.height}`);
+      await matrixPage.keyboard.press('Escape');
+    }
+    const description = await matrixPage.locator('#board-description').textContent();
+    assert.match(description, /Level 1.*0 of 4.*Arrow 1.*coordinates 0, 0.*height 1.*direction/i, 'Canvas description exposes level, progress and active-arrow coordinates/height/direction');
+    assert.equal(await matrixPage.locator('canvas').getAttribute('aria-describedby'), 'board-description');
+    await matrixPage.close();
+
     const savePage = await browser.newPage({ viewport: { width: 720, height: 1280 } });
     await savePage.goto(baseUrl);
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
@@ -416,13 +468,15 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     let preferences = savePage.locator('.settings-panel');
     await preferences.getByLabel('Language').selectOption('ru');
     await preferences.getByLabel('Уменьшить движение').check();
+    await preferences.getByLabel('Высокая контрастность').check();
+    await savePage.waitForFunction(() => document.querySelector('main').classList.contains('high-contrast'));
     await preferences.getByLabel('Режим графики').selectOption('2d');
     await savePage.waitForFunction(() => window.gameDebug.rendererInfo().mode === '2d');
     await savePage.evaluate(() => window.gameDebug.flushPersistence());
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
-    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: '2d', tutorialCompleted: true }, 'locale, reduced motion, renderer preference and tutorial completion survive reload');
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, highContrast: true, rendererMode: '2d', tutorialCompleted: true }, 'locale, accessibility, renderer preference and tutorial completion survive reload');
     assert.equal(await savePage.evaluate(() => window.gameDebug.rendererInfo().mode), '2d');
     await savePage.getByRole('button', { name: 'Настройки' }).click();
     preferences = savePage.locator('.settings-panel');
@@ -443,7 +497,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
       request.onsuccess = () => {
         const tx = request.result.transaction('save', 'readwrite'); const store = tx.objectStore('save');
         const get = store.get('white-tower.save.v1');
-        get.onsuccess = () => store.put({ ...get.result, settings: { language: 'ru', reducedMotion: true, rendererMode: 'auto', tutorialCompleted: true } }, 'white-tower.save.v1');
+        get.onsuccess = () => store.put({ ...get.result, settings: { language: 'ru', reducedMotion: true, highContrast: true, rendererMode: 'auto', tutorialCompleted: true } }, 'white-tower.save.v1');
         tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error);
       };
       request.onerror = () => reject(request.error);
@@ -451,7 +505,7 @@ const exampleLevels = JSON.parse(fs.readFileSync('docs/knowledge/white-tower/lev
     await savePage.reload();
     await savePage.waitForFunction(() => window.gameDebug?.snapshot().loaded);
     restored = await savePage.evaluate(() => window.gameDebug.snapshot());
-    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, rendererMode: 'auto', tutorialCompleted: true }, 'settings values roundtrip with the save');
+    assert.deepEqual(restored.settings, { language: 'ru', reducedMotion: true, highContrast: true, rendererMode: 'auto', tutorialCompleted: true }, 'settings values roundtrip with the save');
     await savePage.evaluate(() => new Promise((resolve, reject) => {
       const request = indexedDB.open('white-tower', 1);
       request.onsuccess = () => {

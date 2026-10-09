@@ -28,7 +28,7 @@ export function createGameActions(options: Readonly<{
     reset(): void;
     toggleMenu(): boolean;
   };
-  announce(message: string): void;
+  announce(message: 'selection' | 'move' | 'undo' | 'restart' | 'menu', index?: number, count?: number): void;
   reset(): void;
   enabled?(): boolean;
   target?: Window;
@@ -50,17 +50,17 @@ export function createGameActions(options: Readonly<{
       const selected = stacks[(current + direction + stacks.length) % stacks.length]!;
       if (options.scene.selectStack(selected.id)) {
         event.preventDefault();
-        options.announce(`Выбрана стопка ${stacks.indexOf(selected) + 1} из ${stacks.length}.`);
+        options.announce('selection', stacks.indexOf(selected) + 1, stacks.length);
       }
     } else if (intent === 'launch' && snapshot.phase === 'Idle') {
       const id = options.scene.selectedStackId();
-      if (id && options.scene.launchStack(id)) { event.preventDefault(); options.announce('Ход выполнен.'); }
+      if (id && options.scene.launchStack(id)) { event.preventDefault(); options.announce('move'); }
     } else if (intent === 'undo' && snapshot.canUndo) {
-      options.scene.undo(); event.preventDefault(); options.announce('Ход отменён.');
+      options.scene.undo(); event.preventDefault(); options.announce('undo');
     } else if (intent === 'restart' && ['Idle', 'Won'].includes(snapshot.phase)) {
-      options.reset(); event.preventDefault(); options.announce('Уровень сброшен.');
+      options.reset(); event.preventDefault(); options.announce('restart');
     } else if (intent === 'menu' && options.scene.toggleMenu()) {
-      event.preventDefault(); options.announce('Меню открыто. Escape — вернуться в игру.');
+      event.preventDefault(); options.announce('menu');
     }
   }
   target.addEventListener('keydown', down);

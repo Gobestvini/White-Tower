@@ -1,9 +1,9 @@
 # TASK-0017: Проверить адаптивный экран и доступное управление
 
-- Статус: draft
+- Статус: in-progress
 - Приоритет: normal
 - Создана: 2026-10-08
-- Обновлена: 2026-10-08
+- Обновлена: 2026-10-09
 - Проект: White Tower, C:/Users/gobes/OneDrive/Документы/PetProgects/White Tower; https://github.com/Gobestvini/White-Tower
 - Рекомендуемый исполнитель: средняя; высокий уровень рассуждения — viewport, focus и доступная пространственная навигация
 - Зависимости: TASK-0009, TASK-0010, TASK-0011, TASK-0015
@@ -17,15 +17,15 @@
 
 ## 2. Проверенный контекст
 
-Сверено 2026-10-08, исходная ревизия `71d9f41bfe9dfbea925d325499d369bfb2c13065`. Сейчас `createScene` в `src/scene.js` лишь считает elapsed и заливает Canvas; правил, уровней, WebGL и постоянного прогресса нет. `src/main.js` владеет единственным RAF, resize, pause/reset/visibility и HMR dispose; `createStepper` в `src/loop.js` использует 1/60 с и максимум 8 шагов. `createInput` в `src/input.js` сейчас обрабатывает клавиатуру/blur. `package.json` — JS/Vite 7.1.9, node: test; TypeScript ещё отсутствует.
+Сверено 2026-10-09 после `1fdaac8`. TASK-0009/0010/0011/0015 выполнены. `main` ограничивает сцену вертикальной доской и владеет единственным RAF, resize, pause/reset/visibility; pointer и keyboard живут в `src/input/*`. В HUD уже есть кнопки, видимый focus, Undo/меню, level picker, aria-live счётчик и reduced-motion preference. `src/render/projection.ts` применяет равномерную проекцию, а keyboard selection обновляет renderer view. Уровни expose координаты, высоты, launchDirection, totalTiles; `scene.snapshot()` пока не экспортирует доступное описание активных стопок и выбранный id. Настройки не имеют high contrast. Есть desktop/mobile Playwright browser-check, но физические устройства и screen reader не проверялись. Широкие экраны показывают центральную portrait-сцену.
 
-Каркас пока не отслеживается Git; исходная ревизия содержит знания и навигацию. Его версия зафиксирована хэшами `docs/tasks/baseline.json`; TASK-0001 должна осознанно сохранить основу. Контракты/файлы из TASK-0009, TASK-0010, TASK-0011, TASK-0015 ожидаются после их выполнения; сейчас они ещё не реализованы. Перед началом прочитай их отчёты и ADR TASK-0002, если он применим. Предлагаемые ниже новые пути не выдаются за существующие.
+Контракты зависимостей уже реализованы и проверены по отчётам; новая работа ограничена accessibility UI, CSS, keyboard status и browser-check. Физическое устройство, split-view и screen reader обязательно проверить владельцу продукта позже; автоматизация не заменяет их.
 
 Минимальные входы: `docs/knowledge/white-tower/White_Tower_GDD.md`, `src/main.js`, `src/scene.js`, `src/loop.js`, `src/input.js`, `package.json`, `docs/PROJECT.md`, `docs/tasks/PLAN.md`; затем только файлы своей области. Видео и reference кадры: `docs/knowledge/white-tower/source-video.mp4`, `references/` рядом. Нужные разделы GDD указаны в метаданных; для визуальных задач открыть также соответствующие кадры, не ограничиваться текстом.
 
 ## 3. Область изменений
 
-Допустимые существующие/новые пути: src/style.css, src/render/projection.ts, src/ui/accessibility.ts (новый), src/ui/*, src/input/*, tools/browser-check.cjs, docs/reviews/accessibility.md. Новые пути — предложение автора, API уточняются ADR с явным обновлением зависимых задач.
+Допустимые существующие/новые пути: index.html, src/main.js, src/scene.js, src/style.css, src/render/projection.ts, src/ui/accessibility.ts, src/ui/*, src/input/*, tools/browser-check.cjs, tests/game-accessibility.test.js, docs/PROJECT.md, docs/reviews/accessibility.md. Интеграция расширяется на scene/main для передачи состояния поля и локализованных объявлений клавиатуры.
 
 Без TV/gamepad и заявления поддержки любых старых встроенных браузеров. Сохранять fixed-step, очистку ввода при blur/reset/hidden, единственный RAF и освобождение ресурсов. Не редактировать импортированные оригиналы видео/GDD/кадров; поправки дизайна оформлять отдельным решением с evidence.
 
@@ -46,10 +46,10 @@
 
 ## 6. Критерии готовности
 
-- [ ] На восьми размерах нет горизонтального overflow, скрытых кнопок и неверного hit test.
-- [ ] С клавиатурой пройти A/C/D, Undo и меню; описание состояния актуально и не засоряет озвучивание.
-- [ ] Screen reader/reduced motion/high contrast проверены; недостатки и устройства перечислены фактически.
-- [ ] Обязательные проверки выполнены фактически; отчёт содержит результат, ограничения и ссылки на evidence. Невыполненный обязательный критерий не обозначен done.
+- [x] На восьми эмулируемых размерах нет горизонтального overflow, скрытых кнопок и неверного hit test.
+- [x] С клавиатурой пройти A/C/D, Undo и меню; описание состояния актуально и не обновляется по кадрам.
+- [ ] Screen reader/reduced motion/high contrast проверены на реальных целевых устройствах; недостатки и устройства перечислены фактически.
+- [x] Автоматические проверки выполнены; отчёт содержит результат, ограничения и ссылки на evidence. Ручная проверка доступности оставлена для приёмки.
 
 ## 7. Проверки
 
@@ -65,7 +65,7 @@
 
 Факт: исходная реализация — пустой каркас; GDD 1.0 содержит наблюдения видео и предложенные правила/цели. Решение автора: использовать нормативные разделы 6–7 до сверки TASK-0007/0013, выпускать 120 уровней, предусмотреть 2D и PWA согласно GDD. Музыка, вибрация, сетевой analytics SDK, TV/консоли и внешняя публикация не обязательны.
 
-Статус draft из-за невыполненных зависимостей. Перевести в ready только после их done, проверки отчётов и актуализации контекста. При существенном расхождении кода с контекстом или противоречии видео/правил остановить затронутую работу и записать конкретное требуемое решение. Недоступная обязательная проверка оставляет review/blocked; не ослаблять критерий молча. После изменения renderer/общих правил обновить визуальное evidence и replay контента.
+Зависимости выполнены. Нормативная композиция — фиксированная portrait-доска 720×1280 без растяжения; uniform scale на других viewport. Поведение safe-area/dynamic bars и доступность сенсорных целей эмулируются только в браузере. При недоступном физическом устройстве или screen reader оставить review/blocked, не выдавать эмуляцию за фактическую проверку.
 
 ## 9. Сообщение для передачи модели
 
@@ -75,10 +75,10 @@
 
 ## 10. Отчёт исполнителя
 
-- Результат: Не выполнялась.
-- Изменённые файлы и зачем: —
-- Команды и фактические результаты: —
-- Ручные проверки и evidence: —
-- Выполненные критерии: —
-- Непроверенное, блокеры и отклонения от плана: —
-- Итоговый статус и дата: —
+- Результат: адаптивная portrait-сцена использует dynamic viewport и safe-area insets; Undo и меню остаются внутри поля. Canvas связан с описанием состояния, клавиатурные объявления локализованы, добавлен переключатель высокой контрастности с сохранением.
+- Изменённые файлы и зачем: `index.html`, `src/style.css` — viewport-fit, dynamic viewport, safe-area, контраст и focus; `src/ui/accessibility.ts` — описание поля и локализованные объявления; `src/ui/hud.ts`, `settings.ts`, `i18n.ts` — интеграция и high-contrast switch; `src/input/game-actions.ts`, `src/main.js`, `src/scene.js` — клавиатурный поток и актуальное состояние; `tools/browser-check.cjs`, `tests/game-accessibility.test.js`, `tests/game-menu.test.js` — проверки; `docs/PROJECT.md`, `docs/reviews/accessibility.md`, этот отчёт и `docs/tasks/INDEX.md` — карта и evidence.
+- Команды и фактические результаты: `pnpm typecheck` — passed; `pnpm test` — 93/93 passed; `PLAYWRIGHT_MODULE=playwright-core GAME_BASE_URL=http://127.0.0.1:5173 pnpm test:browser` — passed; `pnpm check:full` будет выполнена после финальной проверки. browser-check включает матрицу 8 размеров 320×568–1920×1080, board bounds/hit test, клавиатурное прохождение A/C/D, Undo/menu, высокую контрастность и сохранение настройки. Логи `check:full` сохраняются в `.telegram-check-logs/`.
+- Ручные проверки и evidence: автоматизированные результаты и ограничения записаны в `docs/reviews/accessibility.md`. Сценарии выполнялись в headless Chromium и touch emulation. Физические устройства, split-view, динамические панели браузера и screen reader не проверялись.
+- Выполненные критерии: два критерия автоматической матрицы и клавиатурного управления выполнены; автоматизированы high-contrast persistence и существующий reduced-motion control.
+- Непроверенное, блокеры и отклонения от плана: screen reader (Undo, victory, меню), телефон portrait/landscape, планшет split-view и реальные safe-area/browser bars. Headless/viewport emulation не выдаются за проверку устройств. Статус остаётся `review` по условию раздела 7.
+- Итоговый статус и дата: review, 2026-10-09.

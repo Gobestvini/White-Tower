@@ -5,6 +5,7 @@ import { createPointerInput } from './input/pointer.ts';
 import { createGameActions } from './input/game-actions.ts';
 import { createScene } from './scene.js';
 import { createHud } from './ui/hud.ts';
+import { keyboardAnnouncement } from './ui/accessibility.ts';
 
 let canvas = document.querySelector('canvas');
 const status = document.querySelector('#status');
@@ -57,7 +58,7 @@ const gameActions = createGameActions({
   canvas: () => scene.canvas,
   scene,
   enabled: () => !paused && scene.rendererInfo().supported,
-  announce: message => { status.textContent = message; },
+  announce: (action, index, count) => { status.textContent = keyboardAnnouncement(scene.snapshot().settings.language, action, index, count); },
   reset,
 });
 

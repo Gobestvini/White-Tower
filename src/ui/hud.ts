@@ -6,6 +6,8 @@ import { t, type UserSettings } from './i18n.js';
 import { createHintToast } from './hint.js';
 import { createTutorialTip } from './tutorial.js';
 import type { HintView } from '../game/hint-service.js';
+import { createBoardDescription } from './accessibility.js';
+import type { Stack } from '../game/model.js';
 
 type HudOptions = {
   root: HTMLElement;
@@ -21,7 +23,7 @@ type HudOptions = {
   onChooseLevels(): void;
   onHint(): void;
 };
-type HudSnapshot = GameSnapshot & Readonly<{ levelNumber?: number; levelCount?: number; unlockedLevel?: number; settings?: UserSettings; persistence?: { memoryOnly: boolean; recoveryNotice: string }; tutorialVisible?: boolean; hintView?: HintView }>;
+type HudSnapshot = GameSnapshot & Readonly<{ levelNumber?: number; levelCount?: number; unlockedLevel?: number; settings?: UserSettings; persistence?: { memoryOnly: boolean; recoveryNotice: string }; tutorialVisible?: boolean; hintView?: HintView; selectedStackId?: string; activeStacks?: readonly { stack: Stack; direction: string }[] }>;
 
 const icons = {
   settings: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 4h8l1.3 5.1a16 16 0 0 1 3.2 1.3l4.7-2.3 5.7 5.7-2.3 4.7a16 16 0 0 1 1.3 3.2L47 27v8l-5.1 1.3a16 16 0 0 1-1.3 3.2l2.3 4.7-5.7 5.7-4.7-2.3a16 16 0 0 1-3.2 1.3L28 54h-8l-1.3-5.1a16 16 0 0 1-3.2-1.3l-4.7 2.3-5.7-5.7 2.3-4.7a16 16 0 0 1-1.3-3.2L1 35v-8l5.1-1.3a16 16 0 0 1 1.3-3.2l-2.3-4.7 5.7-5.7 4.7 2.3a16 16 0 0 1 3.2-1.3z" transform="translate(1 -5) scale(.85)"/><circle cx="24" cy="24" r="7" class="icon-cutout"/></svg>',
@@ -66,6 +68,7 @@ export function createHud(options: HudOptions) {
   });
   const hintToast = createHintToast(root);
   const tutorialTip = createTutorialTip(root);
+  const boardDescription = createBoardDescription(root.parentElement ?? root);
   let currentPhase = '';
   let menuWasOpen = false;
   let nextPending = false;
@@ -113,6 +116,12 @@ export function createHud(options: HudOptions) {
     settings.disabled = !['Idle', 'Won', 'Menu'].includes(snapshot.phase);
     if (snapshot.settings) victory.setLanguage(snapshot.settings.language);
     const currentSettings = snapshot.settings ?? options.getSettings();
+    root.parentElement?.classList.toggle('high-contrast', !!currentSettings.highContrast);
+    if (snapshot.level && snapshot.committedState) boardDescription.update({
+      level: snapshot.level, state: snapshot.committedState, levelNumber: snapshot.levelNumber ?? 1,
+      language, ...(snapshot.selectedStackId ? { selectedStackId: snapshot.selectedStackId } : {}),
+      activeStacks: snapshot.activeStacks ?? [],
+    });
     hintToast.update(snapshot.hintView ?? { kind: 'idle' }, language);
     tutorialTip.update(!!snapshot.tutorialVisible, language);
     const persistence = snapshot.persistence ?? { memoryOnly: false, recoveryNotice: '' };
@@ -137,7 +146,7 @@ export function createHud(options: HudOptions) {
     settings.removeEventListener('click', openMenu);
     restart.removeEventListener('click', options.onReset);
     undo.removeEventListener('click', options.onUndo);
-    victory.dispose(); menu.dispose(); hintToast.dispose(); tutorialTip.dispose();
+    victory.dispose(); menu.dispose(); hintToast.dispose(); tutorialTip.dispose(); boardDescription.dispose();
     settings.remove(); restart.remove(); counter.remove(); level.remove(); undo.remove();
   }
   return Object.freeze({ update, dispose });

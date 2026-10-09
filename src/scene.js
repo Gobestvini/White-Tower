@@ -348,7 +348,11 @@ export function createScene(canvas, rendererMode = 'auto') {
     snapshot() {
       const snapshot = controller.snapshot();
       const levelIndex = catalog?.levels.findIndex(entry => entry.id === snapshot.level?.id) ?? -1;
-      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0, unlockedLevel, settings, tutorialVisible: tutorialVisible && snapshot.phase === 'Idle', hintView, persistence: { memoryOnly: store.memoryOnly(), recoveryNotice } };
+      const arrows = snapshot.level ? new Map(snapshot.level.cells.filter(cell => cell.kind === 'redirect').map(cell => [`${cell.u},${cell.v}`, cell.direction])) : new Map();
+      const activeStacks = snapshot.level && snapshot.committedState ? snapshot.committedState.stacks
+        .filter(stack => !!stack.launchDirection || arrows.has(`${stack.u},${stack.v}`))
+        .map(stack => ({ stack, direction: stack.launchDirection ?? arrows.get(`${stack.u},${stack.v}`) ?? 'unknown' })) : [];
+      return { elapsed, loaded: !!level, levelId: level?.id ?? null, ...snapshot, selectedStackId, activeStacks, levelNumber: levelIndex >= 0 ? levelIndex + 1 : 1, levelCount: catalog?.levels.length ?? 0, unlockedLevel, settings, tutorialVisible: tutorialVisible && snapshot.phase === 'Idle', hintView, persistence: { memoryOnly: store.memoryOnly(), recoveryNotice } };
     },
     presentationSnapshot() { return animation.snapshot(); },
     resourceCounts() { return renderer.resourceCounts(); },
