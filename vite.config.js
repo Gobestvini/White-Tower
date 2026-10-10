@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-export default defineConfig({ base: './', plugins: [{
+export default defineConfig({ base: '/', plugins: [{
   name: 'offline-art-manifest',
   generateBundle(_options, bundle) {
     // Precache lazy CSS/image dependencies too, including screens not yet opened.

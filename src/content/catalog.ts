@@ -1,4 +1,5 @@
 import { validateLevel, type Level } from '../game/level-schema.js';
+import { contentUrl } from './url.js';
 
 export type CatalogEntry = Readonly<{ id: string; path: string; sha256: string }>;
 export type ContentCatalog = Readonly<{ schemaVersion: 1; contentVersion: string; levels: readonly CatalogEntry[] }>;
@@ -33,7 +34,7 @@ function parseCatalog(raw: unknown): ContentCatalog {
   return Object.freeze({ schemaVersion: 1, contentVersion: candidate.contentVersion, levels: Object.freeze(levels) });
 }
 
-export async function loadCatalog(url = '/content/catalog.json', fetcher: typeof fetch = fetch): Promise<ContentCatalog> {
+export async function loadCatalog(url = contentUrl('/content/catalog.json'), fetcher: typeof fetch = fetch): Promise<ContentCatalog> {
   let response: Response;
   try { response = await fetcher(url); }
   catch (error) { throw new ContentLoadError('network', error instanceof Error ? error.message : String(error)); }
@@ -51,7 +52,7 @@ export async function loadLevelById(catalog: ContentCatalog, id: string, fetcher
   const cached = verifiedLevels.get(cacheKey);
   if (cached) return cached;
   let response: Response;
-  try { response = await fetcher(entry.path, signal ? { signal } : undefined); }
+  try { response = await fetcher(contentUrl(entry.path), signal ? { signal } : undefined); }
   catch (error) { throw new ContentLoadError('network', error instanceof Error ? error.message : String(error)); }
   if (!response.ok) throw new ContentLoadError('network', `Level request failed (${response.status}).`);
   let bytes: Uint8Array;

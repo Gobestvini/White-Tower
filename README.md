@@ -6,6 +6,13 @@ The game now uses the Facebook casual concept artwork across its live HUD, tutor
 
 ## Run locally
 
+Play online: **https://gobestvini.github.io/White-Tower/**.
+
+GitHub Actions publishes `main` to GitHub Pages after the full checks pass. The
+Pages source is GitHub Actions (`.github/workflows/pages.yml`). For a matching
+local production build, run `pnpm build --base /White-Tower/` and open
+`http://127.0.0.1:4173/White-Tower/` with `pnpm exec vite preview --base /White-Tower/ --port 4173`.
+
 Requires Node.js 22.12 or later and pnpm.
 
 ```powershell

@@ -1,14 +1,14 @@
 {
-  "id": "/",
+  "id": "./",
   "name": "White Tower",
   "short_name": "White Tower",
   "description": "A quiet puzzle of paths and merging towers.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#60c0fe",
   "theme_color": "#60c0fe",
   "icons": [
-    { "src": "/white-tower.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "./white-tower.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }

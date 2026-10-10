@@ -13,7 +13,7 @@ import { createServiceScreen } from './ui/service-screen.ts';
 
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {
       // Online play remains available when the browser blocks offline storage.
     });
   }, { once: true });
