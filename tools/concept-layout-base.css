@@ -1,0 +1,191 @@
+/* Native controls retain semantics and events; original artwork supplies the skin. */
+main { width:min(720px,100vw,56.280vh); height:min(1280px,100dvh,177.6833vw); }
+.hud :is(button,.hud-counter,.hud-level,.victory-ribbon,.campaign-end), .settings-panel :is(button,select,input,h2,h3) { min-width:0; min-height:0; padding:0; border:0; border-radius:0; box-shadow:none; transform:none; bottom:auto; right:auto; background-color:transparent; background-size:100% 100%; background-position:center; background-repeat:no-repeat; }
+.hud button { text-shadow:none; filter:none; }
+.hud button:disabled { opacity:1; filter:none; }
+.hud[lang="ru"] :is(.hud-undo,.hud-hint,.next-button,.victory-undo), .hud[lang="ru"] .victory-ribbon { color:transparent; }
+.hud[lang="ru"] :is(.hud-undo,.victory-undo) span { visibility:hidden; }
+.hud .hud-hint[hidden], .hud .next-button[hidden], .hud .victory-undo[hidden] { display:none; }
+.game-logo { object-fit:contain; pointer-events:none; }
+.hud-counter { font-size:6cqw; line-height:1; color:#173e69; letter-spacing:0; }
+.hud-counter::before { content:''; position:absolute; inset:18% 15%; background:linear-gradient(#faf5e9,#f2e8d4); border-radius:40%; z-index:-1; }
+.hud-counter { isolation:isolate; }
+.hud-level { display:grid; place-items:center; background:#e6f8ff; border-radius:30px !important; font-size:3.8cqw; color:#096abe; }
+main[data-screen="gameplay"] .hud-counter { background-image:linear-gradient(#fcf8ed,#f1e6d1); border:2px solid #fffbed; border-radius:50px; }
+main[data-screen="hint"] .hud-counter { background-image:linear-gradient(#fff8e7,#eee0be); border:2px solid #fffbed; border-radius:50px; }
+main[data-screen="tutorial"] .game-logo, main[data-screen="tutorial"] .hud-hint { display:none; }
+main[data-screen="tutorial"] .hud::before { content:''; background-size:100% 100%; background-repeat:no-repeat; }
+main[data-screen="tutorial"] .hud-counter { left:30%; top:6.3%; width:40%; height:5.2%; background:linear-gradient(#fff8e8,#f6ecd6); font-size:7.6cqw; }
+main[data-screen="tutorial"] .hud-level { left:36.5%; top:2.0%; width:27%; height:2.8%; font-size:3.5cqw; color:white; background:#1372ba; }
+main[data-screen="tutorial"] .hud[data-tutorial-original="true"] :is(.hud-counter,.hud-level) { opacity:0; }
+.tutorial-tip, .hint-toast[data-kind="move"] { max-width:none; margin:0; padding:0; border:0; box-shadow:none; border-radius:0; transform:none; background-size:100% 100%; background-repeat:no-repeat; }
+.tutorial-tip[lang="ru"], .hint-toast[data-kind="move"][lang="ru"] { color:transparent; }
+.hud .victory-ribbon { background-size:100% 100%; }
+.hud .victory-ribbon::before { display:none; }
+.hud .victory-undo { font-size:3cqw; }
+main.is-won .settings-button { display:none; }
+main[data-screen="victory"] .hud-level.is-hidden { display:grid !important; }
+.hud .campaign-tower { object-fit:contain; }
+main.is-campaign-complete .campaign-end { max-width:none; margin:0; transform:none; border-radius:0; padding:0; }
+main.is-campaign-complete .hud[lang="ru"] .campaign-end { color:transparent; }
+.settings-panel { padding:0; background-size:100% 100%; }
+.settings-panel[data-page="levels"] { padding:0; }
+.settings-card, .settings-panel[data-page="levels"] .settings-card { position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:0; overflow:visible; background:none; border-radius:0; }
+.settings-panel .settings-card { background:none; }
+.settings-panel.has-storage-notice .settings-card { background:none; }
+.settings-card::before { content:''; pointer-events:none; z-index:-1; }
+.settings-page, .settings-controls, .level-select-page, .setting-row, .level-pagination { display:contents; }
+.setting-row::before { content:''; background-size:100% 100%; background-repeat:no-repeat; }
+.setting-row { background:none; border:0; }
+.setting-row > span { display:flex; align-items:center; font-size:3cqw; white-space:nowrap; background-size:100% 100%; background-repeat:no-repeat; }
+.settings-panel[lang="ru"] .setting-row > span, .settings-panel[lang="ru"] .settings-card h2 { color:transparent; text-shadow:none; }
+.settings-panel .setting-row select { appearance:none; max-width:none; border:0; box-shadow:none; font-size:3.1cqw; font-weight:800; padding:0 3%; color:transparent; background-size:100% 100%; background-repeat:no-repeat; }
+.settings-panel .setting-row select[data-original="false"] { color:#093e80; background-image:linear-gradient(#f5f8fb,#e1e8ee),var(--select-art); background-size:72% 65%,100% 100%; background-position:12% 44%,center; }
+.setting-language select { --select-art:url('../assets/ui/facebook-casual/05-settings/setting-0-control.png'); }
+.setting-renderer select { --select-art:url('../assets/ui/facebook-casual/05-settings/setting-5-control.png'); }
+.settings-panel .setting-row select option { color:#093e80; }
+.settings-panel .setting-row input[type="checkbox"] { appearance:none; margin:0; cursor:pointer; background:url('../assets/ui/facebook-casual/05-settings/setting-3-control.png') center / 100% 100% no-repeat; border:0; border-radius:0; }
+.settings-panel .setting-row input[type="checkbox"]:checked { background-image:url('../assets/ui/facebook-casual/05-settings/setting-1-control.png'); }
+.settings-panel .setting-row input[type="checkbox"]::before { display:none; }
+.settings-panel .setting-volume input { max-width:none; min-width:0; width:30.074%; height:3.708%; appearance:none; background:none; margin:0; accent-color:#62c445; }
+.settings-panel .setting-volume[data-original="true"] input { color:transparent; background:url('../assets/ui/facebook-casual/05-settings/setting-2-control.png') center / 100% 100% no-repeat; }
+.settings-panel .setting-volume[data-original="true"] input::-webkit-slider-runnable-track { background:transparent; }
+.settings-panel .setting-volume[data-original="true"] input::-webkit-slider-thumb { opacity:0; }
+.volume-value { position:absolute; left:77.5%; top:35.05%; width:6%; height:2.2%; min-width:0; font-size:3cqw; color:#103775; }
+.setting-volume input::-webkit-slider-runnable-track { height:1.1cqh; border-radius:20px; background:linear-gradient(#c3d5e4,#a9bfd1); }
+.setting-volume input::-webkit-slider-thumb { appearance:none; width:4.8cqw; height:4.8cqw; margin-top:-1.6cqw; border-radius:50%; border:1px solid #dcccb0; background:linear-gradient(#fffdf4,#f3e4c8); box-shadow:0 2px 2px #8095a566; }
+.settings-panel[lang="ru"] :is(.settings-controls > button,.level-select-page > button,.clear-confirmation button) { color:transparent; background-size:100% 100%; background-repeat:no-repeat; text-shadow:none; }
+.settings-panel .settings-controls > .menu-danger { background:transparent url('../assets/ui/facebook-casual/05-settings/button-reset.png') center / 100% 100% no-repeat !important; }
+.settings-panel .settings-note { display:none; }
+.settings-panel .settings-status:not(:empty) { position:absolute; left:15%; top:85.5%; width:70%; font-size:2.4cqw; }
+.settings-card::before { isolation:isolate; }
+.settings-panel[data-page="settings"] .settings-page::before { content:''; position:absolute; left:15.197%; top:22.727%; width:69.394%; height:33.134%; border-radius:3.2cqw; background:repeating-linear-gradient(transparent 0 calc(5.4426cqh - 1px),#ded6c7 calc(5.4426cqh - 1px) 5.4426cqh),linear-gradient(#fffdf7,#f5eddd); border:1px solid #e1d9ca; pointer-events:none; }
+.settings-panel[data-page="settings"] .settings-controls::after { content:''; position:absolute; left:16.79%; top:71.59%; width:66.63%; height:2px; background:linear-gradient(to right,#c4ccd2 0 28%,transparent 28% 72%,#c4ccd2 72%); pointer-events:none; }
+.settings-panel[data-page="levels"] .menu-logo { display:block; object-fit:contain; }
+.settings-panel[data-page="levels"]::after { content:''; background-size:100% 100%; background-repeat:no-repeat; pointer-events:none; }
+.level-select-page h3 { margin:0; padding:0; max-width:none; background-size:100% 100%; background-repeat:no-repeat; }
+.settings-panel[lang="ru"] .level-select-page h3 { color:transparent; }
+.level-progress { position:absolute; left:32%; top:24.7%; width:36%; height:2.5%; margin:0 !important; display:grid; place-items:center; font-size:3.2cqw; font-weight:800; color:#405877; background:#f9f2e2; white-space:nowrap; }
+.level-grid { display:contents; }
+.settings-panel .level-card { min-width:0; min-height:0; width:100%; height:100%; padding:0; border:0 !important; outline:0; border-radius:0; background:url('../assets/ui/facebook-casual/04-levels/level-14.png') center / 100% 100% no-repeat; font-size:4.3cqw !important; color:#405471 !important; text-shadow:none; box-shadow:none; filter:none; opacity:1; position:relative; isolation:isolate; }
+.settings-panel .level-card::before { content:''; position:absolute; inset:18% 12% 38%; background:linear-gradient(#bdcfe0,#b2c7dc); border-radius:10%; z-index:-1; }
+.settings-panel .level-card.is-completed { background-image:url('../assets/ui/facebook-casual/04-levels/level-01.png'); color:white !important; }
+.settings-panel .level-card.is-completed::before { background:linear-gradient(#04abff,#0086ed); }
+.settings-panel .level-card.is-selected { background-image:url('../assets/ui/facebook-casual/04-levels/level-13.png'); color:#885212 !important; }
+.settings-panel .level-card.is-selected::before { background:linear-gradient(#ffde58,#ffcc37); }
+.settings-panel .level-card.has-original-art { color:transparent !important; }
+.settings-panel .level-card.has-original-art::before { display:none; }
+.settings-panel .level-card:not(.has-original-art) { font-size:0 !important; }
+.settings-panel .level-card:not(.has-original-art)::after { content:attr(data-level); position:absolute;inset:17% 0 0;font-size:4.8cqw;line-height:1.1;white-space:pre;text-align:center;font-weight:900;color:#405471; }
+.settings-panel .level-card.is-completed:not(.has-original-art)::after { content:attr(data-level);color:white; }
+.settings-panel .level-card.is-selected:not(.has-original-art)::after { content:attr(data-level);top:29%;color:#885212; }
+.settings-panel .level-card:disabled:not(.has-original-art)::after { content:attr(data-level); }
+.settings-panel .level-card:not(:disabled):not(.is-completed):not(.is-selected) { background-image:url('../assets/ui/facebook-casual/04-levels/level-01.png'); }
+.settings-panel .level-card:not(:disabled):not(.is-completed):not(.is-selected)::before { inset:18% 12% 14%;background:linear-gradient(#04abff,#0086ed); }
+.settings-panel .level-card:not(:disabled):not(.is-completed):not(.is-selected)::after { color:white; }
+.level-pagination button, .level-select-page > button { background-size:100% 100%; background-repeat:no-repeat; color:transparent; font-size:0; }
+.level-pagination > span { display:grid; place-items:center; color:#445775; font-size:3cqw; font-weight:800; background-image:linear-gradient(#faf4e7,#f6ecd8),url('../assets/ui/facebook-casual/04-levels/page-label.png'); background-size:80% 65%,100% 100%; background-position:center; background-repeat:no-repeat; }
+.level-pagination > span::before { display:none; }
+.level-pagination > span { isolation:isolate; }
+.level-pagination button:disabled { opacity:1; }
+.settings-panel .clear-confirmation { display:contents; background:none; box-shadow:none; }
+.settings-panel.is-confirming .settings-card::after { content:''; z-index:3; pointer-events:none; }
+.settings-panel.is-confirming .settings-page::after { content:''; position:absolute; inset:0; z-index:2; background:#051a358c; pointer-events:auto; }
+.settings-panel.is-confirming .menu-logo { display:block; content:url('../assets/ui/facebook-casual/08-reset-confirmation/logo.png'); }
+.clear-confirmation > * { z-index:4; }
+.clear-confirmation :is(h3,p) { margin:0; background-size:100% 100%; background-repeat:no-repeat; }
+.settings-panel[lang="ru"] .clear-confirmation :is(h3,p) { color:transparent; }
+.settings-panel .clear-confirmation .menu-danger { background:transparent url('../assets/ui/facebook-casual/08-reset-confirmation/button-confirm-reset.png') center / 100% 100% no-repeat !important; }
+.settings-panel .clear-confirmation .menu-secondary { background-image:url('../assets/ui/facebook-casual/08-reset-confirmation/button-cancel.png'); }
+.storage-dismiss { display:none; }
+.settings-panel.has-storage-notice[data-page="settings"] .storage-dismiss { display:block; }
+.settings-panel.has-storage-notice[data-page="settings"] .menu-logo { display:block; content:url('../assets/ui/facebook-casual/09-storage-recovery/logo.png'); }
+.settings-panel.has-storage-notice[data-page="settings"] .settings-page::before { left:15.09%;top:23.92%;width:70.14%;height:13.4%;background:linear-gradient(#ffedb5,#fff3cf);border-color:#ecc875; }
+.settings-panel.has-storage-notice[data-page="settings"] .settings-controls::after { display:none; }
+.settings-panel.has-storage-notice[data-page="settings"] :is(.setting-motion,.setting-contrast,.setting-renderer,.settings-hint) { display:none; }
+.settings-panel.has-storage-notice[data-page="settings"] .settings-controls > .menu-danger { display:none; }
+.settings-panel.has-storage-notice[data-page="settings"] .settings-status:not(:empty) { left:34.1%;top:25.3%;width:46.6%;height:5.5%;padding:0;background:none;border:0;font-size:2.6cqw; }
+.settings-panel.has-storage-notice[data-page="settings"] .settings-status:not(:empty)::before { content:'';display:block;height:2.5cqh;margin-bottom:1cqh;background:url('../assets/ui/facebook-casual/09-storage-recovery/storage-title.png') left center / contain no-repeat; }
+.settings-panel.has-storage-notice[data-page="settings"] .volume-value { left:76%;top:57%;font-size:2.5cqw; }
+.settings-panel.has-storage-notice[data-page="settings"] .storage-retry { color:transparent;background-size:100% 100%;background-repeat:no-repeat; }
+.settings-panel.has-storage-notice[data-page="settings"] :is(.settings-levels,.settings-export,.settings-import) { background:var(--row-art) !important;border:1px solid #ded8cd;border-radius:3cqw; }
+.settings-panel.has-storage-notice[data-page="settings"] :is(.settings-levels,.settings-export,.settings-import)::before, .settings-panel.has-storage-notice[data-page="settings"] :is(.settings-levels,.settings-export,.settings-import)::after { display:none; }
+.settings-panel.has-storage-notice[data-page="settings"] .settings-close { background-image:url('../assets/ui/facebook-casual/09-storage-recovery/button-resume.png'); }
+.settings-panel.has-storage-notice[data-page="settings"] :is(.setting-language,.setting-sound,.setting-volume)::after { content:'';position:absolute;left:15.09%;top:39.65%;width:70.14%;height:5.86%;border:1px solid #ded8cd;border-radius:3cqw;background:linear-gradient(#fffdf7,#f5eddd);z-index:-1; }
+.settings-panel.has-storage-notice[data-page="settings"] .setting-sound::after { top:46.65%;height:5.74%; }
+.settings-panel.has-storage-notice[data-page="settings"] .setting-volume::after { top:53.41%;height:5.38%; }
+.hud .hud-level { background-color:#e6f8ff; }
+/* The service reference is a four-state sheet. Each live state uses its own component. */
+.loading-screen { background:#56c4fa url('../assets/ui/facebook-casual/backgrounds/01-gameplay.jpg') center / cover; }
+main .loading-screen .game-logo { content:url('../assets/ui/facebook-casual/10-service-states/loading-logo.png');left:17%;top:12%;width:66%;height:22%; }
+.loading-screen .loading-tower { position:absolute;left:14%;top:36%;width:72%;height:33%;object-fit:contain; }
+.loading-screen progress { position:absolute;appearance:none;left:15%;top:72%;width:70%;height:6%;border:0;background:url('../assets/ui/facebook-casual/10-service-states/loading-progress.png') center / 100% 100% no-repeat; }
+.loading-screen progress::-webkit-progress-bar { background:transparent; }
+.loading-screen progress::-webkit-progress-value { background:transparent; }
+.loading-screen p { position:absolute;left:22%;top:79%;width:56%;height:4%;margin:0;padding:0;border:0;background:url('../assets/ui/facebook-casual/10-service-states/loading-label.png') center / contain no-repeat; }
+.loading-screen[lang="ru"] p { color:transparent; }
+.load-error { inset:0;background:#56c4fa url('../assets/ui/facebook-casual/backgrounds/01-gameplay.jpg') center / cover;border:0;border-radius:0;box-shadow:none;padding:0;display:block; }
+main:has(> .loading-screen:not([hidden]), > .load-error:not([hidden])) > .hud { visibility:hidden; }
+.load-error::before { content:'';position:absolute;left:10%;top:42%;width:80%;height:38%;border-radius:6cqw;background:linear-gradient(#fffdf7,#f5eddd);border:2px solid #e6dcc8; }
+.load-error .service-illustration { position:absolute;left:23%;top:20%;width:54%;height:27%;max-width:none;object-fit:contain; }
+.load-error p { position:absolute;left:17%;top:48%;width:66%;height:14%;margin:0;color:#103775;font-size:4cqw; }
+.load-error button { position:absolute;left:15%;top:66%;width:70%;height:10%;background:url('../assets/ui/facebook-casual/10-service-states/button-retry-graphics.png') center / 100% 100% no-repeat; }
+.load-error[lang="ru"] button { color:transparent; }
+.load-error[data-kind="content"] .service-illustration { content:url('../assets/ui/facebook-casual/10-service-states/error-icon.png');left:42%;top:46%;width:16%;height:9%; }
+.load-error[data-kind="content"] p { top:57%;height:9%; }
+.load-error[data-kind="content"] button { top:68%;background-image:url('../assets/ui/facebook-casual/10-service-states/button-retry-level.png'); }
+.load-error[data-kind="graphics"][lang="ru"] p { color:transparent;background:url('../assets/ui/facebook-casual/10-service-states/graphics-title.png') center top / 77% 65% no-repeat; }
+.load-error[data-kind="graphics"][lang="ru"] p::after { content:'';position:absolute;left:0;bottom:0;width:100%;height:30%;background:url('../assets/ui/facebook-casual/10-service-states/graphics-description.png') center / contain no-repeat; }
+.load-error[data-kind="content"][lang="ru"] p { color:transparent;background:url('../assets/ui/facebook-casual/10-service-states/error-title.png') center / contain no-repeat; }
+.load-error[lang="en"] button { color:#fff;background:linear-gradient(#20aaff,#0068d4);border-radius:3cqw;font-size:4cqw; }
+.loading-screen[lang="en"] p { background:none;font-size:4cqw;color:#103775; }
+.hud .next-button.has-load-error { left:18%;top:61%;width:64%;height:9%;background:url('../assets/ui/facebook-casual/10-service-states/button-retry-level.png') center / 100% 100% no-repeat !important; }
+.hud[lang="ru"] .next-button.has-load-error { color:transparent; }
+.hud .next-button.error-choose { left:18%;top:71%;width:64%;height:8%;background:url('../assets/ui/facebook-casual/10-service-states/button-levels.png') center / 100% 100% no-repeat; }
+.hud .victory-layer.has-load-error .campaign-end { left:13%;top:43%;width:74%;height:38%;max-width:none;transform:none;display:block;padding:6% 8% 22%;font-size:3.6cqw;border:1px solid #e6dcc8; }
+.settings-panel[lang="en"] .setting-row > span { width:42%;background:none;font-size:2.7cqw; }
+.settings-panel[lang="en"] .setting-volume > span { width:20%; }
+.settings-panel[lang="en"] .settings-card h2 { position:absolute;left:23.59%;top:13.88%;width:52.92%;height:7.65%;display:grid;place-items:center;margin:0;color:#fff;background:linear-gradient(#178be3,#0755a6);border:2px solid #ffd45c;border-radius:2cqw;font-size:5.5cqw; }
+.settings-panel[lang="en"] :is(.settings-levels,.settings-hint,.settings-export,.settings-import,.settings-close) { position:absolute;left:15.62%;top:57.24%;width:33.9%;height:6.34%;color:#fff;background:linear-gradient(#20aaff,#0068d4);border-radius:2.5cqw;font-size:3cqw; }
+.settings-panel[lang="en"] .settings-hint { left:50.48%; }
+.settings-panel[lang="en"] .settings-export { top:64.11%; }
+.settings-panel[lang="en"] .settings-import { left:50.48%;top:64.11%; }
+.settings-panel[lang="en"] .settings-close { top:73.68%;width:67.69%;height:7.95%;background:linear-gradient(#b6ec73,#299b25); }
+.settings-panel[lang="en"] .settings-controls > .menu-danger { position:absolute;left:30%;top:70.69%;width:40%;height:3%;color:#075daa;background:none !important;font-size:2.8cqw; }
+.settings-panel[lang="en"] .level-select-page h3 { background:linear-gradient(#fffdf7,#f5eddd);font-size:5.5cqw;display:grid;align-content:start;padding-top:2%;border-radius:4cqw; }
+.settings-panel[lang="en"][data-page="levels"] .level-select-page > button { color:white;font-size:3.5cqw;background:linear-gradient(#20aaff,#0068d4);border-radius:4cqw; }
+.settings-panel[lang="en"] .clear-confirmation :is(h3,p) { background:none;color:#103775;display:grid;place-items:center;font-size:3cqw; }
+.settings-panel[lang="en"] .clear-confirmation button { font-size:3cqw;color:white;background:linear-gradient(#20aaff,#0068d4);border-radius:3cqw; }
+.settings-panel[lang="en"] .clear-confirmation .menu-danger { background:linear-gradient(#f66b65,#c72935) !important; }
+main[data-screen] .hud[lang="en"] :is(.hud-undo,.hud-hint) { color:white;background:linear-gradient(#20aaff,#0068d4);border:2px solid #ffda58;border-radius:3cqw; }
+main[data-screen] .hud[lang="en"] .hud-undo :is(span,svg) { visibility:visible; }
+.tutorial-tip[lang="en"], .hint-toast[data-kind="move"][lang="en"] { display:grid;place-items:center;background:linear-gradient(#fffdf7,#f5eddd);border:2px solid #ead39a;border-radius:3cqw;font-size:3.6cqw;color:#103775; }
+.hud[lang="en"] :is(.victory-ribbon,.next-button,.victory-undo) { color:white;background:linear-gradient(#56cf37,#209b24);border:2px solid #ffda58;border-radius:3cqw; }
+.hud[lang="en"] .victory-ribbon span { visibility:visible; }
+main.is-campaign-complete .hud[lang="en"] .campaign-end { color:#103775;background:#fff5db;display:grid;place-items:center;border-radius:3cqw; }
+.hint-toast:is([data-kind="deadlock"],[data-kind="undo-proven"]) { left:28%;top:55%;width:50%;height:10%;padding:0;border:0;border-radius:0;background:url('../assets/ui/facebook-casual/10-service-states/undo-tip.png') center / 100% 100% no-repeat; }
+.hint-toast:is([data-kind="deadlock"],[data-kind="undo-proven"])[lang="ru"] { color:transparent; }
+.hint-toast:is([data-kind="deadlock"],[data-kind="undo-proven"])::before { display:none; }
+.settings-panel[data-page="levels"] .level-select-page > .menu-secondary { width:60.042508%; background:transparent url('../assets/ui/facebook-casual/04-levels/button-settings.png') center / 100% 100% no-repeat; }
+/* Preserve the portrait reference composition in short landscape windows too. */
+@media (orientation:landscape) and (max-height:650px) {
+ main { width:56.280dvh; height:100dvh; }
+ .settings-panel, .settings-panel[data-page="levels"] { padding:0; }
+ .menu-logo { display:block !important; }
+ .settings-card, .settings-panel[data-page="levels"] .settings-card { padding:0; width:100%; height:100%; max-height:none; }
+}
+/* High contrast is an explicit alternate skin; visible text remains available. */
+main.high-contrast .settings-panel[lang="ru"] :is(.setting-row > span,h2,h3,.clear-confirmation p), main.high-contrast .hud[lang="ru"] :is(.hud-undo,.hud-hint,.next-button,.victory-undo,.victory-ribbon) { color:white; }
+main.high-contrast .hud[lang="ru"] :is(.hud-undo,.victory-undo) span { visibility:visible; }
+main.high-contrast .settings-panel :is(.setting-row > span,h2,h3,.clear-confirmation p) { background:#071722 !important;color:white !important; }
+main.high-contrast .settings-panel .settings-card { background:#071722 !important; }
+main.high-contrast .settings-card::before { display:none; }
+main.high-contrast .settings-panel .level-card { color:white !important;font-size:4.3cqw !important; }
+main.high-contrast .settings-panel .level-card::before, main.high-contrast .settings-panel .level-card::after { display:none; }
+main.high-contrast .settings-panel .settings-page::before { background:#071722; border-color:white; }
+main.high-contrast .settings-panel .setting-row > span { width:44%;font-size:2.7cqw; }
+main.high-contrast .settings-panel .setting-volume > span { width:24%; }
+main.high-contrast .settings-panel .setting-row select { background:white !important;color:black !important;font-size:2.8cqw;padding:0 1%; }
+main.high-contrast .settings-panel .volume-value { color:white; }
+main.high-contrast .settings-panel .settings-controls > .menu-danger { background:#071722 !important;color:white !important;font-size:2.3cqw;line-height:1;white-space:nowrap; }
+main.high-contrast .settings-panel .clear-confirmation .menu-danger { background:#071722 !important;color:white !important; }

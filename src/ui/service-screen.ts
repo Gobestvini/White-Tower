@@ -11,6 +11,8 @@ export function createServiceScreen(root: HTMLElement) {
   error.prepend(artImage('graphics', 'service-illustration'));
   let failed = false;
   function update(loaded: boolean, supported: boolean, language: Language): void {
+    loading.lang = language; error.lang = language;
+    error.dataset.kind = supported ? 'content' : 'graphics';
     label.textContent = t(language, 'service.loading');
     progress.setAttribute('aria-label', label.textContent);
     loading.hidden = loaded || failed || !supported;

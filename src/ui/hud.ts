@@ -119,7 +119,8 @@ export function createHud(options: HudOptions) {
     settings.setAttribute('aria-label', language === 'ru' ? 'Настройки' : 'Settings');
     restart.setAttribute('aria-label', language === 'ru' ? 'Перезапустить уровень' : 'Restart level');
     undo.setAttribute('aria-label', language === 'ru' ? 'Отменить ход' : 'Undo last move');
-    const nextLevel = snapshot.level ? `${language === 'ru' ? 'Ур.' : 'Lv.'}${snapshot.levelNumber ?? 1}` : (language === 'ru' ? 'Ур.' : 'Lv.');
+    const nextLevel = snapshot.level ? `${language === 'ru' ? 'Уровень' : 'Level'} ${snapshot.levelNumber ?? 1}` : (language === 'ru' ? 'Уровень' : 'Level');
+    root.dataset.tutorialOriginal = String(language === 'ru' && (snapshot.levelNumber ?? 1) === 1 && nextCount === '0/4');
     if (countText !== nextCount || counterLanguage !== language) { counterLanguage = language; countText = nextCount; counter.textContent = nextCount; counter.setAttribute('aria-label', language === 'ru' ? `Собрано ${currentCount} из ${snapshot.level?.totalTiles ?? 0} плиток` : `${currentCount} of ${snapshot.level?.totalTiles ?? 0} tiles gathered`); }
     if (levelText !== nextLevel) { levelText = nextLevel; level.textContent = nextLevel; }
     const won = snapshot.phase === 'Won';

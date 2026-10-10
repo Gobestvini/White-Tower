@@ -63,6 +63,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const levelPage = document.createElement('div'); levelPage.className = 'level-select-page'; levelPage.hidden = true;
   card.append(settingsPage, levelPage); panel.append(card); root.append(panel);
   panel.prepend(artImage('logo', 'menu-logo'));
+  const storageDismiss = document.createElement('button'); storageDismiss.type = 'button'; storageDismiss.className = 'storage-dismiss'; storageDismiss.addEventListener('click', actions.close); panel.append(storageDismiss);
   panel.dataset.page = 'settings';
   const storageIcon = artImage('storage', 'storage-icon'); status.before(storageIcon);
   const levelSelect = createLevelSelect(levelPage, { select: actions.selectLevel, back() { panel.dataset.page = 'settings'; panel.setAttribute('aria-labelledby', 'settings-title'); levelPage.hidden = true; settingsPage.hidden = false; closeButton.focus(); } });
@@ -89,6 +90,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   function update(input: SettingsView): void {
     view = input; const { settings } = input; const language = settings.language;
     panel.lang = language; panel.dir = 'ltr'; title.textContent = t(language, 'settings'); languageName.textContent = t(language, 'language');
+    storageDismiss.setAttribute('aria-label', language === 'ru' ? 'Закрыть настройки' : 'Close settings');
     panel.classList.toggle('has-storage-notice', input.memoryOnly || !!input.recoveryNotice);
     panel.classList.toggle('is-confirming', !confirmPane.hidden);
     confirmTitle.textContent = language === 'ru' ? 'Сбросить прогресс?' : 'Clear progress?';
@@ -96,6 +98,9 @@ export function createSettingsDialog(root: HTMLElement, actions: {
     motionName.textContent = t(language, 'reducedMotion'); contrastName.textContent = t(language, 'highContrast'); rendererName.textContent = t(language, 'renderer');
     rendererSelect.options[0]!.textContent = t(language, 'auto'); rendererSelect.options[1]!.textContent = t(language, 'webgl'); rendererSelect.options[2]!.textContent = t(language, 'canvas');
     languageSelect.value = settings.language; motionInput.checked = settings.reducedMotion; contrastInput.checked = settings.highContrast;
+    languageSelect.dataset.original = String(settings.language === 'ru');
+    rendererSelect.dataset.original = String(settings.rendererMode === 'auto' && settings.language === 'ru');
+    volumeLabel.dataset.original = String(Math.round(settings.soundVolume * 100) === 40);
     soundInput.checked = settings.soundEnabled; volumeInput.value = String(settings.soundVolume); volumeValue.value = `${Math.round(settings.soundVolume * 100)}%`; rendererSelect.value = settings.rendererMode;
     languageSelect.setAttribute('aria-label', t(language, 'language'));
     contrastInput.setAttribute('aria-label', t(language, 'highContrast'));
@@ -108,12 +113,13 @@ export function createSettingsDialog(root: HTMLElement, actions: {
     importButton.textContent = language === 'ru' ? 'Импорт прогресса' : 'Import progress';
     clearButton.textContent = t(language, 'clearProgress'); closeButton.textContent = t(language, 'back');
     audioNote.textContent = t(language, 'audioLater');
-    status.textContent = transferNotice || (input.memoryOnly ? t(language, 'memory') : input.recoveryNotice);
+    status.textContent = transferNotice || (input.memoryOnly ? (language === 'ru' ? 'Хранилище браузера недоступно' : 'Browser storage is unavailable') : input.recoveryNotice ? (language === 'ru' ? 'Сохранение не восстановлено.' : 'The save could not be restored.') : '');
+    status.title = input.recoveryNotice;
     status.classList.toggle('is-warning', input.memoryOnly || !!input.recoveryNotice);
     let retryButton: HTMLButtonElement | null = status.nextElementSibling instanceof HTMLButtonElement && status.nextElementSibling.classList.contains('storage-retry')
       ? status.nextElementSibling : null;
     if (!retryButton) { retryButton = document.createElement('button'); retryButton.type = 'button'; retryButton.className = 'storage-retry menu-secondary'; retryButton.addEventListener('click', actions.retry); status.after(retryButton); }
-    retryButton.textContent = t(language, 'retry'); retryButton.hidden = !input.memoryOnly;
+    retryButton.textContent = t(language, 'retry'); retryButton.hidden = !input.memoryOnly && !input.recoveryNotice;
     clearButton.hidden = !confirmPane.hidden;
     levelSelect.update({ language, choices: input.choices, unlockedLevel: input.unlockedLevel, completed: input.completed, selectedLevelId: input.selectedLevelId });
   }
@@ -127,7 +133,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   motionInput.addEventListener('change', () => changeSettings({ reducedMotion: motionInput.checked }));
   contrastInput.addEventListener('change', () => changeSettings({ highContrast: contrastInput.checked }));
   soundInput.addEventListener('change', () => changeSettings({ soundEnabled: soundInput.checked }));
-  volumeInput.addEventListener('input', () => { volumeValue.value = `${Math.round(Number(volumeInput.value) * 100)}%`; });
+  volumeInput.addEventListener('input', () => { volumeValue.value = `${Math.round(Number(volumeInput.value) * 100)}%`; volumeLabel.dataset.original = String(Math.round(Number(volumeInput.value) * 100) === 40); });
   volumeInput.addEventListener('change', () => changeSettings({ soundVolume: Number(volumeInput.value) }));
   rendererSelect.addEventListener('change', () => changeSettings({ rendererMode: rendererSelect.value as UserSettings['rendererMode'] }));
   levelButton.addEventListener('click', () => { panel.dataset.page = 'levels'; panel.setAttribute('aria-labelledby', 'level-select-title'); settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); });

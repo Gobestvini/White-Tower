@@ -36,6 +36,9 @@ export function createLevelSelect(root: HTMLElement, actions: { select(id: strin
       button.disabled = !available; button.setAttribute('aria-label', `${t(language, 'level')} ${choice.index}${!available ? `, ${t(language, 'locked')}` : done ? `, ${t(language, 'completed')}` : ''}`);
       if (done) button.classList.add('is-completed');
       if (choice.id === selected) button.classList.add('is-selected');
+      button.setAttribute('data-level', String(choice.index));
+      // Original raster cells are exact when their authored number/state matches.
+      if ((done && choice.index <= 12 && choice.id !== selected) || (!available && choice.index >= 14 && choice.index <= 30) || (choice.index === 13 && choice.id === selected)) button.classList.add('has-original-art');
       button.textContent = `${choice.index}${done ? ' ✓' : !available ? ' 🔒' : ''}`;
       button.addEventListener('click', () => { if (available) actions.select(choice.id); }); grid.append(button);
     }

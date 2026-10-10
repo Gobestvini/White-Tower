@@ -1,0 +1,122 @@
+[
+  {
+    "element": "Level-01",
+    "maxError": 0.03462769444337255
+  },
+  {
+    "element": "Level-02",
+    "maxError": 0.025912929472099222
+  },
+  {
+    "element": "Level-03",
+    "maxError": 0.02217252149770843
+  },
+  {
+    "element": "Level-04",
+    "maxError": 0.024486175914944397
+  },
+  {
+    "element": "Level-05",
+    "maxError": 0.015771410943557385
+  },
+  {
+    "element": "Level-06",
+    "maxError": 0.03462769444337255
+  },
+  {
+    "element": "Level-07",
+    "maxError": 0.027604166666606034
+  },
+  {
+    "element": "Level-08",
+    "maxError": 0.027604166666606034
+  },
+  {
+    "element": "Level-09",
+    "maxError": 0.027604166666606034
+  },
+  {
+    "element": "Level-10",
+    "maxError": 0.027604166666606034
+  },
+  {
+    "element": "Level-11",
+    "maxError": 0.03462769444337255
+  },
+  {
+    "element": "Level-12",
+    "maxError": 0.025912929472099222
+  },
+  {
+    "element": "Level-13",
+    "maxError": 0.029513888888914153
+  },
+  {
+    "element": "Level-14",
+    "maxError": 0.02517361111111427
+  },
+  {
+    "element": "Level-15",
+    "maxError": 0.02217252149770843
+  },
+  {
+    "element": "Level-16",
+    "maxError": 0.03462769444337255
+  },
+  {
+    "element": "Level-17",
+    "maxError": 0.025912929472099222
+  },
+  {
+    "element": "Level-18",
+    "maxError": 0.02217252149770843
+  },
+  {
+    "element": "Level-19",
+    "maxError": 0.02517361111111427
+  },
+  {
+    "element": "Level-20",
+    "maxError": 0.02517361111111427
+  },
+  {
+    "element": "Level-21",
+    "maxError": 0.03462769444337255
+  },
+  {
+    "element": "Level-22",
+    "maxError": 0.02604166666628771
+  },
+  {
+    "element": "Level-23",
+    "maxError": 0.02517361111111427
+  },
+  {
+    "element": "Level-24",
+    "maxError": 0.02517361111111427
+  },
+  {
+    "element": "Level-25",
+    "maxError": 0.02604166666628771
+  },
+  {
+    "element": "Level-26",
+    "maxError": 0.03462769444337255
+  },
+  {
+    "element": "Level-27",
+    "maxError": 0.03229166666687888
+  },
+  {
+    "element": "Level-28",
+    "maxError": 0.03229166666687888
+  },
+  {
+    "element": "Level-29",
+    "maxError": 0.03229166666687888
+  },
+  {
+    "element": "Level-30",
+    "maxError": 0.03229166666687888
+  }
+]
