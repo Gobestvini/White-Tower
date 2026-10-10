@@ -1,0 +1,3850 @@
+[
+  {
+    "screen": "01-gameplay",
+    "name": "Logo",
+    "file": "01-gameplay/logo.png",
+    "width": 252,
+    "height": 130,
+    "sourceRect": [
+      310,
+      0,
+      325,
+      145
+    ],
+    "trim": [
+      37,
+      18
+    ],
+    "padding": 4,
+    "origin": [
+      343,
+      14
+    ],
+    "transparentPixels": 6936,
+    "partialAlphaPixels": 898,
+    "sha256": "f39456d79fb1ccf3dacd3c5edf9f27a8d3a73d3adbd507771b963cd53100688a",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "01-gameplay",
+    "name": "Button-settings",
+    "file": "01-gameplay/button-settings.png",
+    "width": 132,
+    "height": 129,
+    "sourceRect": [
+      28,
+      63,
+      139,
+      136
+    ],
+    "trim": [
+      6,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      30,
+      64
+    ],
+    "transparentPixels": 3167,
+    "partialAlphaPixels": 486,
+    "sha256": "3f370e6a4a857158720d26ee9c7928a860968ac7b7bddafd86e89aefe519e2f3",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "01-gameplay",
+    "name": "Button-restart",
+    "file": "01-gameplay/button-restart.png",
+    "width": 132,
+    "height": 129,
+    "sourceRect": [
+      778,
+      63,
+      141,
+      138
+    ],
+    "trim": [
+      5,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      779,
+      64
+    ],
+    "transparentPixels": 3144,
+    "partialAlphaPixels": 486,
+    "sha256": "749c755df9b9b82f0da9fb762cdced3459e83c029decc1eef3d0064c73862b05",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "01-gameplay",
+    "name": "Counter",
+    "file": "01-gameplay/counter.png",
+    "width": 355,
+    "height": 90,
+    "sourceRect": [
+      291,
+      154,
+      361,
+      96
+    ],
+    "trim": [
+      6,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      293,
+      157
+    ],
+    "transparentPixels": 4881,
+    "partialAlphaPixels": 854,
+    "sha256": "2ba729bfe0f70f514df1f93bd40047716c563b807ab9718eb2ffd0735f2ed42c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "01-gameplay",
+    "name": "Level-label",
+    "file": "01-gameplay/level-label.png",
+    "width": 207,
+    "height": 55,
+    "sourceRect": [
+      365,
+      248,
+      210,
+      60
+    ],
+    "trim": [
+      6,
+      4
+    ],
+    "padding": 4,
+    "origin": [
+      367,
+      248
+    ],
+    "transparentPixels": 2479,
+    "partialAlphaPixels": 488,
+    "sha256": "252b8b02f969c46a105949cea756c8c837db64dd8229db9be1b1bb326fa0bf27",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "01-gameplay",
+    "name": "Board",
+    "file": "01-gameplay/board.png",
+    "width": 895,
+    "height": 1015,
+    "sourceRect": [
+      0,
+      350,
+      941,
+      1055
+    ],
+    "trim": [
+      25,
+      24
+    ],
+    "padding": 4,
+    "origin": [
+      21,
+      370
+    ],
+    "transparentPixels": 368043,
+    "partialAlphaPixels": 6191,
+    "sha256": "60053fa154f0605e7c721f1df20770c79abd8661c263b98b7ba3c597e859f92b",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "01-gameplay",
+    "name": "Button-undo",
+    "file": "01-gameplay/button-undo.png",
+    "width": 558,
+    "height": 177,
+    "sourceRect": [
+      175,
+      1438,
+      570,
+      186
+    ],
+    "trim": [
+      5,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      176,
+      1443
+    ],
+    "transparentPixels": 8544,
+    "partialAlphaPixels": 1434,
+    "sha256": "6599107047365da7724e2998575f4429c25b4b9ed08b84c2672fa4db386a00ff",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "01-gameplay",
+    "name": "Button-hint",
+    "file": "01-gameplay/button-hint.png",
+    "width": 174,
+    "height": 181,
+    "sourceRect": [
+      747,
+      1445,
+      166,
+      173
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      743,
+      1441
+    ],
+    "transparentPixels": 3872,
+    "partialAlphaPixels": 636,
+    "sha256": "0b99c1f5fbe6375e3aae9808fd71411775d56cc342542a75c377effc4676ac9c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "02-tutorial",
+    "name": "Button-settings",
+    "file": "02-tutorial/button-settings.png",
+    "width": 150,
+    "height": 147,
+    "sourceRect": [
+      35,
+      35,
+      165,
+      165
+    ],
+    "trim": [
+      10,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      41,
+      39
+    ],
+    "transparentPixels": 4599,
+    "partialAlphaPixels": 558,
+    "sha256": "033186504c755c6682cb950d82087f58666d0f6cac4523fc058f9d62c61d757d",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "02-tutorial",
+    "name": "Button-restart",
+    "file": "02-tutorial/button-restart.png",
+    "width": 152,
+    "height": 149,
+    "sourceRect": [
+      740,
+      35,
+      170,
+      165
+    ],
+    "trim": [
+      12,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      748,
+      38
+    ],
+    "transparentPixels": 4936,
+    "partialAlphaPixels": 566,
+    "sha256": "f815f64970969104fdfc85e1a09f346f76a5e02375bd7c64ead12972b76289ae",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "02-tutorial",
+    "name": "HUD",
+    "file": "02-tutorial/hud.png",
+    "width": 433,
+    "height": 204,
+    "sourceRect": [
+      250,
+      15,
+      445,
+      215
+    ],
+    "trim": [
+      8,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      254,
+      17
+    ],
+    "transparentPixels": 13296,
+    "partialAlphaPixels": 1240,
+    "sha256": "ce81d6a5d7f466f5e7a885ead8ec476cfbda07ecd18f6484eb51aade48d28e27",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "02-tutorial",
+    "name": "Tutorial-card",
+    "file": "02-tutorial/tutorial-card.png",
+    "width": 619,
+    "height": 215,
+    "sourceRect": [
+      150,
+      375,
+      640,
+      235
+    ],
+    "trim": [
+      15,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      161,
+      384
+    ],
+    "transparentPixels": 8800,
+    "partialAlphaPixels": 1634,
+    "sha256": "a5c67f179470bdc7d1e5023257ac3991839448058584ea353dd516d3b3e7e781",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "02-tutorial",
+    "name": "Board-and-hand",
+    "file": "02-tutorial/board-and-hand.png",
+    "width": 636,
+    "height": 503,
+    "sourceRect": [
+      135,
+      635,
+      685,
+      525
+    ],
+    "trim": [
+      38,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      169,
+      644
+    ],
+    "transparentPixels": 208191,
+    "partialAlphaPixels": 3161,
+    "sha256": "04664eb7da3b6335ecf5ff16500f260bc7ff83d8327e8347119e846f88ec0500",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "02-tutorial",
+    "name": "Button-undo",
+    "file": "02-tutorial/button-undo.png",
+    "width": 413,
+    "height": 136,
+    "sourceRect": [
+      255,
+      1475,
+      430,
+      155
+    ],
+    "trim": [
+      13,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      264,
+      1480
+    ],
+    "transparentPixels": 7292,
+    "partialAlphaPixels": 1062,
+    "sha256": "8e145a002b37eb30adbce5ede39c939e62d57557889588aa0bc69504358b1287",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Logo",
+    "file": "03-hint/logo.png",
+    "width": 255,
+    "height": 143,
+    "sourceRect": [
+      40,
+      30,
+      275,
+      160
+    ],
+    "trim": [
+      15,
+      12
+    ],
+    "padding": 4,
+    "origin": [
+      51,
+      38
+    ],
+    "transparentPixels": 8512,
+    "partialAlphaPixels": 926,
+    "sha256": "9c3a1480bf1a832f4dd0137fcd6fa9870b217c10c048f4633495069f8a66d8ff",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Level-label",
+    "file": "03-hint/level-label.png",
+    "width": 304,
+    "height": 78,
+    "sourceRect": [
+      325,
+      35,
+      320,
+      85
+    ],
+    "trim": [
+      10,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      331,
+      44
+    ],
+    "transparentPixels": 4057,
+    "partialAlphaPixels": 728,
+    "sha256": "e21130acbd884cfccae1864a416bfabf8e598b51a0b16c3b822dc54dcc34b881",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Counter",
+    "file": "03-hint/counter.png",
+    "width": 236,
+    "height": 75,
+    "sourceRect": [
+      355,
+      120,
+      255,
+      85
+    ],
+    "trim": [
+      12,
+      4
+    ],
+    "padding": 4,
+    "origin": [
+      363,
+      120
+    ],
+    "transparentPixels": 3138,
+    "partialAlphaPixels": 586,
+    "sha256": "c4d85c0bf4e47261bac4aae6044ea7ecb25705a6289534d73778a1becd665d82",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Button-restart",
+    "file": "03-hint/button-restart.png",
+    "width": 114,
+    "height": 114,
+    "sourceRect": [
+      665,
+      35,
+      130,
+      135
+    ],
+    "trim": [
+      11,
+      14
+    ],
+    "padding": 4,
+    "origin": [
+      672,
+      45
+    ],
+    "transparentPixels": 2544,
+    "partialAlphaPixels": 420,
+    "sha256": "7fbb2309bf8f71e8551cbea919a82e32674b848c87e599cd4e63c0b85c6d6d5c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Button-settings",
+    "file": "03-hint/button-settings.png",
+    "width": 114,
+    "height": 114,
+    "sourceRect": [
+      795,
+      35,
+      135,
+      135
+    ],
+    "trim": [
+      13,
+      14
+    ],
+    "padding": 4,
+    "origin": [
+      804,
+      45
+    ],
+    "transparentPixels": 2555,
+    "partialAlphaPixels": 420,
+    "sha256": "917e594aecdbd6043455381559e183eff5f724745ee81f3dccfea79746840499",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Board-with-highlight",
+    "file": "03-hint/board-with-highlight.png",
+    "width": 844,
+    "height": 846,
+    "sourceRect": [
+      30,
+      270,
+      880,
+      910
+    ],
+    "trim": [
+      22,
+      22
+    ],
+    "padding": 4,
+    "origin": [
+      48,
+      288
+    ],
+    "transparentPixels": 357158,
+    "partialAlphaPixels": 7579,
+    "sha256": "00ff814590da214ccd4a55085bb863f296a098dec96a7aad941813f719a2b8e6",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Hint-card",
+    "file": "03-hint/hint-card.png",
+    "width": 521,
+    "height": 170,
+    "sourceRect": [
+      200,
+      1180,
+      540,
+      190
+    ],
+    "trim": [
+      14,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      210,
+      1181
+    ],
+    "transparentPixels": 18506,
+    "partialAlphaPixels": 1346,
+    "sha256": "bdf071665c1371d499fa27ad769593a7938bcb6e64dd83d8d29b445a6385323b",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Button-undo",
+    "file": "03-hint/button-undo.png",
+    "width": 387,
+    "height": 154,
+    "sourceRect": [
+      25,
+      1435,
+      410,
+      180
+    ],
+    "trim": [
+      14,
+      11
+    ],
+    "padding": 4,
+    "origin": [
+      35,
+      1442
+    ],
+    "transparentPixels": 7227,
+    "partialAlphaPixels": 1046,
+    "sha256": "3c3b4d10c602975b11cd4a69e413a5d3cc083f52061cf5462ca6b3bf71eb4f59",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "03-hint",
+    "name": "Button-hint",
+    "file": "03-hint/button-hint.png",
+    "width": 216,
+    "height": 214,
+    "sourceRect": [
+      685,
+      1380,
+      240,
+      245
+    ],
+    "trim": [
+      15,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      696,
+      1389
+    ],
+    "transparentPixels": 12618,
+    "partialAlphaPixels": 824,
+    "sha256": "ca40057618afeef1086ecfe8c172c88f2835faa617b34dae2a62bad8ca36f067",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Logo",
+    "file": "04-levels/logo.png",
+    "width": 376,
+    "height": 220,
+    "sourceRect": [
+      235,
+      25,
+      395,
+      235
+    ],
+    "trim": [
+      23,
+      17
+    ],
+    "padding": 4,
+    "origin": [
+      254,
+      38
+    ],
+    "transparentPixels": 19321,
+    "partialAlphaPixels": 1596,
+    "sha256": "a1d13787fa179fef1e65079d4afb50acd494074413c05241dc88ff180e1cfa54",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Tower-decoration",
+    "file": "04-levels/tower-decoration.png",
+    "width": 193,
+    "height": 214,
+    "sourceRect": [
+      630,
+      40,
+      200,
+      235
+    ],
+    "trim": [
+      5,
+      24
+    ],
+    "padding": 4,
+    "origin": [
+      631,
+      60
+    ],
+    "transparentPixels": 15050,
+    "partialAlphaPixels": 854,
+    "sha256": "b06d966a71325c7b5fe49b885cb6b3e53af87dc7a3e36522484566fc2306f209",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Title-card",
+    "file": "04-levels/title-card.png",
+    "width": 684,
+    "height": 143,
+    "sourceRect": [
+      120,
+      310,
+      700,
+      165
+    ],
+    "trim": [
+      13,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      129,
+      316
+    ],
+    "transparentPixels": 14691,
+    "partialAlphaPixels": 1850,
+    "sha256": "a2c933551c124344fffbdf6af23285d32e1cbc6505c177df0600f1cace5f5b8c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Button-prev",
+    "file": "04-levels/button-prev.png",
+    "width": 137,
+    "height": 105,
+    "sourceRect": [
+      145,
+      1350,
+      150,
+      120
+    ],
+    "trim": [
+      11,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      152,
+      1355
+    ],
+    "transparentPixels": 3491,
+    "partialAlphaPixels": 448,
+    "sha256": "223cd61203f6f7ae72bcbdd4b1c0e84a73edec36b96a3ae786dd3cc8e1c7b598",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Page-label",
+    "file": "04-levels/page-label.png",
+    "width": 287,
+    "height": 90,
+    "sourceRect": [
+      330,
+      1370,
+      279,
+      82
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      326,
+      1366
+    ],
+    "transparentPixels": 4048,
+    "partialAlphaPixels": 636,
+    "sha256": "2303d5b99d5afc612b6d38cfad7465f56ea6bffcabd85f8a3a5dca2c9f685a0d",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Button-next",
+    "file": "04-levels/button-next.png",
+    "width": 136,
+    "height": 105,
+    "sourceRect": [
+      645,
+      1350,
+      150,
+      120
+    ],
+    "trim": [
+      12,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      653,
+      1355
+    ],
+    "transparentPixels": 3390,
+    "partialAlphaPixels": 446,
+    "sha256": "3a0132fa94025367e862821e61e6bd78c92a43ad3967d46a9010c766dec0505d",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Button-settings",
+    "file": "04-levels/button-settings.png",
+    "width": 565,
+    "height": 134,
+    "sourceRect": [
+      180,
+      1510,
+      580,
+      145
+    ],
+    "trim": [
+      11,
+      4
+    ],
+    "padding": 4,
+    "origin": [
+      187,
+      1510
+    ],
+    "transparentPixels": 8906,
+    "partialAlphaPixels": 1362,
+    "sha256": "afcad1789fd26e7062c9e040d9e5ebc59008d5867a798bf45f9caf92701a23a4",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-01",
+    "file": "04-levels/level-01.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      75,
+      475,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      84,
+      479
+    ],
+    "transparentPixels": 2995,
+    "partialAlphaPixels": 528,
+    "sha256": "948aeca2b4761421217aa784ce84f050521122cd0958a975b179bd04d59ce2e8",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-02",
+    "file": "04-levels/level-02.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      232,
+      475,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      241,
+      479
+    ],
+    "transparentPixels": 3007,
+    "partialAlphaPixels": 528,
+    "sha256": "a99bf347e68cd5b7d0c1979599149b92d2d3f68f8e23c14581ed3e51c7e11e82",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-03",
+    "file": "04-levels/level-03.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      389,
+      475,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      398,
+      479
+    ],
+    "transparentPixels": 3027,
+    "partialAlphaPixels": 528,
+    "sha256": "465fed0b0fecbcf71694cf258d1a6156d6ef34bfd87951847c944eae41988123",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-04",
+    "file": "04-levels/level-04.png",
+    "width": 147,
+    "height": 136,
+    "sourceRect": [
+      546,
+      475,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      554,
+      479
+    ],
+    "transparentPixels": 3042,
+    "partialAlphaPixels": 530,
+    "sha256": "952aa2cf5e4ef73d1d93c795437ad7d6790eac64b30e1cf7eb43cf157686d657",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-05",
+    "file": "04-levels/level-05.png",
+    "width": 147,
+    "height": 136,
+    "sourceRect": [
+      703,
+      475,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      711,
+      479
+    ],
+    "transparentPixels": 3067,
+    "partialAlphaPixels": 530,
+    "sha256": "fd383bdaab39c6caa058846246c2c1225b24709607261ab9aae92da647d01468",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-06",
+    "file": "04-levels/level-06.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      75,
+      620,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      84,
+      623
+    ],
+    "transparentPixels": 3031,
+    "partialAlphaPixels": 528,
+    "sha256": "c6a42985063e84a21927b842a9be41f03993837058e3b6748da322ad1d46e7d4",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-07",
+    "file": "04-levels/level-07.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      232,
+      620,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      241,
+      623
+    ],
+    "transparentPixels": 3031,
+    "partialAlphaPixels": 528,
+    "sha256": "0f3e338a3536f977b943196d69d81ac6a8bf336334399145c804b0a9f71144ce",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-08",
+    "file": "04-levels/level-08.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      389,
+      620,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      398,
+      623
+    ],
+    "transparentPixels": 3043,
+    "partialAlphaPixels": 528,
+    "sha256": "891bd565dc3653b226d4566ee0fb0b0258bc70f506087e28f08d0cb6671350fd",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-09",
+    "file": "04-levels/level-09.png",
+    "width": 147,
+    "height": 136,
+    "sourceRect": [
+      546,
+      620,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      554,
+      623
+    ],
+    "transparentPixels": 3069,
+    "partialAlphaPixels": 530,
+    "sha256": "91b0f0897b6b7fa204c6239c853dd887b7432ec3805687d56a9d20b83dd88d1c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-10",
+    "file": "04-levels/level-10.png",
+    "width": 147,
+    "height": 136,
+    "sourceRect": [
+      703,
+      620,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      711,
+      623
+    ],
+    "transparentPixels": 3122,
+    "partialAlphaPixels": 530,
+    "sha256": "b95709582adc19d252fc3e9e196af09d61d35a1f7ed4ae5fa44079a7147f02fb",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-11",
+    "file": "04-levels/level-11.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      75,
+      765,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      84,
+      767
+    ],
+    "transparentPixels": 2997,
+    "partialAlphaPixels": 528,
+    "sha256": "70842c417132506bf757bf8071b559d5eb4a066826921c03f4f68919c35c0c7b",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-12",
+    "file": "04-levels/level-12.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      232,
+      765,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      241,
+      767
+    ],
+    "transparentPixels": 3036,
+    "partialAlphaPixels": 528,
+    "sha256": "afcb17d2b0d530295819c1f266845864e720e57b09338f78386ce5f9f429b6b7",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-13",
+    "file": "04-levels/level-13.png",
+    "width": 140,
+    "height": 137,
+    "sourceRect": [
+      389,
+      765,
+      155,
+      145
+    ],
+    "trim": [
+      16,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      401,
+      766
+    ],
+    "transparentPixels": 2896,
+    "partialAlphaPixels": 518,
+    "sha256": "9872fb0fdcd0a10d2e0e2358b563e064069577ca226cd2f12cdb275151f87e7f",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-14",
+    "file": "04-levels/level-14.png",
+    "width": 147,
+    "height": 137,
+    "sourceRect": [
+      546,
+      765,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      554,
+      767
+    ],
+    "transparentPixels": 3159,
+    "partialAlphaPixels": 532,
+    "sha256": "510337530081fb5cf790fe08acd0b1684ef59ebb752e67cef073c310bf52a8de",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-15",
+    "file": "04-levels/level-15.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      703,
+      765,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      711,
+      767
+    ],
+    "transparentPixels": 3042,
+    "partialAlphaPixels": 528,
+    "sha256": "5b672783f1e5715705f3c21e13d19e35477377c23145a0377df35d4f7812b956",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-16",
+    "file": "04-levels/level-16.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      75,
+      910,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      84,
+      912
+    ],
+    "transparentPixels": 3114,
+    "partialAlphaPixels": 532,
+    "sha256": "4a87c217435018c9dc15c98a487970cb42344b685a8173341a57e2053266f9bc",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-17",
+    "file": "04-levels/level-17.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      232,
+      910,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      241,
+      912
+    ],
+    "transparentPixels": 3075,
+    "partialAlphaPixels": 530,
+    "sha256": "8f6f85b16a74499d7f03830631356566b3bedbd5b044a9c2b7a7c3df7e07fb2c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-18",
+    "file": "04-levels/level-18.png",
+    "width": 146,
+    "height": 136,
+    "sourceRect": [
+      389,
+      910,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      398,
+      913
+    ],
+    "transparentPixels": 3012,
+    "partialAlphaPixels": 528,
+    "sha256": "6f482cc394038da3fe9b484a7890771df8e0f8a44b564a2910348d84e11f0540",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-19",
+    "file": "04-levels/level-19.png",
+    "width": 147,
+    "height": 137,
+    "sourceRect": [
+      546,
+      910,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      554,
+      913
+    ],
+    "transparentPixels": 3104,
+    "partialAlphaPixels": 532,
+    "sha256": "c307beaf27069efd4e508f69f0787a7ded93cad8c12b9a3becf31fea6cb00e44",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-20",
+    "file": "04-levels/level-20.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      703,
+      910,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      711,
+      912
+    ],
+    "transparentPixels": 3057,
+    "partialAlphaPixels": 530,
+    "sha256": "f3348a7c87c82c945f76783591abf4920478e77bebb1512fa09057b421fad097",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-21",
+    "file": "04-levels/level-21.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      75,
+      1055,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      84,
+      1057
+    ],
+    "transparentPixels": 3124,
+    "partialAlphaPixels": 532,
+    "sha256": "4a41930ede7cd95e57ea8fa340c61db19dc48f40ce96730aab31f1ecac0550e8",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-22",
+    "file": "04-levels/level-22.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      232,
+      1055,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      241,
+      1057
+    ],
+    "transparentPixels": 3094,
+    "partialAlphaPixels": 532,
+    "sha256": "b6b190fd672c9353a3cf73a7b63ac457e6a1bca079e24f539a8aa928c7e432af",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-23",
+    "file": "04-levels/level-23.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      389,
+      1055,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      398,
+      1058
+    ],
+    "transparentPixels": 3067,
+    "partialAlphaPixels": 530,
+    "sha256": "0477fdc5a60aeef70fcb702263a20a973eec0c6d857aec499571250226ea23a4",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-24",
+    "file": "04-levels/level-24.png",
+    "width": 147,
+    "height": 137,
+    "sourceRect": [
+      546,
+      1055,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      554,
+      1058
+    ],
+    "transparentPixels": 3114,
+    "partialAlphaPixels": 532,
+    "sha256": "04fdb868a2379eed3f878c41b60d9e8bf02f419dd476f6ab70d14efa385770af",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-25",
+    "file": "04-levels/level-25.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      703,
+      1055,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      711,
+      1057
+    ],
+    "transparentPixels": 3045,
+    "partialAlphaPixels": 530,
+    "sha256": "64e5e3a56b4083712cb5cf90cf593b08c47c87f30786209d18da0b30b443a023",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-26",
+    "file": "04-levels/level-26.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      75,
+      1200,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      84,
+      1201
+    ],
+    "transparentPixels": 3073,
+    "partialAlphaPixels": 530,
+    "sha256": "9bf907c7e08ff4ce55670b84f536252f7dcc9fe1f823e346eb70838f50094ab3",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-27",
+    "file": "04-levels/level-27.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      232,
+      1200,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      241,
+      1202
+    ],
+    "transparentPixels": 3072,
+    "partialAlphaPixels": 530,
+    "sha256": "fd1af9b7003753819a735d07184b2bb4ee28982fee9864a18880e2f23216b377",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-28",
+    "file": "04-levels/level-28.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      389,
+      1200,
+      155,
+      145
+    ],
+    "trim": [
+      13,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      398,
+      1202
+    ],
+    "transparentPixels": 3076,
+    "partialAlphaPixels": 530,
+    "sha256": "ba0a4683f13249871c4654b7f129d4e2800825dc83014cd0112e75bce508d642",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-29",
+    "file": "04-levels/level-29.png",
+    "width": 147,
+    "height": 137,
+    "sourceRect": [
+      546,
+      1200,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      554,
+      1202
+    ],
+    "transparentPixels": 3108,
+    "partialAlphaPixels": 532,
+    "sha256": "a5507ea5718e9af87f0cd6eb79dabfd143bf74b112313f6cc54a5ad7cfc13a1b",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "04-levels",
+    "name": "Level-30",
+    "file": "04-levels/level-30.png",
+    "width": 146,
+    "height": 137,
+    "sourceRect": [
+      703,
+      1200,
+      155,
+      145
+    ],
+    "trim": [
+      12,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      711,
+      1202
+    ],
+    "transparentPixels": 3060,
+    "partialAlphaPixels": 530,
+    "sha256": "25ff0e9ec25579701868382507583feb8030f2cbd977fbc47fadbc5263f1c0d7",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Title",
+    "file": "05-settings/title.png",
+    "width": 498,
+    "height": 128,
+    "sourceRect": [
+      215,
+      225,
+      515,
+      140
+    ],
+    "trim": [
+      11,
+      11
+    ],
+    "padding": 4,
+    "origin": [
+      222,
+      232
+    ],
+    "transparentPixels": 6683,
+    "partialAlphaPixels": 1216,
+    "sha256": "7aa611beb0d785d36c846700d7fe8931e327a70a5971461cfe03cd79a18ca51e",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-0-icon",
+    "file": "05-settings/setting-0-icon.png",
+    "width": 53,
+    "height": 54,
+    "sourceRect": [
+      155,
+      380,
+      75,
+      85
+    ],
+    "trim": [
+      14,
+      18
+    ],
+    "padding": 4,
+    "origin": [
+      165,
+      394
+    ],
+    "transparentPixels": 1594,
+    "partialAlphaPixels": 156,
+    "sha256": "c92fdb8941fe0fc63dacb4227b98b31681cf2dd0c10dc34774b50039023f0a30",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-0-label",
+    "file": "05-settings/setting-0-label.png",
+    "width": 69,
+    "height": 29,
+    "sourceRect": [
+      235,
+      400,
+      100,
+      45
+    ],
+    "trim": [
+      9,
+      12
+    ],
+    "padding": 4,
+    "origin": [
+      240,
+      408
+    ],
+    "transparentPixels": 1295,
+    "partialAlphaPixels": 424,
+    "sha256": "b348d8f2a6bd7c2d04a3f08a221b212090fbfd3649f01dee1f39c959eb2f3b1d",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-0-control",
+    "file": "05-settings/setting-0-control.png",
+    "width": 248,
+    "height": 72,
+    "sourceRect": [
+      540,
+      393,
+      240,
+      64
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      536,
+      389
+    ],
+    "transparentPixels": 2792,
+    "partialAlphaPixels": 304,
+    "sha256": "7186010aa2b4fe59cb1782aff1fa90a898923d4d65e20c376745d35e7abc5a5c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-1-icon",
+    "file": "05-settings/setting-1-icon.png",
+    "width": 53,
+    "height": 48,
+    "sourceRect": [
+      155,
+      470,
+      75,
+      85
+    ],
+    "trim": [
+      14,
+      22
+    ],
+    "padding": 4,
+    "origin": [
+      165,
+      488
+    ],
+    "transparentPixels": 1498,
+    "partialAlphaPixels": 123,
+    "sha256": "99934e1722fa7527e9fa12c2c9df04e06378a29a83165756775e4b5a1ac12214",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-1-label",
+    "file": "05-settings/setting-1-label.png",
+    "width": 65,
+    "height": 35,
+    "sourceRect": [
+      235,
+      490,
+      100,
+      45
+    ],
+    "trim": [
+      9,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      240,
+      499
+    ],
+    "transparentPixels": 1582,
+    "partialAlphaPixels": 438,
+    "sha256": "44be40573cb0e7ff509afea29608b6407b6b701c9796dda09b01140d2f17a2f7",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-1-control",
+    "file": "05-settings/setting-1-control.png",
+    "width": 116,
+    "height": 63,
+    "sourceRect": [
+      672,
+      486,
+      108,
+      55
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      668,
+      482
+    ],
+    "transparentPixels": 1824,
+    "partialAlphaPixels": 424,
+    "sha256": "b8e8fd1ef4a727b435857c1cea6d74a301d116f4cc599a463784316ccb960187",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-2-icon",
+    "file": "05-settings/setting-2-icon.png",
+    "width": 51,
+    "height": 49,
+    "sourceRect": [
+      155,
+      560,
+      75,
+      85
+    ],
+    "trim": [
+      15,
+      22
+    ],
+    "padding": 4,
+    "origin": [
+      166,
+      578
+    ],
+    "transparentPixels": 1447,
+    "partialAlphaPixels": 124,
+    "sha256": "84b54661b2f621849fa5527015a4091c460cf2e838b7e45af0b3863b3ff6bb08",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-2-label",
+    "file": "05-settings/setting-2-label.png",
+    "width": 135,
+    "height": 34,
+    "sourceRect": [
+      235,
+      580,
+      185,
+      45
+    ],
+    "trim": [
+      10,
+      14
+    ],
+    "padding": 4,
+    "origin": [
+      241,
+      590
+    ],
+    "transparentPixels": 3232,
+    "partialAlphaPixels": 817,
+    "sha256": "8625aefc80a23d1a75e27a0b4e18d68300b51e4074fb2fc1337c9d027a8dfd39",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-2-control",
+    "file": "05-settings/setting-2-control.png",
+    "width": 283,
+    "height": 62,
+    "sourceRect": [
+      430,
+      560,
+      360,
+      85
+    ],
+    "trim": [
+      8,
+      17
+    ],
+    "padding": 4,
+    "origin": [
+      434,
+      573
+    ],
+    "transparentPixels": 9816,
+    "partialAlphaPixels": 1988,
+    "sha256": "3ee7e7574a4ca41d4fdc16c016acd6957a41607ae1df7d4413affbac8d1bf674",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-3-icon",
+    "file": "05-settings/setting-3-icon.png",
+    "width": 44,
+    "height": 50,
+    "sourceRect": [
+      155,
+      650,
+      75,
+      85
+    ],
+    "trim": [
+      20,
+      22
+    ],
+    "padding": 4,
+    "origin": [
+      171,
+      668
+    ],
+    "transparentPixels": 1268,
+    "partialAlphaPixels": 38,
+    "sha256": "7956ae46d6cdc65c351f9200254cb6e9c170baa11f9bcd0e6c3217ae33bac920",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-3-label",
+    "file": "05-settings/setting-3-label.png",
+    "width": 231,
+    "height": 32,
+    "sourceRect": [
+      235,
+      670,
+      270,
+      45
+    ],
+    "trim": [
+      11,
+      15
+    ],
+    "padding": 4,
+    "origin": [
+      242,
+      681
+    ],
+    "transparentPixels": 4798,
+    "partialAlphaPixels": 1640,
+    "sha256": "f32d3395a86b421cfba26ab51c707489a301a40625e3914ff57e4f5c940eab4b",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-3-control",
+    "file": "05-settings/setting-3-control.png",
+    "width": 116,
+    "height": 65,
+    "sourceRect": [
+      672,
+      668,
+      108,
+      57
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      668,
+      664
+    ],
+    "transparentPixels": 1872,
+    "partialAlphaPixels": 444,
+    "sha256": "4bb99344416237974cde463901ff5a35e64c678303d689a0d77cd285a2f4113c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-4-icon",
+    "file": "05-settings/setting-4-icon.png",
+    "width": 51,
+    "height": 53,
+    "sourceRect": [
+      155,
+      740,
+      75,
+      85
+    ],
+    "trim": [
+      15,
+      22
+    ],
+    "padding": 4,
+    "origin": [
+      166,
+      758
+    ],
+    "transparentPixels": 1498,
+    "partialAlphaPixels": 101,
+    "sha256": "6969df542cdfea22c9bfc6599a0e49e925c24499ccecbbbbc3a2b4b610081847",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-4-label",
+    "file": "05-settings/setting-4-label.png",
+    "width": 291,
+    "height": 33,
+    "sourceRect": [
+      235,
+      760,
+      295,
+      45
+    ],
+    "trim": [
+      12,
+      15
+    ],
+    "padding": 4,
+    "origin": [
+      243,
+      771
+    ],
+    "transparentPixels": 6553,
+    "partialAlphaPixels": 1849,
+    "sha256": "6b46087b039b31302d0827861a1bf076c08639267256724d92967effc4665ba5",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-4-control",
+    "file": "05-settings/setting-4-control.png",
+    "width": 116,
+    "height": 65,
+    "sourceRect": [
+      672,
+      758,
+      108,
+      57
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      668,
+      754
+    ],
+    "transparentPixels": 1872,
+    "partialAlphaPixels": 444,
+    "sha256": "5d137713f512a820a9c2050d35949d481f99d40b1eef2f2bd648c5323ee8056d",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-5-icon",
+    "file": "05-settings/setting-5-icon.png",
+    "width": 51,
+    "height": 53,
+    "sourceRect": [
+      155,
+      830,
+      75,
+      85
+    ],
+    "trim": [
+      15,
+      21
+    ],
+    "padding": 4,
+    "origin": [
+      166,
+      847
+    ],
+    "transparentPixels": 1728,
+    "partialAlphaPixels": 57,
+    "sha256": "79b643456e88e599a90f6e608342337e1d4f62eae76d983d51a545f36d576f14",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-5-label",
+    "file": "05-settings/setting-5-label.png",
+    "width": 114,
+    "height": 35,
+    "sourceRect": [
+      235,
+      850,
+      180,
+      45
+    ],
+    "trim": [
+      11,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      242,
+      859
+    ],
+    "transparentPixels": 2660,
+    "partialAlphaPixels": 818,
+    "sha256": "25e9a7153288b439193be1d16b07b0a53c2d6f6d9034c57feb08bffb282fec20",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Setting-5-control",
+    "file": "05-settings/setting-5-control.png",
+    "width": 248,
+    "height": 73,
+    "sourceRect": [
+      540,
+      844,
+      240,
+      65
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      536,
+      840
+    ],
+    "transparentPixels": 2800,
+    "partialAlphaPixels": 304,
+    "sha256": "e5fd115152d256786a7cf153068ba51513ec740041a2da788c28e4a453174315",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Button-levels",
+    "file": "05-settings/button-levels.png",
+    "width": 319,
+    "height": 106,
+    "sourceRect": [
+      140,
+      950,
+      330,
+      120
+    ],
+    "trim": [
+      11,
+      11
+    ],
+    "padding": 4,
+    "origin": [
+      147,
+      957
+    ],
+    "transparentPixels": 4035,
+    "partialAlphaPixels": 814,
+    "sha256": "658bd2f075f6593df068db4b7a4e8eb74c4ba43c3234b3b798c6458afe549846",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Button-hint",
+    "file": "05-settings/button-hint.png",
+    "width": 319,
+    "height": 106,
+    "sourceRect": [
+      475,
+      950,
+      330,
+      120
+    ],
+    "trim": [
+      4,
+      11
+    ],
+    "padding": 4,
+    "origin": [
+      475,
+      957
+    ],
+    "transparentPixels": 4006,
+    "partialAlphaPixels": 814,
+    "sha256": "ed2317e91114094643d85f8b5c5f6654f06d09dbc30f8b16e135b1baca291eb7",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Button-export",
+    "file": "05-settings/button-export.png",
+    "width": 312,
+    "height": 81,
+    "sourceRect": [
+      145,
+      1070,
+      325,
+      90
+    ],
+    "trim": [
+      10,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      151,
+      1072
+    ],
+    "transparentPixels": 3578,
+    "partialAlphaPixels": 750,
+    "sha256": "b9a1eefa422d73120b4fa59d3a6b972418aba328943c5f507aec253809e0892e",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Button-import",
+    "file": "05-settings/button-import.png",
+    "width": 313,
+    "height": 81,
+    "sourceRect": [
+      475,
+      1070,
+      325,
+      90
+    ],
+    "trim": [
+      7,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      478,
+      1072
+    ],
+    "transparentPixels": 3602,
+    "partialAlphaPixels": 752,
+    "sha256": "c774bd6f2d171ad0bddbd83a0f14be8fe15ec80ff4ea29dee602f95458677937",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Button-reset",
+    "file": "05-settings/button-reset.png",
+    "width": 224,
+    "height": 33,
+    "sourceRect": [
+      345,
+      1170,
+      250,
+      55
+    ],
+    "trim": [
+      19,
+      16
+    ],
+    "padding": 4,
+    "origin": [
+      360,
+      1182
+    ],
+    "transparentPixels": 5257,
+    "partialAlphaPixels": 1300,
+    "sha256": "d0285900254e90b9a0f5edf27ac593c07586192f10d8e2d5a70baea38a4d1c7c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "05-settings",
+    "name": "Button-resume",
+    "file": "05-settings/button-resume.png",
+    "width": 637,
+    "height": 133,
+    "sourceRect": [
+      145,
+      1230,
+      655,
+      145
+    ],
+    "trim": [
+      11,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      152,
+      1232
+    ],
+    "transparentPixels": 8731,
+    "partialAlphaPixels": 1504,
+    "sha256": "031d5c0027a9248122fafd7300ba5245af116d96c531b3d3c51659599275ff9a",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "06-victory",
+    "name": "Logo",
+    "file": "06-victory/logo.png",
+    "width": 315,
+    "height": 161,
+    "sourceRect": [
+      305,
+      25,
+      330,
+      170
+    ],
+    "trim": [
+      9,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      310,
+      34
+    ],
+    "transparentPixels": 11478,
+    "partialAlphaPixels": 1074,
+    "sha256": "117b6bbd03b53033997c433f1238155fb332bccc6370958457ce1bfd812f2431",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "06-victory",
+    "name": "Level-label",
+    "file": "06-victory/level-label.png",
+    "width": 231,
+    "height": 57,
+    "sourceRect": [
+      350,
+      195,
+      245,
+      65
+    ],
+    "trim": [
+      9,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      355,
+      201
+    ],
+    "transparentPixels": 2769,
+    "partialAlphaPixels": 540,
+    "sha256": "d29991773a73ecefbde479e1f8ce8671f1545778a30dcbfae5c84bf6d48e5f01",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "06-victory",
+    "name": "Victory-ribbon",
+    "file": "06-victory/victory-ribbon.png",
+    "width": 870,
+    "height": 302,
+    "sourceRect": [
+      30,
+      260,
+      885,
+      305
+    ],
+    "trim": [
+      10,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      36,
+      261
+    ],
+    "transparentPixels": 119037,
+    "partialAlphaPixels": 2711,
+    "sha256": "0b7fb8e7a36dc554a0ed81653dbc29270e1592ed46265fe7d439c1ac3bb9818b",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "06-victory",
+    "name": "Tower-and-board",
+    "file": "06-victory/tower-and-board.png",
+    "width": 880,
+    "height": 791,
+    "sourceRect": [
+      15,
+      490,
+      915,
+      825
+    ],
+    "trim": [
+      21,
+      21
+    ],
+    "padding": 4,
+    "origin": [
+      32,
+      507
+    ],
+    "transparentPixels": 265157,
+    "partialAlphaPixels": 4354,
+    "sha256": "63ea184db36d9d89b68bb3ea608aac666ddd906f81da6078ea9508270797fa13",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "06-victory",
+    "name": "Button-next",
+    "file": "06-victory/button-next.png",
+    "width": 698,
+    "height": 199,
+    "sourceRect": [
+      110,
+      1315,
+      725,
+      210
+    ],
+    "trim": [
+      16,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      122,
+      1316
+    ],
+    "transparentPixels": 14043,
+    "partialAlphaPixels": 1774,
+    "sha256": "f287e429cab2a6f25acb933e21ce27522507e23ee3f117070a191b45034a0d18",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "06-victory",
+    "name": "Button-undo",
+    "file": "06-victory/button-undo.png",
+    "width": 301,
+    "height": 92,
+    "sourceRect": [
+      310,
+      1530,
+      325,
+      110
+    ],
+    "trim": [
+      14,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      320,
+      1534
+    ],
+    "transparentPixels": 4302,
+    "partialAlphaPixels": 750,
+    "sha256": "c718c2dfd2980e26f40351fc44c6033dd1fab3f6aaf31da7b00304a43e669fb9",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "07-campaign-complete",
+    "name": "Logo",
+    "file": "07-campaign-complete/logo.png",
+    "width": 279,
+    "height": 149,
+    "sourceRect": [
+      320,
+      10,
+      300,
+      155
+    ],
+    "trim": [
+      15,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      331,
+      16
+    ],
+    "transparentPixels": 11062,
+    "partialAlphaPixels": 898,
+    "sha256": "3d922257e7ede16f6bac4720e026008ac35f66d98dc0413d378243fabdfd2c09",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "07-campaign-complete",
+    "name": "Campaign-ribbon",
+    "file": "07-campaign-complete/campaign-ribbon.png",
+    "width": 836,
+    "height": 192,
+    "sourceRect": [
+      40,
+      175,
+      860,
+      200
+    ],
+    "trim": [
+      17,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      53,
+      176
+    ],
+    "transparentPixels": 35237,
+    "partialAlphaPixels": 2082,
+    "sha256": "01396221cd919484f1889180f9efaa0cc599f151ebf0c88cdee361d17b2cc7e9",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "07-campaign-complete",
+    "name": "Tower-and-island",
+    "file": "07-campaign-complete/tower-and-island.png",
+    "width": 609,
+    "height": 786,
+    "sourceRect": [
+      140,
+      375,
+      655,
+      810
+    ],
+    "trim": [
+      18,
+      16
+    ],
+    "padding": 4,
+    "origin": [
+      154,
+      387
+    ],
+    "transparentPixels": 211739,
+    "partialAlphaPixels": 3581,
+    "sha256": "23888d568c49d2b3739c0bf67a0fed34178b4178271ef0c1da693412179d993e",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "07-campaign-complete",
+    "name": "Completion-label",
+    "file": "07-campaign-complete/completion-label.png",
+    "width": 780,
+    "height": 136,
+    "sourceRect": [
+      75,
+      1185,
+      795,
+      145
+    ],
+    "trim": [
+      11,
+      4
+    ],
+    "padding": 4,
+    "origin": [
+      82,
+      1185
+    ],
+    "transparentPixels": 11034,
+    "partialAlphaPixels": 1798,
+    "sha256": "d6a455258ff0624fdcb41548948eb6251eb63d24bc0c55dc76cdc622e2cc8b69",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "07-campaign-complete",
+    "name": "Button-levels",
+    "file": "07-campaign-complete/button-levels.png",
+    "width": 649,
+    "height": 173,
+    "sourceRect": [
+      135,
+      1330,
+      675,
+      185
+    ],
+    "trim": [
+      15,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      146,
+      1336
+    ],
+    "transparentPixels": 8841,
+    "partialAlphaPixels": 1608,
+    "sha256": "b2aa566b9488d2dd17cd1d94cb1c940220b869900489dc6d3b0bf82a1b058e32",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "07-campaign-complete",
+    "name": "Button-undo",
+    "file": "07-campaign-complete/button-undo.png",
+    "width": 361,
+    "height": 111,
+    "sourceRect": [
+      285,
+      1520,
+      375,
+      120
+    ],
+    "trim": [
+      9,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      290,
+      1522
+    ],
+    "transparentPixels": 4896,
+    "partialAlphaPixels": 908,
+    "sha256": "9e57c25dc53736cc502f7a7fa4e36cf0695ee4dfbd88a3ba789874246886de73",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "name": "Logo",
+    "file": "08-reset-confirmation/logo.png",
+    "width": 287,
+    "height": 212,
+    "sourceRect": [
+      95,
+      40,
+      300,
+      250
+    ],
+    "trim": [
+      5,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      96,
+      49
+    ],
+    "transparentPixels": 23827,
+    "partialAlphaPixels": 1410,
+    "sha256": "3959b64129fa2880133b8c8ad1f11b51a1658e122b5e9bb0f45b573bc678d8ea",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "name": "Dimmed-settings-title",
+    "file": "08-reset-confirmation/dimmed-settings-title.png",
+    "width": 366,
+    "height": 75,
+    "sourceRect": [
+      115,
+      360,
+      420,
+      110
+    ],
+    "trim": [
+      21,
+      23
+    ],
+    "padding": 4,
+    "origin": [
+      132,
+      379
+    ],
+    "transparentPixels": 17754,
+    "partialAlphaPixels": 8213,
+    "sha256": "c6870964d92569aa186e565c5dc85339030f9ecff44feeed29ec3db90f433d12",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "name": "Dialog-icon",
+    "file": "08-reset-confirmation/dialog-icon.png",
+    "width": 165,
+    "height": 173,
+    "sourceRect": [
+      375,
+      725,
+      190,
+      180
+    ],
+    "trim": [
+      17,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      388,
+      729
+    ],
+    "transparentPixels": 7873,
+    "partialAlphaPixels": 644,
+    "sha256": "d48619e1c9ae7ccbff1040906cfb224e8b9e50ab5141c765754738431ebcc414",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "name": "Dialog-title",
+    "file": "08-reset-confirmation/dialog-title.png",
+    "width": 527,
+    "height": 63,
+    "sourceRect": [
+      210,
+      900,
+      550,
+      70
+    ],
+    "trim": [
+      6,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      212,
+      904
+    ],
+    "transparentPixels": 22412,
+    "partialAlphaPixels": 5700,
+    "sha256": "35db6bf6de43931cbd5463cd95741932dd20f2318365420316202a6cb14203bc",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "name": "Dialog-description",
+    "file": "08-reset-confirmation/dialog-description.png",
+    "width": 487,
+    "height": 86,
+    "sourceRect": [
+      230,
+      980,
+      500,
+      95
+    ],
+    "trim": [
+      8,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      234,
+      986
+    ],
+    "transparentPixels": 31122,
+    "partialAlphaPixels": 6276,
+    "sha256": "b3b85a7d2c25f2b1412bfe3def37ea36508b0ecf33568144f23bfeee918126da",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "name": "Button-cancel",
+    "file": "08-reset-confirmation/button-cancel.png",
+    "width": 316,
+    "height": 132,
+    "sourceRect": [
+      175,
+      1106,
+      308,
+      124
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      171,
+      1102
+    ],
+    "transparentPixels": 5712,
+    "partialAlphaPixels": 944,
+    "sha256": "41e0ecf8f0980e18be153f11b57d91badda06fda2095f4458559cf8d10dbe021",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "name": "Button-confirm-reset",
+    "file": "08-reset-confirmation/button-confirm-reset.png",
+    "width": 278,
+    "height": 132,
+    "sourceRect": [
+      500,
+      1106,
+      270,
+      124
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      496,
+      1102
+    ],
+    "transparentPixels": 4996,
+    "partialAlphaPixels": 848,
+    "sha256": "a832197df30f34585c4ea4d221e25eefdcbcab5b4a09f176ab408099b146ca13",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Logo",
+    "file": "09-storage-recovery/logo.png",
+    "width": 263,
+    "height": 137,
+    "sourceRect": [
+      25,
+      25,
+      275,
+      155
+    ],
+    "trim": [
+      9,
+      17
+    ],
+    "padding": 4,
+    "origin": [
+      30,
+      38
+    ],
+    "transparentPixels": 10118,
+    "partialAlphaPixels": 1358,
+    "sha256": "a504c63849f22b6a91710cf3ad7655cf4dd5a5b88f94888d6cc9946fe89a413a",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Title",
+    "file": "09-storage-recovery/title.png",
+    "width": 298,
+    "height": 65,
+    "sourceRect": [
+      300,
+      285,
+      370,
+      70
+    ],
+    "trim": [
+      28,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      324,
+      291
+    ],
+    "transparentPixels": 12858,
+    "partialAlphaPixels": 693,
+    "sha256": "bf8c52647a142bc30ea3f2683fd65b0a912ce8159d52a84a455434293eee07b4",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Button-close",
+    "file": "09-storage-recovery/button-close.png",
+    "width": 84,
+    "height": 84,
+    "sourceRect": [
+      739,
+      283,
+      76,
+      76
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      735,
+      279
+    ],
+    "transparentPixels": 2256,
+    "partialAlphaPixels": 608,
+    "sha256": "7876d3adcff7ebe6de8e58bd45bdb509dad5de0eef16e9a2acc7c19c7cb6dc62",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Storage-icon",
+    "file": "09-storage-recovery/storage-icon.png",
+    "width": 109,
+    "height": 110,
+    "sourceRect": [
+      160,
+      420,
+      130,
+      140
+    ],
+    "trim": [
+      27,
+      19
+    ],
+    "padding": 4,
+    "origin": [
+      183,
+      435
+    ],
+    "transparentPixels": 6679,
+    "partialAlphaPixels": 238,
+    "sha256": "2edfb14cf1f2a508b16b3a1f3013c842f42fd8863fb31543f9d27c59110bc5ac",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Storage-title",
+    "file": "09-storage-recovery/storage-title.png",
+    "width": 343,
+    "height": 42,
+    "sourceRect": [
+      310,
+      420,
+      475,
+      50
+    ],
+    "trim": [
+      16,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      322,
+      425
+    ],
+    "transparentPixels": 9594,
+    "partialAlphaPixels": 2685,
+    "sha256": "54a804c1c8905545962dd58099694a2c411ddecda621b4aa999b7c375fcb5475",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Storage-description",
+    "file": "09-storage-recovery/storage-description.png",
+    "width": 438,
+    "height": 36,
+    "sourceRect": [
+      310,
+      470,
+      475,
+      45
+    ],
+    "trim": [
+      15,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      321,
+      471
+    ],
+    "transparentPixels": 11706,
+    "partialAlphaPixels": 2548,
+    "sha256": "c45eec9825e0b9828035ff946d8683471bd765d18cf43a56fef406baf6f570f3",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Button-retry",
+    "file": "09-storage-recovery/button-retry.png",
+    "width": 467,
+    "height": 87,
+    "sourceRect": [
+      310,
+      520,
+      485,
+      100
+    ],
+    "trim": [
+      13,
+      3
+    ],
+    "padding": 4,
+    "origin": [
+      319,
+      519
+    ],
+    "transparentPixels": 5104,
+    "partialAlphaPixels": 1072,
+    "sha256": "a58a29c7e4203b58f72a575ea148d9e2bbfa768d5e53630e1de93312fc9a90ac",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-0-icon",
+    "file": "09-storage-recovery/setting-0-icon.png",
+    "width": 63,
+    "height": 65,
+    "sourceRect": [
+      165,
+      660,
+      85,
+      110
+    ],
+    "trim": [
+      9,
+      24
+    ],
+    "padding": 4,
+    "origin": [
+      170,
+      680
+    ],
+    "transparentPixels": 2166,
+    "partialAlphaPixels": 200,
+    "sha256": "aab109cdfa592e43d94e1635b42fa2948e2f69deb504c4e633b41d7b1984f11a",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-0-label",
+    "file": "09-storage-recovery/setting-0-label.png",
+    "width": 82,
+    "height": 33,
+    "sourceRect": [
+      265,
+      690,
+      130,
+      50
+    ],
+    "trim": [
+      11,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      272,
+      695
+    ],
+    "transparentPixels": 1674,
+    "partialAlphaPixels": 592,
+    "sha256": "f5eefd79004843bbd64286f1f072908e5773a9f7328808693db1d6bcf48fba74",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-0-control",
+    "file": "09-storage-recovery/setting-0-control.png",
+    "width": 240,
+    "height": 76,
+    "sourceRect": [
+      540,
+      660,
+      250,
+      110
+    ],
+    "trim": [
+      7,
+      18
+    ],
+    "padding": 4,
+    "origin": [
+      543,
+      674
+    ],
+    "transparentPixels": 2831,
+    "partialAlphaPixels": 596,
+    "sha256": "5f1ae57e60270180835ff4ccb62bed59140b6d63bd6b24f16090ab2ffddcb259",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-1-icon",
+    "file": "09-storage-recovery/setting-1-icon.png",
+    "width": 65,
+    "height": 58,
+    "sourceRect": [
+      165,
+      780,
+      85,
+      110
+    ],
+    "trim": [
+      8,
+      23
+    ],
+    "padding": 4,
+    "origin": [
+      169,
+      799
+    ],
+    "transparentPixels": 2313,
+    "partialAlphaPixels": 118,
+    "sha256": "d97708893242a42473d24abc65dd2265370e01e66e75b24bc60f16c412eee225",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-1-label",
+    "file": "09-storage-recovery/setting-1-label.png",
+    "width": 77,
+    "height": 39,
+    "sourceRect": [
+      265,
+      800,
+      130,
+      50
+    ],
+    "trim": [
+      11,
+      14
+    ],
+    "padding": 4,
+    "origin": [
+      272,
+      810
+    ],
+    "transparentPixels": 2045,
+    "partialAlphaPixels": 546,
+    "sha256": "24ce8fe31a8c304a70999d429a2170d2f546a843a73078a9a7b7e8d7de2e0e7c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-1-control",
+    "file": "09-storage-recovery/setting-1-control.png",
+    "width": 129,
+    "height": 73,
+    "sourceRect": [
+      540,
+      780,
+      250,
+      110
+    ],
+    "trim": [
+      114,
+      16
+    ],
+    "padding": 4,
+    "origin": [
+      650,
+      792
+    ],
+    "transparentPixels": 2432,
+    "partialAlphaPixels": 368,
+    "sha256": "a479cdb72472a50c052ad63287d4e4840bb4fab74202ea54048c45fd580dd190",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-2-icon",
+    "file": "09-storage-recovery/setting-2-icon.png",
+    "width": 56,
+    "height": 58,
+    "sourceRect": [
+      165,
+      900,
+      85,
+      110
+    ],
+    "trim": [
+      14,
+      11
+    ],
+    "padding": 4,
+    "origin": [
+      175,
+      907
+    ],
+    "transparentPixels": 1970,
+    "partialAlphaPixels": 94,
+    "sha256": "3ec169e89adf489fc1397560d1619c71bd96fedc9711e2a3ffdfc0169f9e3f2f",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-2-label",
+    "file": "09-storage-recovery/setting-2-label.png",
+    "width": 157,
+    "height": 39,
+    "sourceRect": [
+      265,
+      910,
+      180,
+      50
+    ],
+    "trim": [
+      12,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      273,
+      916
+    ],
+    "transparentPixels": 4177,
+    "partialAlphaPixels": 1154,
+    "sha256": "9d3b85060d256c7b7005656e708aa8cc7af60c79573d1fe38ee8ad344f7da4bf",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-2-control",
+    "file": "09-storage-recovery/setting-2-control.png",
+    "width": 307,
+    "height": 63,
+    "sourceRect": [
+      465,
+      900,
+      325,
+      110
+    ],
+    "trim": [
+      4,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      465,
+      906
+    ],
+    "transparentPixels": 11364,
+    "partialAlphaPixels": 704,
+    "sha256": "4595dd36096e1bc99efec1b9f10a1e1ab05d89257b1e98f6d8487a004112fd0c",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-3-icon",
+    "file": "09-storage-recovery/setting-3-icon.png",
+    "width": 59,
+    "height": 47,
+    "sourceRect": [
+      165,
+      1020,
+      85,
+      110
+    ],
+    "trim": [
+      11,
+      23
+    ],
+    "padding": 4,
+    "origin": [
+      172,
+      1039
+    ],
+    "transparentPixels": 1532,
+    "partialAlphaPixels": 84,
+    "sha256": "ca70f7a1ac8047eef9e8ffcc0a53f476ae556630005ec49c6501ec70da3e4fa3",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-3-label",
+    "file": "09-storage-recovery/setting-3-label.png",
+    "width": 217,
+    "height": 41,
+    "sourceRect": [
+      265,
+      1035,
+      240,
+      50
+    ],
+    "trim": [
+      12,
+      11
+    ],
+    "padding": 4,
+    "origin": [
+      273,
+      1042
+    ],
+    "transparentPixels": 6011,
+    "partialAlphaPixels": 1647,
+    "sha256": "ae31412b35e90020acd6ead484c5cb4b0e86197828598cef8bc68a355e3144a5",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-3-control",
+    "file": "09-storage-recovery/setting-3-control.png",
+    "width": 27,
+    "height": 37,
+    "sourceRect": [
+      540,
+      1020,
+      250,
+      110
+    ],
+    "trim": [
+      207,
+      29
+    ],
+    "padding": 4,
+    "origin": [
+      743,
+      1045
+    ],
+    "transparentPixels": 737,
+    "partialAlphaPixels": 112,
+    "sha256": "b6b8042f25679410c12303220b2da36b67773f6b5eacf501726a56a612b2da70",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-4-icon",
+    "file": "09-storage-recovery/setting-4-icon.png",
+    "width": 56,
+    "height": 65,
+    "sourceRect": [
+      165,
+      1140,
+      85,
+      110
+    ],
+    "trim": [
+      13,
+      2
+    ],
+    "padding": 4,
+    "origin": [
+      174,
+      1138
+    ],
+    "transparentPixels": 2357,
+    "partialAlphaPixels": 175,
+    "sha256": "7ee1b847aa3a6a212a60fab571288d13f2cc3bc0d55b5b832e595563c7f21252",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-4-label",
+    "file": "09-storage-recovery/setting-4-label.png",
+    "width": 130,
+    "height": 40,
+    "sourceRect": [
+      265,
+      1145,
+      180,
+      50
+    ],
+    "trim": [
+      11,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      272,
+      1154
+    ],
+    "transparentPixels": 3592,
+    "partialAlphaPixels": 943,
+    "sha256": "51b3776881fc5862163ca4480d893038a16ca087aa0f65256a5e4cc03d481525",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-4-control",
+    "file": "09-storage-recovery/setting-4-control.png",
+    "width": 27,
+    "height": 38,
+    "sourceRect": [
+      540,
+      1140,
+      250,
+      110
+    ],
+    "trim": [
+      207,
+      18
+    ],
+    "padding": 4,
+    "origin": [
+      743,
+      1154
+    ],
+    "transparentPixels": 764,
+    "partialAlphaPixels": 114,
+    "sha256": "ac64b97ba11e43acfca0a1f7c4c2d9707cfbf44382bcfe430256560ec878990e",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-5-icon",
+    "file": "09-storage-recovery/setting-5-icon.png",
+    "width": 61,
+    "height": 55,
+    "sourceRect": [
+      165,
+      1260,
+      85,
+      80
+    ],
+    "trim": [
+      10,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      171,
+      1256
+    ],
+    "transparentPixels": 2213,
+    "partialAlphaPixels": 152,
+    "sha256": "af4e56464f883032d83a597f18d5021d473d5e012c6b4e5cb37433560c947e6b",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-5-label",
+    "file": "09-storage-recovery/setting-5-label.png",
+    "width": 119,
+    "height": 39,
+    "sourceRect": [
+      265,
+      1255,
+      180,
+      50
+    ],
+    "trim": [
+      12,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      273,
+      1260
+    ],
+    "transparentPixels": 3144,
+    "partialAlphaPixels": 853,
+    "sha256": "1acf5e73cf26182c46f751b5e3144ff557013409ab87479f61242502a8e1db9a",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Setting-5-control",
+    "file": "09-storage-recovery/setting-5-control.png",
+    "width": 27,
+    "height": 38,
+    "sourceRect": [
+      540,
+      1260,
+      250,
+      80
+    ],
+    "trim": [
+      207,
+      5
+    ],
+    "padding": 4,
+    "origin": [
+      743,
+      1261
+    ],
+    "transparentPixels": 768,
+    "partialAlphaPixels": 114,
+    "sha256": "77ea140862264d409e81b3cee02b164273c2723da9c1c5c50675ded85d4ba886",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "name": "Button-resume",
+    "file": "09-storage-recovery/button-resume.png",
+    "width": 669,
+    "height": 122,
+    "sourceRect": [
+      130,
+      1340,
+      685,
+      145
+    ],
+    "trim": [
+      10,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      136,
+      1346
+    ],
+    "transparentPixels": 7609,
+    "partialAlphaPixels": 1546,
+    "sha256": "a8836443797e9027b4b1180899013676419e705eb133b20871ab4abd45b830ed",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Loading-logo",
+    "file": "10-service-states/loading-logo.png",
+    "width": 333,
+    "height": 208,
+    "sourceRect": [
+      65,
+      85,
+      345,
+      215
+    ],
+    "trim": [
+      12,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      73,
+      90
+    ],
+    "transparentPixels": 15711,
+    "partialAlphaPixels": 1746,
+    "sha256": "fa0ebd4334279a62781bddafaaf94254761e4e22006b44ec94c1fb3af1b27583",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Loading-tower",
+    "file": "10-service-states/loading-tower.png",
+    "width": 362,
+    "height": 307,
+    "sourceRect": [
+      10,
+      315,
+      445,
+      315
+    ],
+    "trim": [
+      71,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      77,
+      319
+    ],
+    "transparentPixels": 50570,
+    "partialAlphaPixels": 1472,
+    "sha256": "1cf1629a368aaee0a8f53e0ec71a1e5670da0c1a0d6206b734629ca0a5b6ec04",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Loading-progress",
+    "file": "10-service-states/loading-progress.png",
+    "width": 352,
+    "height": 55,
+    "sourceRect": [
+      60,
+      635,
+      344,
+      47
+    ],
+    "trim": [
+      0,
+      0
+    ],
+    "padding": 4,
+    "origin": [
+      56,
+      631
+    ],
+    "transparentPixels": 3508,
+    "partialAlphaPixels": 332,
+    "sha256": "4f889d6d5b41e3cc359f571f9ab73ee104bd115740669be898270626dee5dbd7",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Loading-label",
+    "file": "10-service-states/loading-label.png",
+    "width": 275,
+    "height": 37,
+    "sourceRect": [
+      80,
+      695,
+      325,
+      60
+    ],
+    "trim": [
+      30,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      106,
+      697
+    ],
+    "transparentPixels": 7558,
+    "partialAlphaPixels": 449,
+    "sha256": "6573b34c16e74e1a75702f6d7c977c945b20ae04e53ee0d438552cc04d1c4d08",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Error-icon",
+    "file": "10-service-states/error-icon.png",
+    "width": 75,
+    "height": 79,
+    "sourceRect": [
+      670,
+      350,
+      75,
+      80
+    ],
+    "trim": [
+      6,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      672,
+      353
+    ],
+    "transparentPixels": 1924,
+    "partialAlphaPixels": 272,
+    "sha256": "b50a8411a66e5754bd72bccd262fd92879894b02877c911976a0033b7b42bc9d",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Error-title",
+    "file": "10-service-states/error-title.png",
+    "width": 284,
+    "height": 70,
+    "sourceRect": [
+      575,
+      435,
+      280,
+      75
+    ],
+    "trim": [
+      2,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      573,
+      439
+    ],
+    "transparentPixels": 14118,
+    "partialAlphaPixels": 3278,
+    "sha256": "2185f8428db0e908f83b7f85229c744324d35841217eb52cb46b1fee0a8178ab",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Button-retry-level",
+    "file": "10-service-states/button-retry-level.png",
+    "width": 333,
+    "height": 87,
+    "sourceRect": [
+      545,
+      525,
+      335,
+      90
+    ],
+    "trim": [
+      4,
+      4
+    ],
+    "padding": 4,
+    "origin": [
+      545,
+      525
+    ],
+    "transparentPixels": 3991,
+    "partialAlphaPixels": 804,
+    "sha256": "e7adfab2cf50479ff7eca96e998163d2b033a0e88e9036e9f6b54236fd6b2aa7",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Button-levels",
+    "file": "10-service-states/button-levels.png",
+    "width": 332,
+    "height": 72,
+    "sourceRect": [
+      545,
+      615,
+      335,
+      80
+    ],
+    "trim": [
+      5,
+      6
+    ],
+    "padding": 4,
+    "origin": [
+      546,
+      617
+    ],
+    "transparentPixels": 3768,
+    "partialAlphaPixels": 772,
+    "sha256": "0215f14cee747384a65f1c45f5e8ae5a341df3c0eaec5cb8b78477453f3960ca",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Graphics-illustration",
+    "file": "10-service-states/graphics-illustration.png",
+    "width": 265,
+    "height": 232,
+    "sourceRect": [
+      90,
+      950,
+      285,
+      260
+    ],
+    "trim": [
+      18,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      104,
+      956
+    ],
+    "transparentPixels": 11952,
+    "partialAlphaPixels": 1042,
+    "sha256": "127d652b8edc04b72dcebfdb1d9685351f34c4ce643de23fa69f94a202a9ac07",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Graphics-title",
+    "file": "10-service-states/graphics-title.png",
+    "width": 243,
+    "height": 77,
+    "sourceRect": [
+      100,
+      1210,
+      300,
+      85
+    ],
+    "trim": [
+      21,
+      14
+    ],
+    "padding": 4,
+    "origin": [
+      117,
+      1220
+    ],
+    "transparentPixels": 13343,
+    "partialAlphaPixels": 3051,
+    "sha256": "cd003caf3be29a06114cc7df1932fb1b727bd1e86753ef411835daded8d714e9",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Graphics-description",
+    "file": "10-service-states/graphics-description.png",
+    "width": 317,
+    "height": 34,
+    "sourceRect": [
+      70,
+      1300,
+      355,
+      40
+    ],
+    "trim": [
+      13,
+      7
+    ],
+    "padding": 4,
+    "origin": [
+      79,
+      1303
+    ],
+    "transparentPixels": 7765,
+    "partialAlphaPixels": 2126,
+    "sha256": "87062fcb25aa61590892954a85e0875b2f021f3d6cf55ba0b7155d659a3f181f",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Button-retry-graphics",
+    "file": "10-service-states/button-retry-graphics.png",
+    "width": 353,
+    "height": 87,
+    "sourceRect": [
+      50,
+      1345,
+      365,
+      100
+    ],
+    "trim": [
+      12,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      58,
+      1351
+    ],
+    "transparentPixels": 4200,
+    "partialAlphaPixels": 844,
+    "sha256": "1b9b622a854fbd081f7229f3af75ea7d396de795baca8d559fc2ab0a25b64fb7",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Undo-tip",
+    "file": "10-service-states/undo-tip.png",
+    "width": 323,
+    "height": 135,
+    "sourceRect": [
+      550,
+      900,
+      360,
+      160
+    ],
+    "trim": [
+      10,
+      9
+    ],
+    "padding": 4,
+    "origin": [
+      556,
+      905
+    ],
+    "transparentPixels": 9751,
+    "partialAlphaPixels": 880,
+    "sha256": "4066beaccc09ccc65d08289aaa2e38088dfc5843d142afb79b2a749b038e9a57",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Stuck-board",
+    "file": "10-service-states/stuck-board.png",
+    "width": 418,
+    "height": 390,
+    "sourceRect": [
+      480,
+      1025,
+      450,
+      405
+    ],
+    "trim": [
+      14,
+      13
+    ],
+    "padding": 4,
+    "origin": [
+      490,
+      1034
+    ],
+    "transparentPixels": 54279,
+    "partialAlphaPixels": 2196,
+    "sha256": "cd5f6625380dfdf4c6443d245d28e5650d18effe9e63bb40940ee31058d25b0d",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Button-undo",
+    "file": "10-service-states/button-undo.png",
+    "width": 342,
+    "height": 88,
+    "sourceRect": [
+      525,
+      1430,
+      365,
+      100
+    ],
+    "trim": [
+      21,
+      8
+    ],
+    "padding": 4,
+    "origin": [
+      542,
+      1434
+    ],
+    "transparentPixels": 4094,
+    "partialAlphaPixels": 824,
+    "sha256": "454650f73daacef694f6d7f3ab614071422c4d34dfd6bc1385c24a577a8bb259",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "10-service-states",
+    "name": "Button-restart",
+    "file": "10-service-states/button-restart.png",
+    "width": 337,
+    "height": 74,
+    "sourceRect": [
+      525,
+      1518,
+      365,
+      100
+    ],
+    "trim": [
+      24,
+      10
+    ],
+    "padding": 4,
+    "origin": [
+      545,
+      1524
+    ],
+    "transparentPixels": 3833,
+    "partialAlphaPixels": 786,
+    "sha256": "57e088711a0f5ec73b2f65aad4c3d366149db6dd52de25859b117e2c574980ab",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "panels",
+    "name": "panel-confirmation",
+    "file": "panels/panel-confirmation.png",
+    "width": 1175,
+    "height": 972,
+    "padding": 8,
+    "transparentPixels": 50028,
+    "partialAlphaPixels": 10752,
+    "sha256": "ea18673920664e1cd4899b853295f87b63a2f8df6ffbf1245c1fd6bb2dcdf1b0",
+    "source": "built-in image_gen reconstruction of blank panel; not pixel-identical extraction",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "panels",
+    "name": "panel-levels",
+    "file": "panels/panel-levels.png",
+    "width": 1009,
+    "height": 1417,
+    "padding": 8,
+    "transparentPixels": 52970,
+    "partialAlphaPixels": 12340,
+    "sha256": "2b395beaf20e42e4587eefe463f7bd8ca738ae4032bda3236ea12ad8d2b12906",
+    "source": "built-in image_gen reconstruction of blank panel; not pixel-identical extraction",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "panels",
+    "name": "panel-settings",
+    "file": "panels/panel-settings.png",
+    "width": 876,
+    "height": 1464,
+    "padding": 8,
+    "transparentPixels": 45539,
+    "partialAlphaPixels": 12415,
+    "sha256": "1a3415ade033ab1cd39cfead3627c5774f8f9b0a55c4ddd863f1ed07662d3760",
+    "source": "built-in image_gen reconstruction of blank panel; not pixel-identical extraction",
+    "status": "alpha-reviewed"
+  },
+  {
+    "screen": "panels",
+    "name": "panel-storage",
+    "file": "panels/panel-storage.png",
+    "width": 831,
+    "height": 1398,
+    "padding": 8,
+    "transparentPixels": 41117,
+    "partialAlphaPixels": 11034,
+    "sha256": "2b6200d8fd4e7708fbed93d66b7825f86a7d69a44556062543e55a62ca82639e",
+    "source": "built-in image_gen reconstruction of blank panel; not pixel-identical extraction",
+    "status": "alpha-reviewed"
+  }
+]

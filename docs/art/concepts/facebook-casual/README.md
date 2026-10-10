@@ -4,7 +4,7 @@
 
 [Галерея всех изображений](index.html). Полный набор использованных промптов: [prompts.json](prompts.json). Для каждого изображения промпт составляется как `base + screens[i].prompt`.
 
-[Документ Figma с отдельными изображениями элементов](https://www.figma.com/design/3qmmWSoZLpWIZjPDIZHSsZ?node-id=5-2). Описание структуры, ограничений и повторного импорта: [FIGMA.md](FIGMA.md).
+[Документ Figma с прозрачными элементами](https://www.figma.com/design/3qmmWSoZLpWIZjPDIZHSsZ?node-id=13-83). [Каталог 150 самостоятельных PNG RGBA](../../../../assets/ui/facebook-casual/index.html). Прежняя прямоугольная нарезка заменена вырезанными по контуру элементами; структура, проверка экспорта и повторный импорт описаны в [FIGMA.md](FIGMA.md).
 
 | Файл | Экран |
 | --- | --- |

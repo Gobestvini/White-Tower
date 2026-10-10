@@ -1,0 +1,79 @@
+[
+  {
+    "group": "01-gameplay",
+    "file": "01-gameplay-alpha-assets.svg",
+    "width": 2805,
+    "height": 3165,
+    "assets": 8
+  },
+  {
+    "group": "02-tutorial",
+    "file": "02-tutorial-alpha-assets.svg",
+    "width": 2028,
+    "height": 1086,
+    "assets": 6
+  },
+  {
+    "group": "03-hint",
+    "file": "03-hint-alpha-assets.svg",
+    "width": 2652,
+    "height": 2658,
+    "assets": 9
+  },
+  {
+    "group": "04-levels",
+    "file": "04-levels-alpha-assets.svg",
+    "width": 2172,
+    "height": 3380,
+    "assets": 37
+  },
+  {
+    "group": "05-settings",
+    "file": "05-settings-alpha-assets.svg",
+    "width": 2031,
+    "height": 2160,
+    "assets": 25
+  },
+  {
+    "group": "06-victory",
+    "file": "06-victory-alpha-assets.svg",
+    "width": 2760,
+    "height": 1662,
+    "assets": 6
+  },
+  {
+    "group": "07-campaign-complete",
+    "file": "07-campaign-complete-alpha-assets.svg",
+    "width": 2628,
+    "height": 1652,
+    "assets": 6
+  },
+  {
+    "group": "08-reset-confirmation",
+    "file": "08-reset-confirmation-alpha-assets.svg",
+    "width": 1701,
+    "height": 756,
+    "assets": 7
+  },
+  {
+    "group": "09-storage-recovery",
+    "file": "09-storage-recovery-alpha-assets.svg",
+    "width": 2127,
+    "height": 2160,
+    "assets": 26
+  },
+  {
+    "group": "10-service-states",
+    "file": "10-service-states-alpha-assets.svg",
+    "width": 1374,
+    "height": 2580,
+    "assets": 16
+  },
+  {
+    "group": "panels",
+    "file": "panels-alpha-assets.svg",
+    "width": 2430,
+    "height": 3008,
+    "assets": 4
+  }
+]
