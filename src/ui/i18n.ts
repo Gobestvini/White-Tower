@@ -4,6 +4,9 @@ export type UserSettings = Readonly<{ language: Language; reducedMotion: boolean
 
 const messages = {
   en: {
+    'service.loading': 'Loading level…', 'service.contentError': 'Could not load White Tower content. Check the connection and retry.',
+    'service.graphicsError': 'Graphics could not start. Try another browser or reload.', 'service.nextError': 'Could not load the next level. Try again.',
+    'service.notReady': 'Next level is not ready.', 'service.moreLevels': 'More levels are coming soon.',
     settings: 'Settings', back: 'BACK TO GAME', levels: 'Choose level', backSettings: 'BACK TO SETTINGS', hint: 'Hint',
     reducedMotion: 'Reduce motion', language: 'Language', renderer: 'Graphics mode', auto: 'Automatic', webgl: 'WebGL', canvas: 'Canvas 2D',
     highContrast: 'High contrast',
@@ -16,6 +19,9 @@ const messages = {
     'a11y.selection': 'Selected stack {index} of {count}.', 'a11y.move': 'Move started.', 'a11y.undo': 'Move undone.', 'a11y.restart': 'Level restarted.', 'a11y.menu': 'Settings opened. Press Escape to return to the game.',
   },
   ru: {
+    'service.loading': 'Загрузка уровня…', 'service.contentError': 'Не удалось загрузить игру. Проверьте соединение и повторите попытку.',
+    'service.graphicsError': 'Не удалось запустить графику. Попробуйте другой браузер или повторите загрузку.', 'service.nextError': 'Не удалось загрузить следующий уровень. Повторите попытку.',
+    'service.notReady': 'Следующий уровень ещё не готов.', 'service.moreLevels': 'Новые уровни скоро появятся.',
     settings: 'Настройки', back: 'ВЕРНУТЬСЯ В ИГРУ', levels: 'Выбор уровня', backSettings: 'К НАСТРОЙКАМ', hint: 'Подсказка',
     reducedMotion: 'Уменьшить движение', language: 'Язык', renderer: 'Режим графики', auto: 'Автоматически', webgl: 'WebGL', canvas: 'Canvas 2D',
     highContrast: 'Высокая контрастность',

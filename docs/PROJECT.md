@@ -10,6 +10,7 @@
 | src/scene.js / createScene | Связывает controller, проигрыватель временных поз и renderer; не владеет правилами |
 | src/presentation/animation.ts, timings.ts | Кадрово-независимый маршрут движения, слияния, поворота и остановки; пауза/отмена, без изменения committed state |
 | index.html, src/style.css | Оболочка приложения и адаптивная сцена |
+| src/casual.css, src/ui/art.ts, service-screen.ts | Оформление десяти концептов: прозрачные PNG, чистые фоны, живые DOM-контролы, загрузка и ошибки; геометрия поля остаётся интерактивной |
 | tsconfig.json | Строгая проверка TypeScript runtime, тестов и инструментов |
 | src/game/ | Правила, модель уровня, симулятор, поиск решения, контроллер и сервис доказанных подсказок |
 | src/audio/audio.ts, events.ts | Gesture-gated Web Audio, тихие синтезированные эффекты, volume/voice limits, hidden/dispose lifecycle |

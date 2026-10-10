@@ -54,10 +54,10 @@ function createMaterials() {
 }
 
 export function createWebGLRenderer(canvas: HTMLCanvasElement): WhiteTowerRenderer {
-  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = NoToneMapping;
-  renderer.setClearColor(WHITE_TOWER_COLORS.background, 1);
+  renderer.setClearColor(WHITE_TOWER_COLORS.background, 0);
   renderer.autoClear = false;
 
   const scene = new Scene();

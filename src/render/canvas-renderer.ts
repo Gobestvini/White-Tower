@@ -140,8 +140,6 @@ export function createCanvasRenderer(canvas: HTMLCanvasElement): WhiteTowerRende
     const offsetY = (viewport.height - ARTBOARD.height * scale) / 2;
     context.setTransform(viewport.pixelRatio, 0, 0, viewport.pixelRatio, 0, 0);
     context.clearRect(0, 0, viewport.width, viewport.height);
-    context.fillStyle = WHITE_TOWER_COLORS.background;
-    context.fillRect(0, 0, viewport.width, viewport.height);
     context.setTransform(viewport.pixelRatio * scale, 0, 0, viewport.pixelRatio * scale, viewport.pixelRatio * offsetX, viewport.pixelRatio * offsetY);
     if (!view) return;
     context.translate(0, ARTBOARD.height / 2);

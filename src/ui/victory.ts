@@ -1,5 +1,6 @@
 import type { GameSnapshot } from '../game/controller.js';
 import { t, type Language } from './i18n.js';
+import { artImage } from './art.js';
 
 export function createVictoryOverlay(root: HTMLElement, actions: { undo(): void; next(): void; chooseLevels(): void }) {
   const layer = document.createElement('section');
@@ -10,6 +11,7 @@ export function createVictoryOverlay(root: HTMLElement, actions: { undo(): void;
     <div class="victory-ribbon" aria-live="polite"><span>LEVEL</span><span>COMPLETED!</span></div>
     <p class="campaign-end" role="status"></p>`;
   root.append(layer);
+  layer.append(artImage('campaignTower', 'campaign-tower'));
   const nextButton = document.createElement('button');
   nextButton.type = 'button';
   nextButton.className = 'next-button';
@@ -46,19 +48,25 @@ export function createVictoryOverlay(root: HTMLElement, actions: { undo(): void;
       if (elapsed >= 0.3) shown = true;
     }
     const visible = snapshot.phase === 'Won' && shown;
+    root.parentElement?.classList.toggle('is-campaign-complete', visible && campaignComplete);
+    layer.classList.toggle('is-campaign-complete', campaignComplete);
+    layer.classList.toggle('has-load-error', !!campaignMessage);
     layer.lang = language;
-    nextButton.setAttribute('aria-label', language === 'ru' ? 'Следующий уровень' : 'Next level');
+    layer.setAttribute('aria-label', campaignComplete ? (language === 'ru' ? 'Кампания пройдена' : 'Campaign complete') : (language === 'ru' ? 'Уровень пройден' : 'Level completed'));
+    nextButton.setAttribute('aria-label', campaignMessage ? t(language, 'action.retry') : language === 'ru' ? 'Следующий уровень' : 'Next level');
     chooseButton.setAttribute('aria-label', t(language, 'chooseLevel'));
     undoButton.setAttribute('aria-label', language === 'ru' ? 'Отменить последний ход' : 'Undo last move');
     layer.querySelector('.victory-ribbon span')!.textContent = language === 'en' ? 'LEVEL' : 'УРОВЕНЬ';
-    layer.querySelector('.victory-ribbon span:last-child')!.textContent = t(language, 'win');
-    nextButton.querySelector('span')!.textContent = nextPending ? '…' : t(language, 'next');
+    layer.querySelector('.victory-ribbon span:last-child')!.textContent = campaignComplete ? (language === 'ru' ? 'Кампания пройдена!' : 'Campaign complete!') : t(language, 'win');
+    nextButton.querySelector('span')!.textContent = nextPending ? '…' : campaignMessage ? t(language, 'action.retry') : t(language, 'next');
+    nextButton.classList.toggle('has-load-error', !!campaignMessage);
     chooseButton.textContent = t(language, 'chooseLevel');
     undoButton.querySelector('span')!.textContent = t(language, 'undo');
     layer.classList.toggle('is-visible', visible);
     layer.setAttribute('aria-hidden', String(!visible));
     nextButton.hidden = !visible;
-    chooseButton.hidden = !visible || !campaignComplete;
+    chooseButton.hidden = !visible || (!campaignComplete && !campaignMessage);
+    chooseButton.classList.toggle('error-choose', !campaignComplete && !!campaignMessage);
     nextButton.hidden = !visible || campaignComplete;
     undoButton.hidden = !visible;
     nextButton.disabled = nextPending || snapshot.phase !== 'Won';
@@ -70,7 +78,7 @@ export function createVictoryOverlay(root: HTMLElement, actions: { undo(): void;
     undoButton.removeEventListener('click', actions.undo);
     nextButton.removeEventListener('click', actions.next);
     chooseButton.removeEventListener('click', actions.chooseLevels);
-    layer.remove(); chooseButton.remove();
+    layer.remove(); chooseButton.remove(); nextButton.remove();
     undoButton.remove();
   }
   return Object.freeze({ update, setLanguage(value: Language) { language = value; }, dispose });

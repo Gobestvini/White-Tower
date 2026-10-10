@@ -7,7 +7,7 @@ import { createProjection, worldToScreen } from './render/projection.ts';
 import { createAnimationPlayer } from './presentation/animation.ts';
 import { createStore } from './storage/store.ts';
 import { validateGameSave, createGameSave, migrateGameSave } from './storage/save-schema.ts';
-import { parseSettings } from './ui/i18n.ts';
+import { parseSettings, t } from './ui/i18n.ts';
 import { createSolverClient } from './game/solver-client.ts';
 import { createHintService } from './game/hint-service.ts';
 
@@ -249,17 +249,17 @@ export function createScene(canvas, rendererMode = 'auto', options = {}) {
 
   async function nextLevel() {
     const snapshot = controller.snapshot();
-    if (disposed || snapshot.phase !== 'Won' || nextPending) return { advanced: false, message: 'Next level is not ready.' };
+    if (disposed || snapshot.phase !== 'Won' || nextPending) return { advanced: false, message: t(settings.language, 'service.notReady') };
     const currentIndex = catalog?.levels.findIndex(entry => entry.id === snapshot.level?.id) ?? -1;
     const next = catalog?.levels[currentIndex + 1];
-    if (!next) return { advanced: false, message: 'More levels are coming soon.' };
+    if (!next) return { advanced: false, message: t(settings.language, 'service.moreLevels') };
     nextPending = true;
     try {
       await pendingSave;
       await setLevelById(next.id);
       return { advanced: true };
     } catch {
-      return { advanced: false, message: 'Could not load the next level. Try again.' };
+      return { advanced: false, message: t(settings.language, 'service.nextError') };
     } finally { nextPending = false; }
   }
 

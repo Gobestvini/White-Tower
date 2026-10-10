@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'white-tower-';
-const CACHE_NAME = `${CACHE_PREFIX}1.1.0`;
+const CACHE_NAME = `${CACHE_PREFIX}1.2.0-casual`;
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -11,7 +11,11 @@ self.addEventListener('install', event => {
     const assets = [...shell.matchAll(/(?:src|href)="(\/assets\/[^\"]+)"/g)].map(match => match[1]);
     const cache = await caches.open(CACHE_NAME);
     try {
-      await cache.addAll(['/','/index.html','/manifest.webmanifest','/white-tower.svg','/content/catalog.json',...assets,...catalog.levels.map(level=>level.path)]);
+      const artResponse = await fetch('/art-assets.json', { cache: 'no-store' });
+      if (!artResponse.ok) throw new Error('UI asset manifest could not be fetched.');
+      const art = await artResponse.json();
+      if (!Array.isArray(art) || art.some(file => typeof file !== 'string' || !file.startsWith('/assets/'))) throw new Error('UI asset manifest is invalid.');
+      await cache.addAll(['/','/index.html','/manifest.webmanifest','/white-tower.svg','/content/catalog.json','/art-assets.json',...art,...assets,...catalog.levels.map(level=>level.path)]);
     } catch (error) {
       await caches.delete(CACHE_NAME);
       throw error;

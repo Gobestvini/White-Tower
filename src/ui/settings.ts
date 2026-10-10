@@ -1,5 +1,6 @@
 import { createLevelSelect, type LevelChoice } from './level-select.js';
 import { t, type Language, type UserSettings } from './i18n.js';
+import { artImage } from './art.js';
 
 type SettingsView = Readonly<{
   settings: UserSettings; choices: readonly LevelChoice[]; unlockedLevel: number; completed: readonly string[];
@@ -47,21 +48,35 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   const clearButton = document.createElement('button'); clearButton.type = 'button'; clearButton.className = 'menu-danger';
   const closeButton = document.createElement('button'); closeButton.type = 'button'; closeButton.className = 'settings-close';
   const confirmPane = document.createElement('div'); confirmPane.className = 'clear-confirmation'; confirmPane.hidden = true;
+  confirmPane.setAttribute('role', 'alertdialog'); confirmPane.setAttribute('aria-modal', 'true'); confirmPane.setAttribute('aria-labelledby', 'clear-confirmation-title'); confirmPane.setAttribute('aria-describedby', 'clear-confirmation-description');
   const confirmText = document.createElement('p'); const confirmButton = document.createElement('button'); confirmButton.type = 'button'; confirmButton.className = 'menu-danger';
   const cancelButton = document.createElement('button'); cancelButton.type = 'button'; cancelButton.className = 'menu-secondary';
-  confirmPane.append(confirmText, confirmButton, cancelButton);
-  controls.append(languageLabel, motionLabel, contrastLabel, soundLabel, volumeLabel, rendererLabel, levelButton, hintButton, exportButton, importButton, importInput, audioNote, clearButton, closeButton);
+  const confirmTitle = document.createElement('h3'); confirmTitle.className = 'confirm-title';
+  confirmTitle.id = 'clear-confirmation-title'; confirmText.id = 'clear-confirmation-description';
+  confirmPane.append(artImage('reset', 'confirm-icon'), confirmTitle, confirmText, cancelButton, confirmButton);
+  languageLabel.classList.add('setting-language'); soundLabel.classList.add('setting-sound'); volumeLabel.classList.add('setting-volume');
+  motionLabel.classList.add('setting-motion'); contrastLabel.classList.add('setting-contrast'); rendererLabel.classList.add('setting-renderer');
+  levelButton.classList.add('settings-levels'); hintButton.classList.add('settings-hint');
+  exportButton.classList.add('settings-export'); importButton.classList.add('settings-import');
+  controls.append(languageLabel, soundLabel, volumeLabel, motionLabel, contrastLabel, rendererLabel, levelButton, hintButton, exportButton, importButton, importInput, audioNote, clearButton, closeButton);
   settingsPage.append(title, status, controls, confirmPane);
   const levelPage = document.createElement('div'); levelPage.className = 'level-select-page'; levelPage.hidden = true;
   card.append(settingsPage, levelPage); panel.append(card); root.append(panel);
-  const levelSelect = createLevelSelect(levelPage, { select: actions.selectLevel, back() { panel.setAttribute('aria-labelledby', 'settings-title'); levelPage.hidden = true; settingsPage.hidden = false; closeButton.focus(); } });
+  panel.prepend(artImage('logo', 'menu-logo'));
+  panel.dataset.page = 'settings';
+  const storageIcon = artImage('storage', 'storage-icon'); status.before(storageIcon);
+  const levelSelect = createLevelSelect(levelPage, { select: actions.selectLevel, back() { panel.dataset.page = 'settings'; panel.setAttribute('aria-labelledby', 'settings-title'); levelPage.hidden = true; settingsPage.hidden = false; closeButton.focus(); } });
   let view: SettingsView | undefined;
-  function focusable(): HTMLElement[] { return [...panel.querySelectorAll<HTMLElement>('button:not([disabled]):not([hidden]), select:not([disabled]):not([hidden]), input:not([disabled]):not([hidden])')].filter(el => el.offsetParent !== null); }
+  function focusable(): HTMLElement[] { return [...panel.querySelectorAll<HTMLElement>('button:not([disabled]):not([hidden]), select:not([disabled]):not([hidden]), input:not([disabled]):not([hidden])')].filter(el => el.offsetParent !== null && !el.closest('[inert]')); }
+  function showConfirmation(visible: boolean): void {
+    confirmPane.hidden = !visible; controls.inert = visible; clearButton.hidden = visible;
+    panel.classList.toggle('is-confirming', visible);
+  }
   function onKeydown(event: KeyboardEvent): void {
     if (!panel.classList.contains('is-visible')) return;
     if (event.key === 'Escape') {
       event.preventDefault(); event.stopPropagation();
-      if (!confirmPane.hidden) { confirmPane.hidden = true; clearButton.hidden = false; clearButton.focus(); }
+      if (!confirmPane.hidden) { showConfirmation(false); clearButton.focus(); }
       else actions.close();
       return;
     }
@@ -74,6 +89,10 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   function update(input: SettingsView): void {
     view = input; const { settings } = input; const language = settings.language;
     panel.lang = language; panel.dir = 'ltr'; title.textContent = t(language, 'settings'); languageName.textContent = t(language, 'language');
+    panel.classList.toggle('has-storage-notice', input.memoryOnly || !!input.recoveryNotice);
+    panel.classList.toggle('is-confirming', !confirmPane.hidden);
+    confirmTitle.textContent = language === 'ru' ? 'Сбросить прогресс?' : 'Clear progress?';
+    storageIcon.hidden = !input.memoryOnly && !input.recoveryNotice;
     motionName.textContent = t(language, 'reducedMotion'); contrastName.textContent = t(language, 'highContrast'); rendererName.textContent = t(language, 'renderer');
     rendererSelect.options[0]!.textContent = t(language, 'auto'); rendererSelect.options[1]!.textContent = t(language, 'webgl'); rendererSelect.options[2]!.textContent = t(language, 'canvas');
     languageSelect.value = settings.language; motionInput.checked = settings.reducedMotion; contrastInput.checked = settings.highContrast;
@@ -111,7 +130,7 @@ export function createSettingsDialog(root: HTMLElement, actions: {
   volumeInput.addEventListener('input', () => { volumeValue.value = `${Math.round(Number(volumeInput.value) * 100)}%`; });
   volumeInput.addEventListener('change', () => changeSettings({ soundVolume: Number(volumeInput.value) }));
   rendererSelect.addEventListener('change', () => changeSettings({ rendererMode: rendererSelect.value as UserSettings['rendererMode'] }));
-  levelButton.addEventListener('click', () => { settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); });
+  levelButton.addEventListener('click', () => { panel.dataset.page = 'levels'; panel.setAttribute('aria-labelledby', 'level-select-title'); settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); });
   hintButton.addEventListener('click', actions.hint);
   exportButton.addEventListener('click', async () => {
     try {
@@ -128,14 +147,14 @@ export function createSettingsDialog(root: HTMLElement, actions: {
       transferNotice = accepted ? (view?.settings.language === 'ru' ? 'Прогресс импортирован.' : 'Progress imported.') : (view?.settings.language === 'ru' ? 'Файл не подходит или его версия не поддерживается.' : 'This save is invalid or uses an unsupported version.');
     } catch { transferNotice = view?.settings.language === 'ru' ? 'Не удалось прочитать файл прогресса.' : 'Could not read the progress file.'; }
   });
-  clearButton.addEventListener('click', () => { confirmText.textContent = t(view?.settings.language ?? 'en', 'clearQuestion'); confirmButton.textContent = t(view?.settings.language ?? 'en', 'confirmClear'); cancelButton.textContent = t(view?.settings.language ?? 'en', 'cancel'); confirmPane.hidden = false; clearButton.hidden = true; confirmButton.focus(); });
-  cancelButton.addEventListener('click', () => { confirmPane.hidden = true; clearButton.hidden = false; clearButton.focus(); });
-  confirmButton.addEventListener('click', () => { confirmPane.hidden = true; clearButton.hidden = false; actions.clearProgress(); });
+  clearButton.addEventListener('click', () => { confirmText.textContent = t(view?.settings.language ?? 'en', 'clearQuestion'); confirmButton.textContent = t(view?.settings.language ?? 'en', 'confirmClear'); cancelButton.textContent = t(view?.settings.language ?? 'en', 'cancel'); showConfirmation(true); confirmButton.focus(); });
+  cancelButton.addEventListener('click', () => { showConfirmation(false); clearButton.focus(); });
+  confirmButton.addEventListener('click', () => { showConfirmation(false); actions.clearProgress(); });
   closeButton.addEventListener('click', actions.close);
   panel.addEventListener('keydown', onKeydown);
-  function open(): void { panel.classList.add('is-visible'); panel.setAttribute('aria-hidden', 'false'); settingsPage.hidden = false; levelPage.hidden = true; confirmPane.hidden = true; closeButton.hidden = false; closeButton.focus(); }
+  function open(): void { panel.dataset.page = 'settings'; panel.setAttribute('aria-labelledby', 'settings-title'); panel.classList.add('is-visible'); panel.setAttribute('aria-hidden', 'false'); settingsPage.hidden = false; levelPage.hidden = true; showConfirmation(false); closeButton.hidden = false; languageSelect.focus(); card.scrollTop = 0; }
   function close(): void { panel.classList.remove('is-visible'); panel.setAttribute('aria-hidden', 'true'); }
-  function showLevels(): void { panel.setAttribute('aria-labelledby', 'level-select-title'); settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); }
+  function showLevels(): void { panel.dataset.page = 'levels'; panel.setAttribute('aria-labelledby', 'level-select-title'); settingsPage.hidden = true; levelPage.hidden = false; levelSelect.render(); focusable()[0]?.focus(); }
   function dispose(): void { panel.removeEventListener('keydown', onKeydown); panel.remove(); }
   return Object.freeze({ update, open, close, showLevels, dispose, isVisible: () => panel.classList.contains('is-visible') });
 }

@@ -2,6 +2,8 @@
 
 White Tower is a browser puzzle about guiding moving stacks across a tiled board. The project includes a WebGL renderer with Canvas 2D fallback, keyboard/touch controls, Undo, hints, local progress, bilingual settings, and a 120-level campaign. Campaign levels 13–120 are provisional candidates awaiting human play and readability review; see [campaign report](docs/content/campaign.md) and [manual review protocol](docs/content/level-reviews.md).
 
+The game now uses the Facebook casual concept artwork across its live HUD, tutorial, hints, settings, level selection, victory, campaign completion, reset confirmation, storage recovery and service states. Counters, levels and preferences remain dynamic. See the [integration review](docs/reviews/casual-ui.md) for scope and verification.
+
 ## Run locally
 
 Requires Node.js 22.12 or later and pnpm.

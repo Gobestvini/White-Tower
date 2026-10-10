@@ -8,6 +8,7 @@ import { createTutorialTip } from './tutorial.js';
 import type { HintView } from '../game/hint-service.js';
 import { createBoardDescription } from './accessibility.js';
 import type { Stack } from '../game/model.js';
+import { artImage } from './art.js';
 
 type HudOptions = {
   root: HTMLElement;
@@ -44,6 +45,9 @@ function makeButton(label: string, icon: string, className: string): HTMLButtonE
 
 export function createHud(options: HudOptions) {
   const { root } = options;
+  const logo = artImage('logo', 'game-logo');
+  const hint = makeButton('Hint', '<span>?</span>', 'hud-hint');
+  hint.addEventListener('click', options.onHint);
   const settings = makeButton('Settings', icons.settings, 'hud-icon settings-button');
   const restart = makeButton('Restart level', icons.restart, 'hud-icon restart-button');
   const counter = document.createElement('div');
@@ -53,7 +57,7 @@ export function createHud(options: HudOptions) {
   const level = document.createElement('div');
   level.className = 'hud-level';
   const undo = makeButton('Undo last move', icons.undo + '<span>UNDO</span>', 'hud-undo');
-  root.append(settings, restart, counter, level, undo);
+  root.append(logo, settings, restart, counter, level, undo, hint);
   const menu = createSettingsDialog(root, {
     close: options.onMenu,
     update: options.onSettings,
@@ -78,6 +82,7 @@ export function createHud(options: HudOptions) {
   let nextPending = false;
   let campaignMessage = '';
   let countText = '';
+  let counterLanguage = '';
   let levelText = '';
 
   async function runNext(): Promise<void> {
@@ -86,9 +91,9 @@ export function createHud(options: HudOptions) {
     campaignMessage = '';
     try {
       const result = await options.onNext();
-      if (!result.advanced) campaignMessage = result.message ?? 'More levels are coming soon.';
+      if (!result.advanced) campaignMessage = result.message ?? t(options.getSettings().language, 'service.moreLevels');
     } catch {
-      campaignMessage = 'Could not load the next level. Try again.';
+      campaignMessage = t(options.getSettings().language, 'service.nextError');
     } finally { nextPending = false; }
   }
   const openMenu = () => { settings.focus(); options.onMenu(); };
@@ -106,11 +111,16 @@ export function createHud(options: HudOptions) {
     const currentCount = highest < 2 ? 0 : highest;
     const nextCount = `${currentCount}/${snapshot.level?.totalTiles ?? 0}`;
     const language = snapshot.settings?.language ?? options.getSettings().language;
+    root.lang = language;
+    root.parentElement!.dataset.screen = wonScreen(snapshot);
+    hint.textContent = t(language, 'hint'); hint.setAttribute('aria-label', t(language, 'hint'));
+    hint.disabled = snapshot.phase !== 'Idle';
+    hint.hidden = snapshot.phase === 'Won' || inMenu;
     settings.setAttribute('aria-label', language === 'ru' ? 'Настройки' : 'Settings');
     restart.setAttribute('aria-label', language === 'ru' ? 'Перезапустить уровень' : 'Restart level');
     undo.setAttribute('aria-label', language === 'ru' ? 'Отменить ход' : 'Undo last move');
     const nextLevel = snapshot.level ? `${language === 'ru' ? 'Ур.' : 'Lv.'}${snapshot.levelNumber ?? 1}` : (language === 'ru' ? 'Ур.' : 'Lv.');
-    if (countText !== nextCount) { countText = nextCount; counter.textContent = nextCount; counter.setAttribute('aria-label', language === 'ru' ? `Собрано ${currentCount} из ${snapshot.level?.totalTiles ?? 0} плиток` : `${currentCount} of ${snapshot.level?.totalTiles ?? 0} tiles gathered`); }
+    if (countText !== nextCount || counterLanguage !== language) { counterLanguage = language; countText = nextCount; counter.textContent = nextCount; counter.setAttribute('aria-label', language === 'ru' ? `Собрано ${currentCount} из ${snapshot.level?.totalTiles ?? 0} плиток` : `${currentCount} of ${snapshot.level?.totalTiles ?? 0} tiles gathered`); }
     if (levelText !== nextLevel) { levelText = nextLevel; level.textContent = nextLevel; }
     const won = snapshot.phase === 'Won';
     root.parentElement?.classList.toggle('is-won', won);
@@ -151,7 +161,15 @@ export function createHud(options: HudOptions) {
     restart.removeEventListener('click', options.onReset);
     undo.removeEventListener('click', options.onUndo);
     victory.dispose(); menu.dispose(); hintToast.dispose(); tutorialTip.dispose(); boardDescription.dispose();
-    settings.remove(); restart.remove(); counter.remove(); level.remove(); undo.remove();
+    hint.removeEventListener('click', options.onHint);
+    settings.remove(); restart.remove(); counter.remove(); level.remove(); undo.remove(); hint.remove(); logo.remove();
   }
   return Object.freeze({ update, dispose });
+}
+
+function wonScreen(snapshot: HudSnapshot): string {
+  if (snapshot.phase === 'Won') return snapshot.levelNumber === snapshot.levelCount ? 'campaign' : 'victory';
+  if (snapshot.tutorialVisible) return 'tutorial';
+  if (snapshot.hintView?.kind === 'move') return 'hint';
+  return 'gameplay';
 }

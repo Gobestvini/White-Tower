@@ -1,4 +1,5 @@
 import './style.css';
+import './casual.css';
 import { createStepper } from './loop.js';
 import { createInput } from './input.js';
 import { createPointerInput } from './input/pointer.ts';
@@ -7,6 +8,7 @@ import { createScene } from './scene.js';
 import { createHud } from './ui/hud.ts';
 import { keyboardAnnouncement } from './ui/accessibility.ts';
 import { createAudio } from './audio/audio.ts';
+import { createServiceScreen } from './ui/service-screen.ts';
 
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -20,6 +22,7 @@ let canvas = document.querySelector('canvas');
 const status = document.querySelector('#status');
 const input = createInput();
 const audio = createAudio();
+const serviceScreen = createServiceScreen(document.querySelector('main'));
 let scene;
 try {
   const initialRendererMode = import.meta.env.DEV ? new URLSearchParams(window.location.search).get('renderer') ?? 'auto' : 'auto';
@@ -100,6 +103,7 @@ function tick(now) {
   let alpha = 0;
   if (!paused && !document.hidden) alpha = stepper.advance(delta, dt => scene.update(dt, input)).alpha;
   hud.update(scene.snapshot(), scene.presentationSnapshot(), !paused && !document.hidden ? Math.min(delta, 0.1) : 0);
+  serviceScreen.update(scene.snapshot().loaded, scene.rendererInfo().supported, scene.snapshot().settings.language);
   const persistence = scene.persistenceInfo();
   if (persistence.memoryOnly) status.textContent = scene.snapshot().settings.language === 'ru' ? 'Прогресс временный: хранилище браузера недоступно.' : 'Progress is temporary because browser storage is unavailable.';
   else if (persistence.recoveryNotice) status.textContent = persistence.recoveryNotice;
@@ -140,12 +144,12 @@ scene.ready.then(async () => {
   status.textContent = scene.rendererInfo().message ?? (scene.rendererInfo().mode === '2d' ? 'Упрощённый графический режим.' : 'Готово');
 }).catch(error => {
   status.textContent = error instanceof Error ? `Ошибка уровня: ${error.message}` : 'Не удалось загрузить уровень.';
-  document.querySelector('#load-error').hidden = false;
+  serviceScreen.fail();
 });
 function dispose() {
   disposed = true;
   cancelAnimationFrame(frame);
-  input.dispose(); pointerInput?.dispose(); gameActions.dispose(); hud.dispose(); scene.dispose();
+  input.dispose(); pointerInput?.dispose(); gameActions.dispose(); hud.dispose(); serviceScreen.dispose(); scene.dispose();
   document.removeEventListener('pointerdown', unlockAudio, true); document.removeEventListener('keydown', unlockAudio, true); void audio.dispose();
   window.removeEventListener('resize', resize);
   document.removeEventListener('visibilitychange', visibility);

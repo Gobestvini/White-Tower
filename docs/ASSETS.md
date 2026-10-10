@@ -1,5 +1,15 @@
 # Runtime asset register
 
+## Casual UI integration · 10 October 2026
+
+The runtime uses selected individual PNGs and reconstructed JPEG scenery from `assets/ui/facebook-casual/`, created with the built-in image_gen for this project at the user's request. Provenance, prompts, source rectangles and SHA-256 values are recorded in that directory's manifest and `docs/art/concepts/facebook-casual/`. No complete mockup is shipped as a screen texture.
+
+`src/casual.css` owns UI textures; `src/ui/art.ts` owns decorative DOM images. Vite emits hashed files referenced by CSS or static URL imports. Thirty-four artwork files total 8,372,400 bytes in the production build; this is the entire artwork set, not a measured first-load transfer. Hidden decorative images use lazy loading. `art-assets.json` lists emitted images for the service worker's offline installation, including screens not opened yet. Browser caching owns image lifetimes; no new GPU texture owners are added.
+
+Russian button artwork retains baked labels; English and high-contrast controls use live DOM text and CSS surfaces. Numbers, campaign completion, locks, selection, preferences, translations, errors and hints come from current game state. Empty panel images are scaled to responsive containers. Gameplay and normal victory show the live projected board; the completed-campaign island is decorative. Backgrounds and reconstructed surfaces differ from the original concepts. Full source PNGs remain available for lossless reuse.
+
+## Earlier implementation assets
+
 | Asset | Source / generator | Version | Use | Runtime owner / release |
 | --- | --- | --- | --- | --- |
 | White tile top, bevel band, and side faces | Procedural BufferGeometry in `src/render/geometry.ts`; no external source or export | App source, TASK-0008 | One top and two exposed faces per tile layer; shared geometry/material instances | `src/render/webgl-renderer.ts`; disposed once with renderer |
