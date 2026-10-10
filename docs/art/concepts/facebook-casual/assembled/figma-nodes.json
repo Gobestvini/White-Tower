@@ -1,0 +1,82 @@
+[
+  {
+    "screen": "01-gameplay",
+    "nodeId": "17:38",
+    "x": 10000,
+    "y": 0.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "02-tutorial",
+    "nodeId": "17:2",
+    "x": 11100,
+    "y": 0.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "03-hint",
+    "nodeId": "17:17",
+    "x": 12200,
+    "y": 0.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "04-levels",
+    "nodeId": "17:201",
+    "x": 13300,
+    "y": 0.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "05-settings",
+    "nodeId": "17:280",
+    "x": 14400,
+    "y": 0.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "06-victory",
+    "nodeId": "17:147",
+    "x": 10000,
+    "y": 1872.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "07-campaign-complete",
+    "nodeId": "17:57",
+    "x": 11100,
+    "y": 1872.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "nodeId": "17:353",
+    "x": 12200,
+    "y": 1872.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "09-storage-recovery",
+    "nodeId": "17:72",
+    "x": 13300,
+    "y": 1872.0,
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "screen": "10-service-states",
+    "nodeId": "17:162",
+    "x": 14400,
+    "y": 1872.0,
+    "width": 941,
+    "height": 1672
+  }
+]

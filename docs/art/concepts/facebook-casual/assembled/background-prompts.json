@@ -1,0 +1,56 @@
+{
+  "generator": "built-in image_gen",
+  "transparent_background": false,
+  "items": [
+    {
+      "name": "01-gameplay",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the central foreground floating game board, its rocky island, yellow tiles, white stacks and orange arrows completely. Remove logo, counters and all buttons. Preserve only the distant peripheral islands, trees, clouds and blue sky; reconstruct empty sky behind the central board. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../01-gameplay.png"
+    },
+    {
+      "name": "02-tutorial",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the four foreground white tile stacks, glowing arrow and pointing hand. Remove all UI, counters, tutorial plaque and buttons. Preserve the peripheral ivory arches, trees, floating ruins and blue sky. Reconstruct clean empty sky through the center. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../02-tutorial.png"
+    },
+    {
+      "name": "03-hint",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the entire central yellow game board and white stacks, arrows and cyan hint glow. Remove all UI, logo, counters, speech bubble and buttons. Preserve only distant peripheral islands, clouds, trees and sky. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../03-hint.png"
+    },
+    {
+      "name": "04-levels",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the complete large level-selection panel, all numbered buttons and pagination, logo, isolated white stack at upper right and settings button. Preserve only distant islands and blue sky at the edges. Reconstruct sky behind the removed panel, entirely free of UI. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../04-levels.png"
+    },
+    {
+      "name": "05-settings",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the entire large settings panel, title plaque and every icon, text and button on that panel. Preserve the blurred decorative game board, towers, islands, clouds and blue background behind it, including the muted blue lighting. Reconstruct the hidden decorative game board naturally. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../05-settings.png"
+    },
+    {
+      "name": "06-victory",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the central foreground white victory tower AND yellow/white game board. Remove logo, green victory ribbon, level label and both buttons. Preserve gold confetti and distant peripheral islands, blue sky and clouds. Reconstruct clean open blue sky behind the removed foreground tower and UI. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../06-victory.png"
+    },
+    {
+      "name": "07-campaign-complete",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the tall central white tower AND its foreground yellow-tiled island. Remove logo, campaign-complete banner, completion label and both buttons. Preserve confetti, golden radiant light, distant islands and blue sky/clouds. Reconstruct empty luminous sky behind the tower. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../07-campaign-complete.png"
+    },
+    {
+      "name": "08-reset-confirmation",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove BOTH settings and reset-confirmation dialogs completely, their frames, rows, controls, all text, logos, icons and buttons. Preserve only the decorative world behind them: the yellow/white game board at upper right, distant white pillars, trees, clouds and blue sky. Reconstruct scenery hidden behind panels; no settings UI may remain. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../08-reset-confirmation.png"
+    },
+    {
+      "name": "09-storage-recovery",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Remove the entire tall settings/storage recovery panel, its header, warnings, rows, labels, controls and green button; also remove the top-left logo. Preserve the muted decorative yellow/white puzzle board behind the panel and its islands, trees and blue sky. Reconstruct hidden scenery; no UI remains. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../09-storage-recovery.png"
+    },
+    {
+      "name": "10-service-states",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an existing White Tower concept. Create a CLEAN BACKGROUND PLATE for assembling this exact screen from separate PNG UI layers. Preserve the original portrait aspect ratio 941:1672, camera, composition, color palette, lighting and polished casual 3D painting style. Keep the exact FOUR-QUADRANT storyboard layout and white horizontal/vertical dividing lines. Remove every UI logo, label, dialog card, warning icon, progress bar, speech bubble and button in all four quadrants. Also remove the large foreground white tower on its plinth in upper-left, the broken-browser illustration in lower-left, and the foreground playable tile board in lower-right. Keep the upper-right golden portal and its decorative path, distant islands, peripheral arches and blue sky/cloud scenery in each quadrant. Reconstruct empty scenery behind removed objects. This output is ONLY four clean scenery backdrops, no user interface. Absolutely no text, letters, numerals, logo, UI button, cream dialog panel, user interface, watermark or checkerboard anywhere. Keep original framing and full-bleed opaque background. Do not redesign the environment or introduce new characters. All removed foreground/UI will be re-added as independent layers later.",
+      "input": "../10-service-states.png"
+    }
+  ]
+}

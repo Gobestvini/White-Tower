@@ -1,0 +1,82 @@
+[
+  {
+    "screen": "01-gameplay",
+    "file": "01-gameplay.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "c4339514fdbad744de28c4b1f20274d4b6d6751562e45e1d5f35c027be8f2880",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "02-tutorial",
+    "file": "02-tutorial.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "dcd787ac43bd83fb8982f6a2a67675ab16aff2111826fe9f10566cd0ebbb9f19",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "03-hint",
+    "file": "03-hint.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "8a2144979e1a0ea70e7feff6e2c98406b3965d8b4b2ef114580dc28554cbd9bf",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "04-levels",
+    "file": "04-levels.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "54f85f65c21a1051f9ac32f50acd4abf4bdfc329fa157ebd10c18d671779f37c",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "05-settings",
+    "file": "05-settings.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "0cdf248aa3554cb7bdded1a88c3abf86c132ff70874eb75e87e7e1edac6125bc",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "06-victory",
+    "file": "06-victory.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "75bd4652e0006a0dac001021f1788b006b239c93decf9555a633aedd5000d4f2",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "07-campaign-complete",
+    "file": "07-campaign-complete.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "63b87ea3764cbf1383718988cfb9dc8bbc46ddc18becd07f3fb5bb64b8e85932",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "08-reset-confirmation",
+    "file": "08-reset-confirmation.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "f96de4a73ce7926e3b5c35078ade872b8f0e4c66142396cc23ac2b66307c08e6",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "09-storage-recovery",
+    "file": "09-storage-recovery.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "69bf9dc7ec46ccefef80e1f0cd8b3b12cfe29b0b9b5195e9e9fe423d6b5abc86",
+    "source": "built-in image_gen clean-background reconstruction"
+  },
+  {
+    "screen": "10-service-states",
+    "file": "10-service-states.jpg",
+    "width": 941,
+    "height": 1672,
+    "sha256": "3fd3bede096a5e7f6b37837aa9739b6eab7c6e6aa9f97af8d5502ea1f0ce8655",
+    "source": "built-in image_gen clean-background reconstruction"
+  }
+]

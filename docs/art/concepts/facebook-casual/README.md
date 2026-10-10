@@ -1,5 +1,7 @@
 # White Tower — Facebook casual concepts
 
+[Десять экранов, собранных из отдельных элементов](assembled/index.html), [обзор](assembled/overview.html), [Figma](https://www.figma.com/design/3qmmWSoZLpWIZjPDIZHSsZ?node-id=17-38). Подробности слоёв и восстановления фонов: [assembled/README.md](assembled/README.md).
+
 Создано 9 октября 2026 встроенным инструментом `image_gen`. Это альтернативное художественное направление по запросу пользователя; игровая реализация и эталонный режим не изменены.
 
 [Галерея всех изображений](index.html). Полный набор использованных промптов: [prompts.json](prompts.json). Для каждого изображения промпт составляется как `base + screens[i].prompt`.
